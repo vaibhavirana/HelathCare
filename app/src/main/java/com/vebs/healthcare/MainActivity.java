@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         models.add(
                 new NavigationTabBar.Model
                         .Builder(
-                        getResources().getDrawable(R.drawable.ic_first),0)
+                        getResources().getDrawable(R.drawable.ic_action_doctor),0)
                         .title("DOCTOR")
                         .build()
         );
