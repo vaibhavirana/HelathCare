@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
+import com.vebs.healthcare.adapter.MyPagerAdapter;
+import com.vebs.healthcare.fragment.DoctorFragment;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,32 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-        viewPager.setAdapter(new PagerAdapter() {
-            @Override
-            public int getCount() {
-                return 3;
-            }
-
-            @Override
-            public boolean isViewFromObject(final View view, final Object object) {
-                return view.equals(object);
-            }
-
-            @Override
-            public void destroyItem(final View container, final int position, final Object object) {
-                ((ViewPager) container).removeView((View) object);
-            }
-
-            @Override
-            public Object instantiateItem(final ViewGroup container, final int position) {
-                final View view = LayoutInflater.from(
-                        getBaseContext()).inflate(R.layout.item_vp, null, false);
-
-                container.addView(view);
-                return view;
-            }
-        });
-
+        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
 
         final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
@@ -63,21 +40,29 @@ public class MainActivity extends AppCompatActivity {
                 new NavigationTabBar.Model
                         .Builder(
                         getResources().getDrawable(R.drawable.ic_action_doctor),0)
-                        .title("DOCTOR")
+                        .title(getString(R.string.doctor))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_second),
                         0)
-                        .title("LABS")
+                        .title(getString(R.string.labs))
                         .build()
         );
         models.add(
                 new NavigationTabBar.Model.Builder(
                         getResources().getDrawable(R.drawable.ic_third),
                         0)
-                        .title("DIAGNOSTIC")
+                        .title(getString(R.string.diagnostic))
+                        .build()
+        );
+
+        models.add(
+                new NavigationTabBar.Model.Builder(
+                        getResources().getDrawable(R.drawable.ic_third),
+                        0)
+                        .title(getString(R.string.reference))
                         .build()
         );
 
@@ -91,18 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 ((ViewGroup.MarginLayoutParams) viewPager.getLayoutParams()).topMargin =
                         (int) -navigationTabBar.getBadgeMargin();
                 viewPager.requestLayout();
-            }
-        });
-
-        navigationTabBar.setOnTabBarSelectedIndexListener(new NavigationTabBar.OnTabBarSelectedIndexListener() {
-            @Override
-            public void onStartTabSelected(final NavigationTabBar.Model model, final int index) {
-
-            }
-
-            @Override
-            public void onEndTabSelected(final NavigationTabBar.Model model, final int index) {
-                model.hideBadge();
             }
         });
 

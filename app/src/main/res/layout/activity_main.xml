@@ -13,7 +13,7 @@
     <com.gigamole.navigationtabbar.ntb.NavigationTabBar
         android:id="@+id/ntb_horizontal"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="?actionBarSize"
         app:ntb_badge_gravity="bottom"
         app:ntb_badge_position="left"
         app:ntb_badge_title_color="#ffffffff"
@@ -30,11 +30,5 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-
-    <View
-        android:id="@+id/mask"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_gravity="bottom" />
 
 </LinearLayout>

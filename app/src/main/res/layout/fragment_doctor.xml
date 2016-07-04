@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtPatientName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_4dp"
+                android:hint="Patient Name "
+                android:padding="@dimen/dimen_4dp"
+                app:met_baseColor="@color/blue"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/blue" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtPatientNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_4dp"
+                android:hint="Mobile Number"
+                android:inputType="number"
+                android:maxLength="10"
+                android:padding="@dimen/dimen_4dp"
+                app:met_baseColor="@color/blue"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/blue" />
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_4dp"
+                android:orientation="horizontal"
+                android:id="@+id/rgGender"
+                android:padding="@dimen/dimen_4dp">
+
+                <RadioButton
+                    android:id="@+id/rdMale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dimen_4dp"
+                    android:checked="true"
+                    android:text="Male" />
+
+                <RadioButton
+                    android:id="@+id/rdFemale"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/dimen_4dp"
+                    android:text="Female" />
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edtAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="age"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:padding="@dimen/dimen_4dp"
+                    app:met_baseColor="@color/blue"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/blue" />
+            </RadioGroup>
+
+            <TextView
+                android:id="@+id/txtDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:hint="Date"
+                android:maxLength="10"
+                android:padding="@dimen/dimen_4dp"
+                 />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:padding="@dimen/dimen_8dp"
+                android:id="@+id/spnCategory">
+
+            </Spinner>
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:padding="@dimen/dimen_8dp"
+                android:id="@+id/spnDoctor">
+
+            </Spinner>
+
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:gravity="top|start"
+                android:hint="Reference Note"
+                android:inputType="textMultiLine|textCapWords"
+                android:minLines="2"
+                android:padding="@dimen/dimen_8dp"
+                app:met_baseColor="@color/blue"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/blue"
+                android:id="@+id/edtRefer" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_8dp"
+                android:weightSum="2"
+                android:orientation="horizontal">
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/btnRefernce"
+                    style="@style/MyFlatButtonStyle"
+                    android:background="@android:color/transparent"
+                    android:text="@string/reference" />
+
+                <Button
+                    android:layout_weight="1"
+                    android:id="@+id/btnEmergency"
+                    style="@style/MyFlatButtonStyle"
+                    android:background="@android:color/transparent"
+                    android:text="@string/emergengy" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

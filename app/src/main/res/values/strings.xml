@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">HelathCare</string>
+    <string name="reference">Refer</string>
+    <string name="emergengy">Emergengy Note</string>
+    <string name="home_collected">Home \nCollected</string>
+    <string name="center_collected">Center \nCollected</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="doctor">DOCTOR</string>
+    <string name="labs">LABS</string>
+    <string name="diagnostic">DIAG</string>
+    <string name="username">UserName</string>
+    <string name="login">Login</string>
+    <string name="forget_pswd">Forget Password</string>
+
 </resources>
