@@ -7,8 +7,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.Spinner;
+import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -63,23 +76,75 @@ public class LabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_lab, container, false);
+        View view=inflater.inflate(R.layout.fragment_lab, container, false);
+        init(view);
+        return view;
     }
+
+    private MaterialEditText edtPatientName,edtPatientNo,edtAge,edtRefer;
+    private TextView txtDate;
+    private Button btnRefernce,btnHomeCollected,btnCenterCollected;
+    private RadioButton rdMale,rdFemale;
+    private RadioGroup rgGender;
+    private Spinner spnLab,spnLabTest;
+
 
     // TODO: Rename method, update argument and hook method into UI event
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private void init(View view) {
+        txtDate=(TextView) view.findViewById(R.id.txtDate);
+        edtPatientName= (MaterialEditText) view.findViewById(R.id.edtPatientName);
+        edtPatientNo=(MaterialEditText) view.findViewById(R.id.edtPatientNo);
+        edtAge=(MaterialEditText) view.findViewById(R.id.edtAge);
+        edtRefer=(MaterialEditText) view.findViewById(R.id.edtRefer);
+
+        btnRefernce=(Button)view.findViewById(R.id.btnRefernce);
+        btnHomeCollected=(Button)view.findViewById(R.id.btnHomeCollected);
+        btnCenterCollected=(Button)view.findViewById(R.id.btnCenterCollected);
+        rdMale= (RadioButton) view.findViewById(R.id.rdMale);
+        rdFemale= (RadioButton) view.findViewById(R.id.rdFemale);
+        rgGender= (RadioGroup) view.findViewById(R.id.rgGender);
+
+        spnLab= (Spinner) view.findViewById(R.id.spnLab);
+        spnLabTest= (Spinner) view.findViewById(R.id.spnLabTest);
+
+        setData();
+
+    }
+
+    private void setData() {
+
+        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
+
+        List<String> list = new ArrayList<String>();
+        list.add("Select Lab");
+        list.add("Lab 1");
+        list.add("Lab 2");
+        list.add("Lab 3");
+        list.add("Lab 4");
+        list.add("Lab 5");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnLab.setAdapter(dataAdapter);
+
+        List<String> list1 = new ArrayList<String>();
+        list1.add("Select Lab");
+        list1.add("Lab Test 1");
+        list1.add("Lab Test 2");
+        list1.add("Lab Test 3");
+        list1.add("Lab Test 4");
+        list1.add("Lab Test 5");
+
+        ArrayAdapter<String> dataAdapter1 = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, list1);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnLabTest.setAdapter(dataAdapter1);
+
+    }
+
 }

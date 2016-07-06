@@ -7,11 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.vebs.healthcare.adapter.MyPagerAdapter;
 import com.vebs.healthcare.fragment.DoctorFragment;
@@ -19,15 +21,66 @@ import com.vebs.healthcare.fragment.DoctorFragment;
 import java.util.ArrayList;
 import java.util.Random;
 
+
 public class MainActivity extends AppCompatActivity {
+
+    private View rootView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        initToolbar();
         initUI();
         
+    }
+
+    private void initToolbar() {
+        //rootView = findViewById(android.R.id.content);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(null);
+        }
+
+        TextView txtCity=(TextView)toolbar.findViewById(R.id.txtCity);
+        txtCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showPopup();
+            }
+        });
+        setSupportActionBar(toolbar);
+    }
+
+    private void showPopup() {
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title("Select City")
+                .items(R.array.cat_arrays)
+               // .itemsIds(R.array.itemIds)
+                //.typeface(Functions.getBoldFont(context), Functions.getRegularFont(context))
+                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                    @Override
+                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                       /* if (listener != null) {
+                            listener.onSelectDuration(which, text.toString());
+                        }*/
+                        dialog.dismiss();
+                        return true;
+                    }
+                })
+               /* .positiveText(R.string.save)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        if (selectSaveListener != null) {
+                            selectSaveListener.onSave();
+                        }
+                    }
+                })*/
+                .show();
+        dialog.setCancelable(true);
     }
 
     private void initUI() {

@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#8bc34a</color>
 
     <color name="blue">#0F3959</color>
     <color name="colorWhite">#ffffff</color>
@@ -10,4 +10,8 @@
     <color name="edittext_hint_color">#57748a</color>
     <color name="trans_blue">#800F3959</color>
     <color name="half_black">#676767</color>
+
+    <color name="color_green">#4caf50</color>
+    <color name="color_light_green">#8bc34a</color>
+    <color name="color_lime">#cddc39</color>
 </resources>

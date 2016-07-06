@@ -1,0 +1,77 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/btnNotConsulted"
+                    style="@style/MyFlatButtonStyle"
+                    android:layout_marginRight="@dimen/dimen_8dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/not_consulted" />
+
+                <Button
+                    android:id="@+id/btnConsulted"
+                    style="@style/MyFlatButtonStyle"
+                    android:layout_marginLeft="@dimen/dimen_8dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:text="@string/consulted" />
+
+
+            </LinearLayout>
+
+            <!--<android.support.v7.widget.AppCompatAutoCompleteTextView
+                android:id="@+id/txtSearch"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:hint="Search"
+                android:textColorHint="@color/blue"
+                android:drawableTint="@color/colorAccent"
+                android:drawablePadding="@dimen/dimen_16dp"
+                android:drawableRight="@drawable/ic_action_search"
+                android:textAllCaps="true"
+                android:padding="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_8dp"
+                />-->
+
+            <TextView
+                android:id="@+id/txtSearch"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:hint="Search"
+                android:textColorHint="@color/blue"
+                android:drawableTintMode="src_atop"
+                android:drawableTint="@color/blue"
+                android:drawablePadding="@dimen/dimen_16dp"
+                android:drawableLeft="@drawable/ic_action_search"
+                android:textAllCaps="true"
+                android:padding="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_8dp"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvPatientName"
+                android:layout_width="match_parent"
+                android:padding="@dimen/dimen_8dp"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

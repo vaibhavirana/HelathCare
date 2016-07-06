@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -16,14 +17,11 @@ import android.widget.TextView;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link DoctorFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link DoctorFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class DoctorFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -69,7 +67,7 @@ public class DoctorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_doctor, container, false);
+        View view = inflater.inflate(R.layout.fragment_doctor, container, false);
         init(view);
         return view;
     }
@@ -97,9 +95,29 @@ public class DoctorFragment extends Fragment {
         spnCategory= (Spinner) view.findViewById(R.id.spnCategory);
         spnDoctor= (Spinner) view.findViewById(R.id.spnDoctor);
 
-
+        
+        setData();
 
     }
+
+    private void setData() {
+
+        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
+
+        List<String> list = new ArrayList<String>();
+        list.add("Select Doctor");
+        list.add("Doctor 1");
+        list.add("Doctor 2");
+        list.add("Doctor 3");
+        list.add("Doctor 4");
+        list.add("Doctor 5");
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnDoctor.setAdapter(dataAdapter);
+
+    }
+
 
 
 }

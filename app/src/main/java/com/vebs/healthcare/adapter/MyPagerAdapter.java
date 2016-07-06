@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.vebs.healthcare.fragment.DiagnosticFragment;
 import com.vebs.healthcare.fragment.DoctorFragment;
 import com.vebs.healthcare.fragment.LabFragment;
+import com.vebs.healthcare.fragment.ReferenceFragment;
 
 /**
  * Created by vraj on 7/2/2016.
@@ -26,7 +27,7 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
             case 0: return DoctorFragment.newInstance("FirstFragment", "Instance 1");
             case 1: return LabFragment.newInstance("SecondFragment", "Instance 1");
             case 2: return DiagnosticFragment.newInstance("ThirdFragment", "Instance 1");
-            case 3: return DiagnosticFragment.newInstance("ThirdFragment", "Instance 1");
+            case 3: return ReferenceFragment.newInstance("ThirdFragment", "Instance 1");
         }
         return null;
     }

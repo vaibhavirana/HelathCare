@@ -14,5 +14,17 @@
     <string name="username">UserName</string>
     <string name="login">Login</string>
     <string name="forget_pswd">Forget Password</string>
+    <string name="not_consulted">NOT CONSULTED</string>
+    <string name="consulted">CONSULTED</string>
+
+    <string name="cat_prompt">Choose a Category</string>
+
+    <string-array name="cat_arrays">
+        <item>Category 1</item>
+        <item>Category 2</item>
+        <item>Category 3</item>
+        <item>Category 4</item>
+        <item>Category 5</item>
+    </string-array>
 
 </resources>

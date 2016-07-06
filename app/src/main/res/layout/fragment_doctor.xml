@@ -40,32 +40,56 @@
                 app:met_primaryColor="@color/blue" />
 
             <RadioGroup
+                android:id="@+id/rgGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_4dp"
                 android:orientation="horizontal"
-                android:id="@+id/rgGender"
                 android:padding="@dimen/dimen_4dp">
 
                 <RadioButton
                     android:id="@+id/rdMale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/dimen_4dp"
+                    android:layout_weight="1"
                     android:checked="true"
+                    android:drawableLeft="@drawable/ic_male"
+                    android:drawablePadding="@dimen/dimen_8dp"
+                    android:padding="@dimen/dimen_4dp"
                     android:text="Male" />
 
                 <RadioButton
                     android:id="@+id/rdFemale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:drawableLeft="@drawable/ic_female"
+                    android:drawablePadding="@dimen/dimen_8dp"
                     android:padding="@dimen/dimen_4dp"
                     android:text="Female" />
 
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dimen_8dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="Date"
+                    android:padding="@dimen/dimen_4dp"
+                    android:textColor="@color/blue" />
+
                 <com.rengwuxian.materialedittext.MaterialEditText
                     android:id="@+id/edtAge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="right"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -76,38 +100,33 @@
                     app:met_baseColor="@color/blue"
                     app:met_floatingLabel="highlight"
                     app:met_primaryColor="@color/blue" />
-            </RadioGroup>
-
-            <TextView
-                android:id="@+id/txtDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
-                android:hint="Date"
-                android:maxLength="10"
-                android:padding="@dimen/dimen_4dp"
-                 />
+            </LinearLayout>
 
             <Spinner
+                android:id="@+id/spnCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8dp"
-                android:padding="@dimen/dimen_8dp"
-                android:id="@+id/spnCategory">
+                android:entries="@array/cat_arrays"
+                android:prompt="@string/cat_prompt"
+                android:padding="@dimen/dimen_8dp">
 
             </Spinner>
 
             <Spinner
+                android:id="@+id/spnDoctor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8dp"
-                android:padding="@dimen/dimen_8dp"
-                android:id="@+id/spnDoctor">
+                android:entries="@array/cat_arrays"
+                android:prompt="@string/cat_prompt"
+                android:padding="@dimen/dimen_8dp">
 
             </Spinner>
 
 
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtRefer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8dp"
@@ -118,28 +137,29 @@
                 android:padding="@dimen/dimen_8dp"
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
-                app:met_primaryColor="@color/blue"
-                android:id="@+id/edtRefer" />
+                app:met_primaryColor="@color/blue" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/dimen_8dp"
                 android:layout_margin="@dimen/dimen_8dp"
-                android:weightSum="2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_8dp"
+                android:weightSum="2">
 
                 <Button
-                    android:layout_weight="1"
                     android:id="@+id/btnRefernce"
                     style="@style/MyFlatButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/reference" />
 
                 <Button
-                    android:layout_weight="1"
                     android:id="@+id/btnEmergency"
                     style="@style/MyFlatButtonStyle"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="@string/emergengy" />
             </LinearLayout>
