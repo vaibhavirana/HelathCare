@@ -1,9 +1,11 @@
 package com.vebs.healthcare.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,19 @@ import android.widget.TextView;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.Function;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -27,11 +41,15 @@ public class DoctorFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    InputStream is = null;
+    String line = null;
+    String result = null;
+    private ArrayList<String> cat_list;
+    private ArrayList<Integer> cat_list_id;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+     ProgressDialog loading;
     public DoctorFragment() {
         // Required empty public constructor
     }
@@ -95,7 +113,10 @@ public class DoctorFragment extends Fragment {
         spnCategory= (Spinner) view.findViewById(R.id.spnCategory);
         spnDoctor= (Spinner) view.findViewById(R.id.spnDoctor);
 
-        
+        loading = ProgressDialog.show(getActivity(), "Fetching Data", "Please wait...", false, false);
+        cat_list=new ArrayList<>();
+        cat_list_id=new ArrayList<>();
+        callApi();
         setData();
 
     }
@@ -118,6 +139,60 @@ public class DoctorFragment extends Fragment {
 
     }
 
+    private void callApi() {
+
+        if (Function.isConnected(getActivity())) {
+
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        HttpClient httpClient = new DefaultHttpClient();
+                        HttpPost httpPost = new HttpPost(Function.ROOT_URL);
+                        HttpResponse response = httpClient.execute(httpPost);
+                        HttpEntity entity = response.getEntity();
+                        is = entity.getContent();
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+                        StringBuilder sb = new StringBuilder();
+
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line + "\n");
+                        }
+
+                        is.close();
+                        String result = sb.toString();
+                        Log.e("result", result.toString());
+                        JSONArray ja = new JSONArray(result);
+                        JSONObject jo_cat = null;
+                        for (int i = 0; i < ja.length(); i++) {
+
+                                jo_cat = ja.getJSONObject(i).getJSONObject("category");
+                                if (jo_cat != null) {
+                                    cat_list.add(jo_cat.getString("catName"));
+                                    cat_list_id.add(jo_cat.getInt("catId"));
+                                    Log.e("result", jo_cat.toString());
+                                }
+
+                        }
+                        loading.dismiss();
+                       setCategoryData();
+                    } catch (Exception e) {
+                        Log.e("Webservice 1", e.toString());
+                    }
+
+                }
+            });
+
+            thread.start();
+        }
+    }
+
+    private void setCategoryData() {
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, cat_list);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnCategory.setAdapter(dataAdapter);
+    }
 
 
 }

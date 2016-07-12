@@ -19,6 +19,7 @@
 
     <string name="cat_prompt">Choose a Category</string>
     <string name="developed_text">Developed by GG Solutions and Technologies</string>
+    <string name="patient">Patient Detail</string>
 
     <string-array name="cat_arrays">
         <item>Category 1</item>

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity {
 
-    public static final String ROOT_URL = "https://arkaihealthcare.com/Reference/app/get_cate_ws.php";
+    public String ROOT_URL = "https://arkaihealthcare.com/Reference/app/get_cate_ws.php";
     InputStream is = null;
     String line = null;
     String result = null;

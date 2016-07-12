@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.adapter.PatientAdapter;
@@ -94,7 +96,7 @@ public class ReferenceFragment extends Fragment {
         for(int i=1;i<=5;i++) {
             list.add("("+i+") Patient " + i);
         }
-        PatientAdapter adpt=new PatientAdapter(getActivity(),list);
+        PatientAdapter adpt=new PatientAdapter(getActivity(), list);
         rvPatientName.setAdapter(adpt);
 
 
