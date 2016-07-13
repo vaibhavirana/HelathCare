@@ -1,15 +1,13 @@
 package com.vebs.healthcare;
 
-import android.graphics.Color;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -19,10 +17,20 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.vebs.healthcare.adapter.MyPagerAdapter;
-import com.vebs.healthcare.fragment.DoctorFragment;
+import com.vebs.healthcare.utils.Function;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -30,13 +38,19 @@ public class MainActivity extends AppCompatActivity {
     private View rootView;
     private Toolbar toolbar;
 
+    private JSONArray mainJsonArray;
+    private ProgressDialog progressDialog;
+    private InputStream is = null;
+    private StringBuilder sb;
+    private String line = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initToolbar();
         initUI();
-        
+
     }
 
     private void initToolbar() {
@@ -47,22 +61,22 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setTitle(null);
         }
 
-        TextView txtCity=(TextView)toolbar.findViewById(R.id.txtCity);
+        TextView txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
         txtCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showPopup(new SelectChooseListener() {
                               @Override
                               public void onSave(int id, String text) {
-                                  Toast.makeText(MainActivity.this,text,Toast.LENGTH_LONG).show();
+                                  Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
                               }
                           },
-                new SelectSaveListener() {
-                    @Override
-                    public void onSave() {
-                        //// save city in prefUtils.
-                    }
-                }
+                        new SelectSaveListener() {
+                            @Override
+                            public void onSave() {
+                                //// save city in prefUtils.
+                            }
+                        }
                 );
             }
         });
@@ -73,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
                 .title("Select City")
                 .items(R.array.cat_arrays)
-               // .itemsIds(R.array.itemIds)
+                // .itemsIds(R.array.itemIds)
                 //.typeface(Functions.getBoldFont(context), Functions.getRegularFont(context))
                 .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
@@ -117,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         models.add(
                 new NavigationTabBar.Model
                         .Builder(
-                        getResources().getDrawable(R.drawable.ic_action_doctor),0)
+                        getResources().getDrawable(R.drawable.ic_action_doctor), 0)
                         .title(getString(R.string.doctor))
                         .build()
         );
@@ -160,5 +174,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public JSONArray getMainJsonArray() {
+        return mainJsonArray;
+    }
+
+    public void setMainJsonArray(JSONArray mainJsonArray) {
+        this.mainJsonArray = mainJsonArray;
+    }
 
 }

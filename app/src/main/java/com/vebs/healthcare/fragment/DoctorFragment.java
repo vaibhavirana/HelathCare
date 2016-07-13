@@ -1,8 +1,7 @@
 package com.vebs.healthcare.fragment;
 
 import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.utils.Function;
 
@@ -44,12 +44,20 @@ public class DoctorFragment extends Fragment {
     InputStream is = null;
     String line = null;
     String result = null;
+
+    // category
     private ArrayList<String> cat_list;
     private ArrayList<Integer> cat_list_id;
+
+    // doctor
+    private ArrayList<String> doc_list;
+    private ArrayList<Integer> doc_list_id;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-     ProgressDialog loading;
+    ProgressDialog loading;
+
     public DoctorFragment() {
         // Required empty public constructor
     }
@@ -90,33 +98,45 @@ public class DoctorFragment extends Fragment {
         return view;
     }
 
-    private MaterialEditText edtPatientName,edtPatientNo,edtAge,edtRefer;
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            callApi();
+        }
+    }
+
+    private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
     private TextView txtDate;
-    private Button btnRefernce,btnEmergency;
-    private RadioButton rdMale,rdFemale;
+    private Button btnRefernce, btnEmergency;
+    private RadioButton rdMale, rdFemale;
     private RadioGroup rgGender;
-    private Spinner spnCategory,spnDoctor;
+    private Spinner spnCategory, spnDoctor;
 
     private void init(View view) {
-        txtDate=(TextView) view.findViewById(R.id.txtDate);
-        edtPatientName= (MaterialEditText) view.findViewById(R.id.edtPatientName);
-        edtPatientNo=(MaterialEditText) view.findViewById(R.id.edtPatientNo);
-        edtAge=(MaterialEditText) view.findViewById(R.id.edtAge);
-        edtRefer=(MaterialEditText) view.findViewById(R.id.edtRefer);
+        txtDate = (TextView) view.findViewById(R.id.txtDate);
+        edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
+        edtPatientNo = (MaterialEditText) view.findViewById(R.id.edtPatientNo);
+        edtAge = (MaterialEditText) view.findViewById(R.id.edtAge);
+        edtRefer = (MaterialEditText) view.findViewById(R.id.edtRefer);
 
-        btnRefernce=(Button)view.findViewById(R.id.btnRefernce);
-        btnEmergency=(Button)view.findViewById(R.id.btnEmergency);
-        rdMale= (RadioButton) view.findViewById(R.id.rdMale);
-        rdFemale= (RadioButton) view.findViewById(R.id.rdFemale);
-        rgGender= (RadioGroup) view.findViewById(R.id.rgGender);
+        btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
+        btnEmergency = (Button) view.findViewById(R.id.btnEmergency);
+        rdMale = (RadioButton) view.findViewById(R.id.rdMale);
+        rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);
+        rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
 
-        spnCategory= (Spinner) view.findViewById(R.id.spnCategory);
-        spnDoctor= (Spinner) view.findViewById(R.id.spnDoctor);
+        spnCategory = (Spinner) view.findViewById(R.id.spnCategory);
+        spnDoctor = (Spinner) view.findViewById(R.id.spnDoctor);
 
         loading = ProgressDialog.show(getActivity(), "Fetching Data", "Please wait...", false, false);
-        cat_list=new ArrayList<>();
-        cat_list_id=new ArrayList<>();
-        callApi();
+        cat_list = new ArrayList<>();
+        cat_list_id = new ArrayList<>();
+
+        doc_list = new ArrayList<>();
+        doc_list_id = new ArrayList<>();
+
+
         setData();
 
     }
@@ -125,27 +145,24 @@ public class DoctorFragment extends Fragment {
 
         txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
 
-        List<String> list = new ArrayList<String>();
-        list.add("Select Doctor");
-        list.add("Doctor 1");
-        list.add("Doctor 2");
-        list.add("Doctor 3");
-        list.add("Doctor 4");
-        list.add("Doctor 5");
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnDoctor.setAdapter(dataAdapter);
-
     }
 
     private void callApi() {
 
         if (Function.isConnected(getActivity())) {
 
-            Thread thread = new Thread(new Runnable() {
+            new AsyncTask<Void, Void, Void>() {
+
+                StringBuilder sb = new StringBuilder();
+
                 @Override
-                public void run() {
+                protected void onPreExecute() {
+                    super.onPreExecute();
+
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
                     try {
                         HttpClient httpClient = new DefaultHttpClient();
                         HttpPost httpPost = new HttpPost(Function.ROOT_URL);
@@ -154,44 +171,64 @@ public class DoctorFragment extends Fragment {
                         is = entity.getContent();
 
                         BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
-                        StringBuilder sb = new StringBuilder();
 
                         while ((line = reader.readLine()) != null) {
                             sb.append(line + "\n");
                         }
 
                         is.close();
+
                         String result = sb.toString();
                         Log.e("result", result.toString());
                         JSONArray ja = new JSONArray(result);
-                        JSONObject jo_cat = null;
+                        JSONObject jo_cat = null, jo_doc = null;
+                        int p = 0;
                         for (int i = 0; i < ja.length(); i++) {
 
+                            JSONObject object = ja.getJSONObject(i);
+                            if (object.has("category")) {
                                 jo_cat = ja.getJSONObject(i).getJSONObject("category");
                                 if (jo_cat != null) {
                                     cat_list.add(jo_cat.getString("catName"));
                                     cat_list_id.add(jo_cat.getInt("catId"));
-                                    Log.e("result", jo_cat.toString());
-                                }
 
+                                }
+                            }
+
+                            if (object.has("doctors")) {
+                                jo_doc = ja.getJSONObject(i).getJSONObject("doctors");
+                                if (jo_doc != null) {
+                                    doc_list.add(jo_doc.getString("drName"));
+                                    doc_list_id.add(jo_doc.getInt("drId"));
+                                }
+                            }
                         }
-                        loading.dismiss();
-                       setCategoryData();
                     } catch (Exception e) {
+                        e.printStackTrace();
                         Log.e("Webservice 1", e.toString());
                     }
-
+                    return null;
                 }
-            });
 
-            thread.start();
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    loading.dismiss();
+                    setCategoryData();
+                }
+            }.execute();
         }
     }
 
     private void setCategoryData() {
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(),android.R.layout.simple_spinner_item, cat_list);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spnCategory.setAdapter(dataAdapter);
+        ArrayAdapter<String> catAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, cat_list);
+        // dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnCategory.setAdapter(catAdapter);
+
+        ArrayAdapter<String> docAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, doc_list);
+        // dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spnDoctor.setAdapter(docAdapter);
+
     }
 
 
