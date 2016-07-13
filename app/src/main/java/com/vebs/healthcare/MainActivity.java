@@ -25,7 +25,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -37,20 +36,77 @@ public class MainActivity extends AppCompatActivity {
 
     private View rootView;
     private Toolbar toolbar;
-
-    private JSONArray mainJsonArray;
+    InputStream is = null;
+    String line = null;
     private ProgressDialog progressDialog;
-    private InputStream is = null;
-    private StringBuilder sb;
-    private String line = null;
+    private JSONArray mainJSONArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initToolbar();
+
         initUI();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        callAPI();
+    }
+
+    private void callAPI() {
+        if (Function.isConnected(this)) {
+
+            new AsyncTask<Void, Void, Void>() {
+
+                StringBuilder sb = new StringBuilder();
+
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                   // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        HttpClient httpClient = new DefaultHttpClient();
+                        HttpPost httpPost = new HttpPost(Function.ROOT_URL);
+                        HttpResponse response = httpClient.execute(httpPost);
+                        HttpEntity entity = response.getEntity();
+                        is = entity.getContent();
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
+
+                        while ((line = reader.readLine()) != null) {
+                            sb.append(line + "\n");
+                        }
+
+                        is.close();
+
+                        String result = sb.toString();
+                        Log.e("result", result.toString());
+                        JSONArray ja = new JSONArray(result);
+                        setMainJSONArray(ja);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                   // progressDialog.dismiss();
+                }
+            }.execute();
+        }
     }
 
     private void initToolbar() {
@@ -124,7 +180,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void initUI() {
         final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
+        assert viewPager != null;
         viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        viewPager.setOffscreenPageLimit(0);
 
         final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
         final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
@@ -170,16 +228,13 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.requestLayout();
             }
         });
-
-
     }
 
-    public JSONArray getMainJsonArray() {
-        return mainJsonArray;
+    public JSONArray getMainJSONArray() {
+        return mainJSONArray;
     }
 
-    public void setMainJsonArray(JSONArray mainJsonArray) {
-        this.mainJsonArray = mainJsonArray;
+    public void setMainJSONArray(JSONArray mainJSONArray) {
+        this.mainJSONArray = mainJSONArray;
     }
-
 }
