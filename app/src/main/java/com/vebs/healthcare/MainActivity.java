@@ -18,6 +18,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.vebs.healthcare.adapter.MyPagerAdapter;
 import com.vebs.healthcare.utils.Function;
+import com.vebs.healthcare.utils.Prefs;
+import com.vebs.healthcare.utils.PrefsUtil;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -31,6 +33,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
+import static com.vebs.healthcare.R.id.txtSelectCategory;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     String line = null;
     private ProgressDialog progressDialog;
     private JSONArray mainJSONArray;
+    private int cityWhich=0;
+    private TextView txtCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,10 @@ public class MainActivity extends AppCompatActivity {
         initToolbar();
 
         initUI();
+
+        if(Function.isConnected(this)) {
+            Function.fetch_city();
+        }
 
     }
 
@@ -75,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 protected Void doInBackground(Void... params) {
                     try {
                         HttpClient httpClient = new DefaultHttpClient();
-                        HttpPost httpPost = new HttpPost(Function.ROOT_URL);
+                        HttpPost httpPost = new HttpPost(Function.ROOT_URL+Function.CATEGORy_URL);
                         HttpResponse response = httpClient.execute(httpPost);
                         HttpEntity entity = response.getEntity();
                         is = entity.getContent();
@@ -117,54 +127,41 @@ public class MainActivity extends AppCompatActivity {
             toolbar.setTitle(null);
         }
 
-        TextView txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
+        txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
+        if(!PrefsUtil.getCity(this).isEmpty())
+        {
+            txtCity.setText(PrefsUtil.getCity(this));
+        }
         txtCity.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPopup(new SelectChooseListener() {
-                              @Override
-                              public void onSave(int id, String text) {
-                                  Toast.makeText(MainActivity.this, text, Toast.LENGTH_LONG).show();
-                              }
-                          },
-                        new SelectSaveListener() {
-                            @Override
-                            public void onSave() {
-                                //// save city in prefUtils.
-                            }
-                        }
-                );
+                showPopup();
             }
         });
         setSupportActionBar(toolbar);
     }
 
-    private void showPopup(final SelectChooseListener selectSaveListener, final SelectSaveListener saveListener) {
+    private void showPopup() {
         MaterialDialog dialog = new MaterialDialog.Builder(this)
-                .title("Select City")
-                .items(R.array.cat_arrays)
-                // .itemsIds(R.array.itemIds)
-                //.typeface(Functions.getBoldFont(context), Functions.getRegularFont(context))
-                .itemsCallbackSingleChoice(0, new MaterialDialog.ListCallbackSingleChoice() {
+                .title(this.getString(R.string.select_city))
+                .items(Function.city_list)
+                .itemsCallbackSingleChoice(cityWhich, new MaterialDialog.ListCallbackSingleChoice() {
                     @Override
                     public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                        if (selectSaveListener != null) {
-                            selectSaveListener.onSave(which, text.toString());
-                        }
                         dialog.dismiss();
+                        cityWhich = which;
+                        txtCity.setText(Function.city_list.get(which));
+                        //cityId = Function.city_list_id.get(which);
+                        PrefsUtil.setCity(MainActivity.this,Function.city_list.get(which));
+                        PrefsUtil.setCityID(MainActivity.this,Function.city_list_id.get(which));
                         return true;
                     }
                 })
-                .positiveText("OK")
-                .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        if (saveListener != null) {
-                            saveListener.onSave();
-                        }
-                    }
-                })
+                // .itemsIds(R.array.itemIds)
+                //.typeface(Functions.getBoldFont(context), Functions.getRegularFont(context))
+                .positiveText(android.R.string.ok)
                 .show();
+
         dialog.setCancelable(true);
     }
 

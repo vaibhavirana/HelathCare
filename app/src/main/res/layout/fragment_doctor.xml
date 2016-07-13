@@ -108,7 +108,7 @@
                 android:layout_margin="@dimen/dimen_8dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
                 android:paddingLeft="@dimen/dimen_16dp"
-                android:text="Select Category"
+                android:text="@string/select_category"
                 android:textSize="@dimen/M_TEXT" />
 
             <TextView
@@ -118,7 +118,7 @@
                 android:layout_margin="@dimen/dimen_8dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
                 android:paddingLeft="@dimen/dimen_16dp"
-                android:text="Select Doctor"
+                android:text="@string/select_doctor"
                 android:textSize="@dimen/M_TEXT" />
 
             <com.rengwuxian.materialedittext.MaterialEditText

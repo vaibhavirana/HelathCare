@@ -1,10 +1,13 @@
 package com.vebs.healthcare.fragment;
 
 import android.app.ProgressDialog;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +57,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private RadioButton rdMale, rdFemale;
     private RadioGroup rgGender;
     private JSONArray jsonArray;
+    private String selectedGenderId;
 
     public DoctorFragment() {
         // Required empty public constructor
@@ -129,6 +133,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         rdMale = (RadioButton) view.findViewById(R.id.rdMale);
         rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
+        selectedGenderId = "MALE";
 
         setData();
 
@@ -139,6 +144,20 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
         txtSelectDoctor.setOnClickListener(this);
+        btnRefernce.setOnClickListener(this);
+        btnEmergency.setOnClickListener(this);
+
+        rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.rdMale) {
+                    selectedGenderId = "MALE";
+
+                } else {
+                    selectedGenderId = "FEMALE";
+                }
+            }
+        });
     }
 
     private void setData() {
@@ -210,7 +229,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.txtSelectCategory:
                 new MaterialDialog.Builder(getActivity())
-                        .title("Select Category")
+                        .title(this.getString(R.string.select_category))
                         .items(cat_list)
                         .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
@@ -228,7 +247,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
             case R.id.txtSelectDoctor:
                 new MaterialDialog.Builder(getActivity())
-                        .title("Select Doctor")
+                        .title(this.getString(R.string.select_doctor))
                         .items(doc_list)
                         .itemsCallbackSingleChoice(docWhich, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
@@ -243,6 +262,40 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                         .positiveText(android.R.string.ok)
                         .show();
                 break;
+
+            case R.id.btnRefernce:
+                validateData(0);
+                break;
+
+            case R.id.btnEmergency:
+                validateData(1);
+                break;
         }
+    }
+
+    private void validateData(int flag) {
+        if (edtPatientName.length() == 0) {
+            edtPatientName.setError(this.getString(R.string.patient_error));
+        } else if (edtPatientNo.length() == 0) {
+            edtPatientNo.setError(this.getString(R.string.patient_no_error));
+        } else if (edtAge.length() == 0) {
+            edtAge.setError(this.getString(R.string.patient_age_error));
+        } else if (Integer.parseInt(edtAge.getText().toString().trim()) <= 0
+                || Integer.parseInt(edtAge.getText().toString().trim()) >= 110) {
+            edtAge.setError(this.getString(R.string.patient_proper_age_error));
+        } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
+            txtSelectCategory.setError(this.getString(R.string.select_category));
+        } else if (txtSelectDoctor.getText().equals(this.getString(R.string.select_doctor))) {
+            txtSelectDoctor.setError(this.getString(R.string.select_doctor));
+        } else if (edtRefer.length() == 0) {
+            edtRefer.setError(this.getString(R.string.refer_error));
+        } else {
+            // send data call referdoctor
+            Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
+                    edtAge.getText() + " || " + selectedGenderId + " || " + txtSelectDoctor.getText() + " || " +
+                    txtSelectCategory.getText() + " || " + txtDate.getText() + " || " + edtRefer.getText());
+        }
+
+
     }
 }
