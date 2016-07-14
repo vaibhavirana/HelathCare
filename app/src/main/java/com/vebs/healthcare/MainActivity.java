@@ -4,6 +4,10 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +21,10 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
 import com.vebs.healthcare.adapter.MyPagerAdapter;
+import com.vebs.healthcare.fragment.DiagnosticFragment;
+import com.vebs.healthcare.fragment.DoctorFragment;
+import com.vebs.healthcare.fragment.LabFragment;
+import com.vebs.healthcare.fragment.ReferenceFragment;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.Prefs;
 import com.vebs.healthcare.utils.PrefsUtil;
@@ -32,17 +40,19 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import static com.vebs.healthcare.R.id.txtSelectCategory;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private View rootView;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter adapter;
     private Toolbar toolbar;
     InputStream is = null;
     String line = null;
-    private ProgressDialog progressDialog;
     private JSONArray mainJSONArray;
     private int cityWhich=0;
     private TextView txtCity;
@@ -60,6 +70,75 @@ public class MainActivity extends AppCompatActivity {
             Function.fetch_city();
         }
 
+    }
+
+    private void initUI() {
+        tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        viewPager = (ViewPager) findViewById(R.id.pager);
+        setupViewPager(viewPager);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
+        viewPager.setOffscreenPageLimit(0);
+    }
+
+    private void setupTabIcons() {
+        tabLayout.getTabAt(0).setText(R.string.doctor);
+        tabLayout.getTabAt(1).setText(R.string.labs);
+        tabLayout.getTabAt(2).setText(R.string.diagnostic);
+        tabLayout.getTabAt(3).setText(R.string.reference);
+        /*ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        int tabsCount = vg.getChildCount();
+        for (int j = 0; j < tabsCount; j++) {
+            ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
+            int tabChildsCount = vgTab.getChildCount();
+            for (int i = 0; i < tabChildsCount; i++) {
+                View tabViewChild = vgTab.getChildAt(i);
+                if (tabViewChild instanceof TextView) {
+                    ((TextView) tabViewChild).setTypeface(Functions.getTypeFace(getActivity()));
+                }
+            }
+        }*/
+    }
+
+    private void setupViewPager(ViewPager viewPager) {
+        adapter = new ViewPagerAdapter(this.getSupportFragmentManager());
+        adapter.addFrag(new DoctorFragment(), getResources().getString(R.string.doctor));
+        adapter.addFrag(new LabFragment(), getResources().getString(R.string.labs));
+        adapter.addFrag(new DiagnosticFragment(), getResources().getString(R.string.diagnostic));
+        adapter.addFrag(new ReferenceFragment(), getResources().getString(R.string.reference));
+
+        viewPager.setAdapter(adapter);
+        viewPager.setCurrentItem(0);
+    }
+
+
+    class ViewPagerAdapter extends FragmentStatePagerAdapter {
+        private final List<Fragment> mFragmentList = new ArrayList<>();
+        private final List<String> mFragmentTitleList = new ArrayList<>();
+
+        public ViewPagerAdapter(FragmentManager manager) {
+            super(manager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragmentList.size();
+        }
+
+        public void addFrag(Fragment fragment, String title) {
+            mFragmentList.add(fragment);
+            mFragmentTitleList.add(title);
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitleList.get(position);
+        }
     }
 
     @Override
@@ -85,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                 protected Void doInBackground(Void... params) {
                     try {
                         HttpClient httpClient = new DefaultHttpClient();
-                        HttpPost httpPost = new HttpPost(Function.ROOT_URL+Function.CATEGORy_URL);
+                        HttpPost httpPost = new HttpPost(Function.CATEGORy_URL);
                         HttpResponse response = httpClient.execute(httpPost);
                         HttpEntity entity = response.getEntity();
                         is = entity.getContent();
@@ -163,68 +242,6 @@ public class MainActivity extends AppCompatActivity {
                 .show();
 
         dialog.setCancelable(true);
-    }
-
-    public interface SelectChooseListener {
-        public void onSave(int id, String text);
-
-    }
-
-    public interface SelectSaveListener {
-        public void onSave();
-
-    }
-
-    private void initUI() {
-        final ViewPager viewPager = (ViewPager) findViewById(R.id.vp_horizontal_ntb);
-        assert viewPager != null;
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
-        viewPager.setOffscreenPageLimit(0);
-
-        final NavigationTabBar navigationTabBar = (NavigationTabBar) findViewById(R.id.ntb_horizontal);
-        final ArrayList<NavigationTabBar.Model> models = new ArrayList<>();
-        models.add(
-                new NavigationTabBar.Model
-                        .Builder(
-                        getResources().getDrawable(R.drawable.ic_action_doctor), 0)
-                        .title(getString(R.string.doctor))
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_second),
-                        0)
-                        .title(getString(R.string.labs))
-                        .build()
-        );
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
-                        0)
-                        .title(getString(R.string.diagnostic))
-                        .build()
-        );
-
-        models.add(
-                new NavigationTabBar.Model.Builder(
-                        getResources().getDrawable(R.drawable.ic_third),
-                        0)
-                        .title(getString(R.string.reference))
-                        .build()
-        );
-
-        navigationTabBar.setModels(models);
-        navigationTabBar.setViewPager(viewPager, 0);
-
-        navigationTabBar.post(new Runnable() {
-            @Override
-            public void run() {
-                final View viewPager = findViewById(R.id.vp_horizontal_ntb);
-                ((ViewGroup.MarginLayoutParams) viewPager.getLayoutParams()).topMargin =
-                        (int) -navigationTabBar.getBadgeMargin();
-                viewPager.requestLayout();
-            }
-        });
     }
 
     public JSONArray getMainJSONArray() {

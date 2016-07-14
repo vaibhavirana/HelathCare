@@ -28,8 +28,11 @@ import java.util.ArrayList;
 public class Function {
 
     public static final String ROOT_URL = "https://arkaihealthcare.com/Reference/app/";
-    public static final String CATEGORy_URL = "get_cate_ws.php";
-    public static final String CITY_URL = "fetch_city.php";
+    public static final String CATEGORy_URL = ROOT_URL+"get_cate_ws.php";
+    public static final String CITY_URL = ROOT_URL+"fetch_city.php";
+    public static final String REFER_DOCTOR_URL = ROOT_URL+"refer_doctor.php";
+    public static final String REFER_LAB_URL = ROOT_URL+"refer_lab.php";
+    public static final String REFER_DIAG_URL = ROOT_URL+"refer_daignostic.php";
     public static ArrayList<String> city_list;
     public static ArrayList<Integer> city_list_id;
     private static InputStream is;
@@ -60,7 +63,7 @@ public class Function {
                 protected Void doInBackground(Void... params) {
                     try {
                         HttpClient httpClient = new DefaultHttpClient();
-                        HttpPost httpPost = new HttpPost(Function.ROOT_URL+CITY_URL);
+                        HttpPost httpPost = new HttpPost(CITY_URL);
                         HttpResponse response = httpClient.execute(httpPost);
                         HttpEntity entity = response.getEntity();
                         is = entity.getContent();

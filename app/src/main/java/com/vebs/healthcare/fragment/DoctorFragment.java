@@ -22,6 +22,9 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.Function;
+import com.vebs.healthcare.utils.PrefsUtil;
+import com.vebs.healthcare.utils.RestClient;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -294,6 +297,40 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
                     edtAge.getText() + " || " + selectedGenderId + " || " + txtSelectDoctor.getText() + " || " +
                     txtSelectCategory.getText() + " || " + txtDate.getText() + " || " + edtRefer.getText());
+
+            final RestClient client = new RestClient(Function.REFER_DOCTOR_URL);
+            client.AddParam("user_id", String.valueOf(3));
+            client.AddParam("patient_name", edtPatientName.getText().toString());
+            client.AddParam("patient_mob_number", edtPatientNo.getText().toString());
+            client.AddParam("gender", selectedGenderId);
+            client.AddParam("age", edtAge.getText().toString());
+            client.AddParam("date", txtDate.getText().toString());
+            client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
+            client.AddParam("category_id", String.valueOf(catId));
+            client.AddParam("diagnostic_center_id", String.valueOf(2));
+            client.AddParam("diagnostic_test_name", "2016-07-10 00:00:00");
+            client.AddParam("refer_note", "2016-07-10 00:00:00");
+
+            try {
+                Thread thread=new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            client.Execute("post");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                thread.start();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            String response = client.getResponse();
+            Log.e("resp",response);
         }
 
 
