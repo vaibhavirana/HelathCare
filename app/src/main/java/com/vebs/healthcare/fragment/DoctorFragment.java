@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.MainActivity;
@@ -40,27 +43,16 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // category
-    private ArrayList<String> cat_list;
-    private ArrayList<Integer> cat_list_id;
+
     private int catWhich = 0, catId = 0, docWhich = 0, docId = 0;
 
-    // doctor
-    private ArrayList<String> doc_list;
-    private ArrayList<Integer> doc_list_id;
-
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    ProgressDialog loading;
 
     private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
     private TextView txtDate, txtSelectCategory, txtSelectDoctor;
     private Button btnRefernce, btnEmergency;
-    private RadioButton rdMale, rdFemale;
     private RadioGroup rgGender;
-    private JSONArray jsonArray;
-    private String selectedGenderId;
+    private String selectedGenderId, doctorname;
 
     public DoctorFragment() {
         // Required empty public constructor
@@ -88,8 +80,8 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            //  mParam1 = getArguments().getString(ARG_PARAM1);
+            // mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -106,7 +98,8 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            new CountDownTimer(2000, 1000) {
+            Function.fetch_category(getActivity());
+            /*new CountDownTimer(2000, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
 
@@ -114,16 +107,19 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
                 @Override
                 public void onFinish() {
-                    loading = ProgressDialog.show(getActivity(), "Fetching Data", "Please wait...", false, false);
-                    Toast.makeText(getActivity(), "call_doctor", Toast.LENGTH_SHORT).show();
-                    callApi();
+
+                   // Toast.makeText(getActivity(), "call_doctor", Toast.LENGTH_SHORT).show();
+                    Function.fetch_category(getActivity());
+                    //callApi();
                 }
-            }.start();
+            }.start();*/
         }
     }
 
     private void init(View view) {
         txtDate = (TextView) view.findViewById(R.id.txtDate);
+        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
+
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
         txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
         edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
@@ -133,12 +129,11 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
         btnEmergency = (Button) view.findViewById(R.id.btnEmergency);
-        rdMale = (RadioButton) view.findViewById(R.id.rdMale);
-        rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);
+        /*rdMale = (RadioButton) view.findViewById(R.id.rdMale);
+        rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);*/
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = "MALE";
 
-        setData();
 
         actionListener();
 
@@ -163,84 +158,24 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void setData() {
-        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
-
-    }
-
-    private void callApi() {
-
-        new AsyncTask<Void, Void, Void>() {
-
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                cat_list = new ArrayList<>();
-                cat_list_id = new ArrayList<>();
-
-                doc_list = new ArrayList<>();
-                doc_list_id = new ArrayList<>();
-
-            }
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                try {
-
-                    jsonArray = ((MainActivity) getActivity()).getMainJSONArray();
-
-                    JSONObject jo_cat = null, jo_doc = null;
-
-                    int p = 0;
-
-                    for (int i = 0; i < jsonArray.length(); i++) {
-
-                        JSONObject object = jsonArray.getJSONObject(i);
-                        if (object.has("category")) {
-                            jo_cat = jsonArray.getJSONObject(i).getJSONObject("category");
-                            if (jo_cat != null) {
-                                cat_list.add(jo_cat.getString("catName"));
-                                cat_list_id.add(jo_cat.getInt("catId"));
-                            }
-                        }
-
-                        if (object.has("doctors")) {
-                            jo_doc = jsonArray.getJSONObject(i).getJSONObject("doctors");
-                            if (jo_doc != null) {
-                                doc_list.add(jo_doc.getString("drName"));
-                                doc_list_id.add(jo_doc.getInt("drId"));
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.e("Webservice 1", e.toString());
-                }
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
-                loading.dismiss();
-            }
-        }.execute();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtSelectCategory:
+                txtSelectDoctor.setText(this.getString(R.string.select_doctor));
                 new MaterialDialog.Builder(getActivity())
                         .title(this.getString(R.string.select_category))
-                        .items(cat_list)
+                        .items(Function.cat_list)
                         .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
                                 dialog.dismiss();
                                 catWhich = which;
-                                txtSelectCategory.setText(cat_list.get(which));
-                                catId = cat_list_id.get(which);
+                                txtSelectCategory.setText(Function.cat_list.get(which));
+                                catId = Function.cat_list_id.get(which);
+                                //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
+                                Function.fetch_doctor(getActivity(), catId);
+
                                 return true;
                             }
                         })
@@ -249,21 +184,33 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.txtSelectDoctor:
-                new MaterialDialog.Builder(getActivity())
-                        .title(this.getString(R.string.select_doctor))
-                        .items(doc_list)
-                        .itemsCallbackSingleChoice(docWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                dialog.dismiss();
-                                docWhich = which;
-                                txtSelectDoctor.setText(doc_list.get(which));
-                                docId = doc_list_id.get(which);
-                                return true;
-                            }
-                        })
-                        .positiveText(android.R.string.ok)
-                        .show();
+                if (Function.doc_list.size() == 0) {
+
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.no_doctor))
+                            .positiveText(android.R.string.ok)
+                            .show();
+                    //txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
+
+                }else {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_doctor))
+                            .items(Function.doc_list)
+                            .itemsCallbackSingleChoice(docWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    dialog.dismiss();
+                                    docWhich = which;
+                                    txtSelectDoctor.setText(Function.doc_list.get(which));
+                                    docId = Function.doc_list_id.get(which);
+                                    doctorname = Function.doc_list.get(which);
+                                    return true;
+                                }
+                            })
+                            .positiveText(android.R.string.ok)
+                            .show();
+                }
+
                 break;
 
             case R.id.btnRefernce:
@@ -296,7 +243,9 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             // send data call referdoctor
             Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
                     edtAge.getText() + " || " + selectedGenderId + " || " + txtSelectDoctor.getText() + " || " +
-                    txtSelectCategory.getText() + " || " + txtDate.getText() + " || " + edtRefer.getText());
+                    txtSelectCategory.getText() + " || " +
+                    doctorname + " || " +
+                    txtDate.getText() + " || " + edtRefer.getText());
 
             final RestClient client = new RestClient(Function.REFER_DOCTOR_URL);
             client.AddParam("user_id", String.valueOf(3));
@@ -307,32 +256,60 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             client.AddParam("date", txtDate.getText().toString());
             client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
-            client.AddParam("diagnostic_center_id", String.valueOf(2));
-            client.AddParam("diagnostic_test_name", "2016-07-10 00:00:00");
-            client.AddParam("refer_note", "2016-07-10 00:00:00");
+            client.AddParam("doctor_name", doctorname);
+            client.AddParam("is_emergency", String.valueOf(flag));
+            client.AddParam("refer_note", edtRefer.getText().toString());
+            new AsyncTask<Void, Void, Void>() {
+                public ProgressDialog progressDialog;
 
-            try {
-                Thread thread=new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            client.Execute("post");
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog = ProgressDialog.show(getActivity(), "Refer Doctor", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        client.Execute("post");
+                        JSONArray ja = new JSONArray(client.getResponse());
+                        for (int i = 0; i < ja.length(); i++) {
+                            JSONObject object = ja.getJSONObject(i);
+
+                            if (object.has("flag")) {
+                                //Log.e("flag",object.getBoolean("flag")+"");
+                                showToast(object.getBoolean("flag"));
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
                     }
-                });
+                    return null;
+                }
 
-                thread.start();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            String response = client.getResponse();
-            Log.e("resp",response);
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    progressDialog.dismiss();
+                }
+            }.execute();
         }
 
 
     }
+
+    private void showToast(final boolean str) {
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                if (str) {
+                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
 }

@@ -37,4 +37,15 @@
     <string name="patient_age_error">Enter Petient Age</string>
     <string name="patient_proper_age_error">Enter Petient Proper Age</string>
     <string name="refer_error">Enter Refer Note</string>
+
+    <string name="select_lab">Select Lab</string>
+    <string name="select_lab_test">Select Lab Test</string>
+
+    <string name="select_diag">Select Diagnostic Center</string>
+    <string name="select_diag_test">Select Dignostic Test</string>
+    <string name="no_doctor">No Doctor Found</string>
+    <string name="no_lab_test">No Lab Test Found</string>
+    <string name="no_diag_test">No Diagnostic Test Found</string>
+    <string name="no_diag">Please Select Category First</string>
+    <string name="no_internet_msg">Please Check Your Internet Connection. Try Again Later.</string>
 </resources>

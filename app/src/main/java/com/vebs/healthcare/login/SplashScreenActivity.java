@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.UIUtil;
 
@@ -20,17 +21,20 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         // txtAppName.setTypeface(Functions.getBoldFont(this));
+        if(Function.isConnected(this)) {
+            Function.fetch_city(SplashScreenActivity.this);
+            new CountDownTimer(2500, 100) {
+                @Override
+                public void onTick(long l) {
 
-        new CountDownTimer(2500, 100) {
-            @Override
-            public void onTick(long l) {
+                }
 
-            }
-
-            @Override
-            public void onFinish() {
-
-                if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
+                @Override
+                public void onFinish() {
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+               /* if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
                     Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
                  //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -41,10 +45,26 @@ public class SplashScreenActivity extends AppCompatActivity {
                     //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 }
+*//* if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
+                    Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                 //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
 
-                finish();
-            }
-        }.start();
+                } else {
+                    //Functions.fireIntent(SplashScreenActivity.this, MainPageActivity.class);
+                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                    //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                }
+*/
+                    finish();
+                }
+            }.start();
+        }else
+        {
+            Function.showInternetPopup(this);
+        }
+
     }
 
     @Override

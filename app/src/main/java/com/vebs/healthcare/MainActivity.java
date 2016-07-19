@@ -28,6 +28,7 @@ import com.vebs.healthcare.fragment.ReferenceFragment;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.Prefs;
 import com.vebs.healthcare.utils.PrefsUtil;
+import com.vebs.healthcare.utils.RestClient;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -35,6 +36,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -51,28 +53,19 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private Toolbar toolbar;
-    InputStream is = null;
-    String line = null;
-    private JSONArray mainJSONArray;
-    private int cityWhich=0;
+    private int cityWhich = 0;
     private TextView txtCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         initToolbar();
-
         initUI();
-
-        if(Function.isConnected(this)) {
-            Function.fetch_city();
-        }
-
     }
 
     private void initUI() {
+        //Log.e("city",city_list.toString());
         tabLayout = (TabLayout) findViewById(R.id.tab_layout);
         viewPager = (ViewPager) findViewById(R.id.pager);
         setupViewPager(viewPager);
@@ -111,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(0);
     }
 
-
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -144,71 +136,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        callAPI();
-    }
 
-    private void callAPI() {
-        if (Function.isConnected(this)) {
 
-            new AsyncTask<Void, Void, Void>() {
-
-                StringBuilder sb = new StringBuilder();
-
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                   // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
-                        HttpClient httpClient = new DefaultHttpClient();
-                        HttpPost httpPost = new HttpPost(Function.CATEGORy_URL);
-                        HttpResponse response = httpClient.execute(httpPost);
-                        HttpEntity entity = response.getEntity();
-                        is = entity.getContent();
-
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"), 8);
-
-                        while ((line = reader.readLine()) != null) {
-                            sb.append(line + "\n");
-                        }
-
-                        is.close();
-
-                        String result = sb.toString();
-                        Log.e("result", result.toString());
-                        JSONArray ja = new JSONArray(result);
-                        setMainJSONArray(ja);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("Webservice 1", e.toString());
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                   // progressDialog.dismiss();
-                }
-            }.execute();
-        }
     }
 
     private void initToolbar() {
-        //rootView = findViewById(android.R.id.content);
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         if (toolbar != null) {
             toolbar.setTitle(null);
         }
 
         txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
-        if(!PrefsUtil.getCity(this).isEmpty())
-        {
+        if (!PrefsUtil.getCity(this).isEmpty()) {
             txtCity.setText(PrefsUtil.getCity(this));
         }
         txtCity.setOnClickListener(new View.OnClickListener() {
@@ -231,8 +170,9 @@ public class MainActivity extends AppCompatActivity {
                         cityWhich = which;
                         txtCity.setText(Function.city_list.get(which));
                         //cityId = Function.city_list_id.get(which);
-                        PrefsUtil.setCity(MainActivity.this,Function.city_list.get(which));
-                        PrefsUtil.setCityID(MainActivity.this,Function.city_list_id.get(which));
+                        Log.e("city",Function.city_list.get(which));
+                        PrefsUtil.setCity(MainActivity.this, Function.city_list.get(which));
+                        PrefsUtil.setCityID(MainActivity.this, Function.city_list_id.get(which));
                         return true;
                     }
                 })
@@ -244,11 +184,7 @@ public class MainActivity extends AppCompatActivity {
         dialog.setCancelable(true);
     }
 
-    public JSONArray getMainJSONArray() {
-        return mainJSONArray;
-    }
 
-    public void setMainJSONArray(JSONArray mainJSONArray) {
-        this.mainJSONArray = mainJSONArray;
-    }
+
+
 }

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/dimen_8dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -21,7 +22,10 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_4dp"
                 android:hint="Patient Name "
+                android:singleLine="true"
+                android:imeOptions="actionNext"
                 android:padding="@dimen/dimen_4dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -107,9 +111,10 @@
                 android:id="@+id/txtSelectLab"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_16dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
-                android:paddingLeft="@dimen/dimen_16dp"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
                 android:text="Select Lab"
                 android:textSize="@dimen/M_TEXT" />
 
@@ -117,9 +122,10 @@
                 android:id="@+id/txtSelectTest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_16dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
-                android:paddingLeft="@dimen/dimen_16dp"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
                 android:text="Select Test"
                 android:textSize="@dimen/M_TEXT" />
 
@@ -146,6 +152,7 @@
                     android:text="@string/center_collected" />
             </LinearLayout>
             <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtRefer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_8dp"

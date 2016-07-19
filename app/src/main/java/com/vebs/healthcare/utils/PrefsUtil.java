@@ -8,8 +8,8 @@ import android.content.Context;
 public class PrefsUtil {
 
     private static String Login = "Login";
-    private static String City = "City";
-    private static String City_id = "CityId";
+    private static String city = "City";
+    private static String city_id = "CityId";
 
 
     public static void setLogin(Context context, boolean isLogin) {
@@ -21,19 +21,19 @@ public class PrefsUtil {
     }
 
     public static void setCity(Context context, String City) {
-        Prefs.with(context).save(City, City);
+        Prefs.with(context).save(city, City);
     }
 
     public static String getCity(Context context) {
-        return Prefs.with(context).getString(City, "");
+        return Prefs.with(context).getString(city, "");
     }
 
-    public static void setCityID(Context context, int city_id) {
-        Prefs.with(context).save(City_id, city_id);
+    public static void setCityID(Context context, int cityid) {
+        Prefs.with(context).save(city_id, cityid);
     }
 
     public static int getCityID(Context context) {
-        return Prefs.with(context).getInt(City_id, 0);
+        return Prefs.with(context).getInt(city_id, 0);
     }
 
 }

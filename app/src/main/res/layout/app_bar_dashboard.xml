@@ -46,7 +46,7 @@
             android:layout_marginRight="@dimen/dimen_8dp"
             android:gravity="center"
             android:padding="@dimen/dimen_6dp"
-            android:text="Vadodara"
+            android:text="@string/select_city"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/L_TEXT" />
 

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/dimen_8dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -19,8 +20,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_4dp"
+                android:singleLine="true"
+                android:imeOptions="actionNext"
                 android:hint="Patient Name "
                 android:padding="@dimen/dimen_4dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -105,9 +109,10 @@
                 android:id="@+id/txtSelectCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_16dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
-                android:paddingLeft="@dimen/dimen_16dp"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
                 android:text="@string/select_category"
                 android:textSize="@dimen/M_TEXT" />
 
@@ -115,9 +120,10 @@
                 android:id="@+id/txtSelectDoctor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
+                android:layout_margin="@dimen/dimen_16dp"
                 android:drawableRight="@drawable/ic_arrow_drop_down"
-                android:paddingLeft="@dimen/dimen_16dp"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
                 android:text="@string/select_doctor"
                 android:textSize="@dimen/M_TEXT" />
 

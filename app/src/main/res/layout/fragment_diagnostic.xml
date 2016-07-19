@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="@dimen/dimen_8dp"
     android:orientation="vertical">
 
     <ScrollView
@@ -20,8 +21,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_4dp"
+                android:imeOptions="actionNext"
                 android:hint="Patient Name "
                 android:padding="@dimen/dimen_4dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -103,34 +106,38 @@
                     app:met_primaryColor="@color/blue" />
             </LinearLayout>
 
-            <Spinner
-                android:id="@+id/spnDiagCat"
+            <TextView
+                android:id="@+id/txtSelectCategory"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
-                android:entries="@array/cat_arrays"
-                android:prompt="@string/cat_prompt"
-                android:padding="@dimen/dimen_8dp">
+                android:layout_margin="@dimen/dimen_16dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
+                android:text="@string/select_category"
+                android:textSize="@dimen/M_TEXT" />
 
-            </Spinner>
-
-            <Spinner
-                android:id="@+id/spnDiagCenter"
+            <TextView
+                android:id="@+id/txtSelectDiagCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
-                android:padding="@dimen/dimen_8dp">
+                android:layout_margin="@dimen/dimen_16dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
+                android:text="@string/select_diag"
+                android:textSize="@dimen/M_TEXT" />
 
-            </Spinner>
-
-            <Spinner
-                android:id="@+id/spnDiagTest"
+            <TextView
+                android:id="@+id/txtSelectDiagTest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_8dp"
-                android:padding="@dimen/dimen_8dp">
-
-            </Spinner>
+                android:layout_margin="@dimen/dimen_16dp"
+                android:drawableRight="@drawable/ic_arrow_drop_down"
+                android:paddingLeft="@dimen/dimen_4dp"
+                android:paddingRight="@dimen/dimen_4dp"
+                android:text="@string/select_diag_test"
+                android:textSize="@dimen/M_TEXT" />
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtRefer"
