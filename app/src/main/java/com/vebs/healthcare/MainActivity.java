@@ -149,6 +149,9 @@ public class MainActivity extends AppCompatActivity {
         txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
         if (!PrefsUtil.getCity(this).isEmpty()) {
             txtCity.setText(PrefsUtil.getCity(this));
+        }else
+        {
+            showPopup();
         }
         txtCity.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_content"
@@ -11,69 +10,61 @@
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-        <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16dp"
+        app:cardCornerRadius="@dimen/dimen_4dp"
+        android:layout_gravity="center_horizontal|center"
+        app:cardElevation="@dimen/dimen_16dp">
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="@dimen/dimen_16dp"
-            app:cardCornerRadius="@dimen/dimen_4dp"
-            app:cardElevation="@dimen/dimen_16dp">
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+            android:orientation="vertical"
+            android:padding="@dimen/dimen_16dp">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="@dimen/splash_image_width"
+                android:layout_height="@dimen/splash_image_height"
+                android:src="@drawable/healthcare" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtEmail"
+                style="@style/MyEditTextStyle"
+                android:hint="@string/username"
+                app:met_baseColor="@color/blue"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/blue"
+                app:met_textColorHint="@color/edittext_hint_color" />
+
+            <com.rengwuxian.materialedittext.MaterialEditText
+                android:id="@+id/edtPassword"
+                style="@style/MyEditTextStyle"
+                android:hint="Password"
+                android:inputType="textPassword"
+                app:met_baseColor="@color/blue"
+                app:met_floatingLabel="highlight"
+                app:met_primaryColor="@color/blue"
+                app:met_textColorHint="@color/edittext_hint_color" />
+
+            <Button
+                android:id="@+id/btnLogin"
+                style="@style/MyFlatButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical|center"
+                android:layout_margin="@dimen/dimen_16dp"
+                android:background="@android:color/transparent"
+                android:padding="@dimen/dimen_4dp"
+                android:text="@string/login"
+                android:textSize="@dimen/N_TEXT" />
+
+        </LinearLayout>
 
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:orientation="vertical"
-                        android:padding="@dimen/dimen_16dp">
-
-                        <com.rengwuxian.materialedittext.MaterialEditText
-                            android:id="@+id/edtEmail"
-                            style="@style/MyEditTextStyle"
-                            android:hint="@string/username"
-                            app:met_baseColor="@color/blue"
-                            app:met_floatingLabel="highlight"
-                            app:met_primaryColor="@color/blue"
-                            app:met_textColorHint="@color/edittext_hint_color"
-                             />
-
-                        <com.rengwuxian.materialedittext.MaterialEditText
-                            android:id="@+id/edtPassword"
-                            style="@style/MyEditTextStyle"
-                            android:hint="Password"
-                            android:inputType="textPassword"
-                            app:met_baseColor="@color/blue"
-                            app:met_floatingLabel="highlight"
-                            app:met_primaryColor="@color/blue"
-                            app:met_textColorHint="@color/edittext_hint_color" />
-
-                        <Button
-                            android:id="@+id/btnLogin"
-                            style="@style/MyFlatButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_gravity="center_vertical|center"
-                            android:layout_margin="4dp"
-                            android:background="@android:color/transparent"
-                            android:padding="@dimen/dimen_4dp"
-                            android:text="@string/login"
-                            android:textSize="@dimen/N_TEXT" />
-
-                        <TextView
-                            android:id="@+id/txtForget"
-                            android:layout_gravity="center_vertical|center"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="@dimen/N_TEXT"
-                            android:textColor="@color/edittext_hint_color"
-                            android:text="@string/forget_pswd"/>
-
-                    </LinearLayout>
-
-            </ScrollView>
-
-        </android.support.v7.widget.CardView>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

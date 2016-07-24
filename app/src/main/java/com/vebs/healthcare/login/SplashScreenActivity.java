@@ -21,7 +21,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
         // txtAppName.setTypeface(Functions.getBoldFont(this));
-        if(Function.isConnected(this)) {
+        if (Function.isConnected(this)) {
             Function.fetch_city(SplashScreenActivity.this);
             new CountDownTimer(2500, 100) {
                 @Override
@@ -31,37 +31,23 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                 @Override
                 public void onFinish() {
-                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                    //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-               /* if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
-                    Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                 //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
 
-                } else {
-                    //Functions.fireIntent(SplashScreenActivity.this, MainPageActivity.class);
-                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                    //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-*//* if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
-                    Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-                 //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
+                    if (!PrefsUtil.getLogin(SplashScreenActivity.this)) {
+                        Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
+                        //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
 
-                } else {
-                    //Functions.fireIntent(SplashScreenActivity.this, MainPageActivity.class);
-                    Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
-                    //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                }
-*/
+                    } else {
+                        //Functions.fireIntent(SplashScreenActivity.this, MainPageActivity.class);
+                        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
+                        //   intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+
                     finish();
                 }
             }.start();
-        }else
-        {
+        } else {
             Function.showInternetPopup(this);
         }
 

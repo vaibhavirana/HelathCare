@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static com.vebs.healthcare.R.id.txtSelectDoctor;
+
 import static com.vebs.healthcare.R.id.txtSelectTest;
 
 public class DiagnosticFragment extends Fragment implements View.OnClickListener {

@@ -30,6 +30,7 @@
     </string-array>
 
     <string name="select_city">Select City</string>
+    <string name="select_city_first">Select City First</string>
     <string name="select_category">Select Category</string>
     <string name="select_doctor">Select Doctor</string>
     <string name="patient_error">Enter Petient Name</string>
@@ -48,4 +49,11 @@
     <string name="no_diag_test">No Diagnostic Test Found</string>
     <string name="no_diag">Please Select Category First</string>
     <string name="no_internet_msg">Please Check Your Internet Connection. Try Again Later.</string>
+    <string name="enter_valid_email">Enter Valid Username</string>
+    <string name="enter_valid_password">Enter Valid Password</string>
+    <string name="login_fail">Username And/Or Password is Incorrect. Please Enter Proper Data.</string>
+    <string name="alert_doctor_selection">Are you sure you want to select this doctor?</string>
+    <string name="doctor_already_selected">Doctor Alreay Selected</string>
+    <string name="alert_doctor_remove">Want to Remove Doctor Selection</string>
+    <string name="search_doctor">Search Doctor</string>
 </resources>

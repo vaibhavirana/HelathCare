@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/llDoctor"
+    android:layout_margin="@dimen/dimen_8dp"
+    android:background="@drawable/bg_round_rect"
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_8dp">
+
+    <TextView
+        android:id="@+id/txtDrName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Doctor Name: " />
+
+    <TextView
+        android:id="@+id/txtHospName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Hospital Name: " />
+
+    <TextView
+        android:id="@+id/txtMobileNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mobile Num: " />
+
+    <TextView
+        android:id="@+id/txtLandLineNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Landline Num: " />
+
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Email: " />
+
+    <TextView
+        android:id="@+id/txtAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Clinic Address: " />
+
+    <TextView
+        android:id="@+id/txtTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Timming: " />
+    <TextView
+        android:id="@+id/txtFees"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Fees: " />
+    <TextView
+        android:id="@+id/txtPatient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No of Patient: " />
+
+    <TextView
+        android:id="@+id/txtNote"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Note: " />
+</LinearLayout>

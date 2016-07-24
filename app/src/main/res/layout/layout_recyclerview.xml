@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <com.rengwuxian.materialedittext.MaterialEditText android:id="@+id/inputSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:paddingLeft="@dimen/dimen_4dp"
+        android:paddingRight="@dimen/dimen_4dp"
+        android:hint="@string/search_doctor"
+        android:singleLine="true"
+        app:met_baseColor="@color/blue"
+        app:met_floatingLabel="highlight"
+        app:met_primaryColor="@color/blue"/>
+
+    <com.vebs.healthcare.custom.EmptyLayout
+        android:id="@+id/emptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone">
+
+    </com.vebs.healthcare.custom.EmptyLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/RecyclerViewList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible">
+
+    </android.support.v7.widget.RecyclerView>
+</LinearLayout>

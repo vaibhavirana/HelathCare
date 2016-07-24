@@ -8,8 +8,45 @@ import android.content.Context;
 public class PrefsUtil {
 
     private static String Login = "Login";
+    private static String DrID = "Dr_id";
+    private static String cAddress = "clinicAddress";
+    private static String drName = "Dr_Name";
+    private static String mobiles = "Mobile";
     private static String city = "City";
     private static String city_id = "CityId";
+
+
+    public static String getMobiles(Context context) {
+        return mobiles;
+    }
+
+    public static void setMobiles(Context context,String Mobiles) {
+        Prefs.with(context).save(mobiles, Mobiles);
+    }
+
+    public static String getDrName(Context context) {
+        return Prefs.with(context).getString(drName, "");
+    }
+
+    public static void setDrName(Context context,String DrName) {
+        Prefs.with(context).save(drName, DrName);
+    }
+
+    public static String getcAddress(Context context) {
+        return Prefs.with(context).getString(cAddress, "");
+    }
+
+    public static void setcAddress(Context context,String cAddress) {
+        Prefs.with(context).save(cAddress, cAddress);
+    }
+
+    public static String getDrID(Context context) {
+        return Prefs.with(context).getString(DrID, "");
+    }
+
+    public static void setDrID(Context context,String drID) {
+        Prefs.with(context).save(DrID, drID);
+    }
 
 
     public static void setLogin(Context context, boolean isLogin) {

@@ -1,6 +1,7 @@
 package com.vebs.healthcare.fragment;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -10,11 +11,17 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -25,6 +32,8 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.adapter.DoctorAdapter;
+import com.vebs.healthcare.custom.EmptyLayout;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -36,6 +45,9 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
 
 public class DoctorFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
@@ -49,23 +61,19 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename and change types of parameters
 
     private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
-    private TextView txtDate, txtSelectCategory, txtSelectDoctor;
+    private EditText inputSearch;
+    private TextView txtDate, txtSelectCategory;
     private Button btnRefernce, btnEmergency;
     private RadioGroup rgGender;
+    private RecyclerView rvList;
+    private EmptyLayout emptyLayout;
+    private DoctorAdapter adapter;
     private String selectedGenderId, doctorname;
+    private ArrayList<HashMap<String,Object>> doc_list;
 
     public DoctorFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DoctorFragment.
-     */
     // TODO: Rename and change types and number of parameters
     public static DoctorFragment newInstance(String param1, String param2) {
         DoctorFragment fragment = new DoctorFragment();
@@ -98,21 +106,8 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
+           // Log.e("uid",PrefsUtil.getDrID(getActivity()));
             Function.fetch_category(getActivity());
-            /*new CountDownTimer(2000, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-                }
-
-                @Override
-                public void onFinish() {
-
-                   // Toast.makeText(getActivity(), "call_doctor", Toast.LENGTH_SHORT).show();
-                    Function.fetch_category(getActivity());
-                    //callApi();
-                }
-            }.start();*/
         }
     }
 
@@ -121,18 +116,25 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
 
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
-        txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
+        //txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
         edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
         edtPatientNo = (MaterialEditText) view.findViewById(R.id.edtPatientNo);
         edtAge = (MaterialEditText) view.findViewById(R.id.edtAge);
         edtRefer = (MaterialEditText) view.findViewById(R.id.edtRefer);
+
+        inputSearch = (EditText) view.findViewById(R.id.inputSearch);
+        rvList=(RecyclerView)view.findViewById(R.id.RecyclerViewList);
+        rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvList.setHasFixedSize(true);
+        emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
+        //setAdapter();
 
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
         btnEmergency = (Button) view.findViewById(R.id.btnEmergency);
         /*rdMale = (RadioButton) view.findViewById(R.id.rdMale);
         rdFemale = (RadioButton) view.findViewById(R.id.rdFemale);*/
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
-        selectedGenderId = "MALE";
+        selectedGenderId = Function.MALE;
 
 
         actionListener();
@@ -141,7 +143,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
-        txtSelectDoctor.setOnClickListener(this);
+       // txtSelectDoctor.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
         btnEmergency.setOnClickListener(this);
 
@@ -149,42 +151,81 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rdMale) {
-                    selectedGenderId = "MALE";
+                    selectedGenderId = Function.MALE;
 
                 } else {
-                    selectedGenderId = "FEMALE";
+                    selectedGenderId = Function.FEMALE;
                 }
             }
         });
+    }
+
+    private void setAdapter() {
+       // fetchDoctorList();
+        if(doc_list.size()>0) {
+            inputSearch.setVisibility(View.VISIBLE);
+            rvList.setVisibility(View.VISIBLE);
+            emptyLayout.setVisibility(View.GONE);
+            adapter = new DoctorAdapter(getActivity(), doc_list, new DoctorAdapter.OnclickListner() {
+                @Override
+                public void onItemClickListner(int position) {
+                    Log.e("selected doctor",position+"");
+                    if(position>=0) {
+                        inputSearch.setText(doc_list.get(position).get("name").toString());
+                        docId= (int) doc_list.get(position).get("id");
+                    }else
+                    {
+                        inputSearch.setText("");
+                        inputSearch.setError(getString(R.string.search_doctor));
+                    }
+                }
+            });
+            rvList.setAdapter(adapter);
+            addTextListener();
+
+        }else
+        {
+            rvList.setVisibility(View.GONE);
+            inputSearch.setVisibility(View.GONE);
+            emptyLayout.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtSelectCategory:
-                txtSelectDoctor.setText(this.getString(R.string.select_doctor));
-                new MaterialDialog.Builder(getActivity())
-                        .title(this.getString(R.string.select_category))
-                        .items(Function.cat_list)
-                        .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                dialog.dismiss();
-                                catWhich = which;
-                                txtSelectCategory.setText(Function.cat_list.get(which));
-                                catId = Function.cat_list_id.get(which);
-                                //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
-                                Function.fetch_doctor(getActivity(), catId);
-
-                                return true;
-                            }
-                        })
-                        .positiveText(android.R.string.ok)
-                        .show();
+                if (PrefsUtil.getCity(getActivity()).isEmpty()) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_city_first))
+                            .positiveText(android.R.string.ok)
+                            .show();
+                    //showPopup();
+                }else {
+                   // txtSelectDoctor.setText(this.getString(R.string.select_doctor));
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_category))
+                            .items(Function.cat_list)
+                            .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    dialog.dismiss();
+                                    catWhich = which;
+                                    txtSelectCategory.setText(Function.cat_list.get(which));
+                                    catId = Function.cat_list_id.get(which);
+                                    //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
+                                    fetch_doctor(getActivity(), catId);
+                                    //setAdapter();
+                                    return true;
+                                }
+                            })
+                            .positiveText(android.R.string.ok)
+                            .show();
+                }
                 break;
 
-            case R.id.txtSelectDoctor:
-                if (Function.doc_list.size() == 0) {
+            /*case R.id.txtSelectDoctor:
+                if (doc_list.size() == 0) {
 
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.no_doctor))
@@ -193,25 +234,11 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                     //txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
 
                 }else {
-                    new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.select_doctor))
-                            .items(Function.doc_list)
-                            .itemsCallbackSingleChoice(docWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    dialog.dismiss();
-                                    docWhich = which;
-                                    txtSelectDoctor.setText(Function.doc_list.get(which));
-                                    docId = Function.doc_list_id.get(which);
-                                    doctorname = Function.doc_list.get(which);
-                                    return true;
-                                }
-                            })
-                            .positiveText(android.R.string.ok)
-                            .show();
+                    Log.d("doc list",doc_list.toString());
+
                 }
 
-                break;
+                break;*/
 
             case R.id.btnRefernce:
                 validateData(0);
@@ -235,20 +262,20 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
         } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
             txtSelectCategory.setError(this.getString(R.string.select_category));
-        } else if (txtSelectDoctor.getText().equals(this.getString(R.string.select_doctor))) {
-            txtSelectDoctor.setError(this.getString(R.string.select_doctor));
+        } else if (inputSearch.getText().equals(this.getString(R.string.search_doctor))) {
+            inputSearch.setError(this.getString(R.string.search_doctor));
         } else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
         } else {
             // send data call referdoctor
             Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
-                    edtAge.getText() + " || " + selectedGenderId + " || " + txtSelectDoctor.getText() + " || " +
+                    edtAge.getText() + " || " + selectedGenderId + " || " +
                     txtSelectCategory.getText() + " || " +
-                    doctorname + " || " +
+                    docId + " || " +
                     txtDate.getText() + " || " + edtRefer.getText());
 
             final RestClient client = new RestClient(Function.REFER_DOCTOR_URL);
-            client.AddParam("user_id", String.valueOf(3));
+            client.AddParam("user_id", String.valueOf(PrefsUtil.getDrID(getActivity())));
             client.AddParam("patient_name", edtPatientName.getText().toString());
             client.AddParam("patient_mob_number", edtPatientNo.getText().toString());
             client.AddParam("gender", selectedGenderId);
@@ -256,7 +283,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             client.AddParam("date", txtDate.getText().toString());
             client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
-            client.AddParam("doctor_name", doctorname);
+            client.AddParam("doctor_name", String.valueOf(docId));
             client.AddParam("is_emergency", String.valueOf(flag));
             client.AddParam("refer_note", edtRefer.getText().toString());
             new AsyncTask<Void, Void, Void>() {
@@ -312,4 +339,110 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
     }
 
+    public  void fetch_doctor(final Context mContext, final int catId) {
+        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+        if (Function.isConnected(mContext)) {
+            final RestClient client = new RestClient(Function.DOCTOR_URL);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    doc_list= new ArrayList<>();
+                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Doctor", "Please wait...", false, false);
+                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        client.AddParam("catId", String.valueOf(catId));
+                        client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
+                        client.Execute("get");
+                        //Log.e("res")
+                        if (client.getResponse() != null) {
+                            JSONArray ja = new JSONArray(client.getResponse());
+                            JSONObject jo_doctor = null;
+                            for (int i = 0; i < ja.length(); i++) {
+
+                                JSONObject object = ja.getJSONObject(i);
+                                if (object.has("doctors")) {
+                                    jo_doctor = ja.getJSONObject(i).getJSONObject("doctors");
+                                    if (jo_doctor != null) {
+                                        HashMap<String, Object> doc = new HashMap<String, Object>();
+                                        doc.put("id", jo_doctor.getInt("id"));
+                                        doc.put("name", jo_doctor.getString("Doc Name"));
+                                        doc.put("email", jo_doctor.getString("email"));
+                                        doc.put("address", jo_doctor.getString("address"));
+                                        doc.put("hosp_name", jo_doctor.getString("Hospotal name"));
+                                        doc.put("mobile", jo_doctor.getString("mobile"));
+                                        doc.put("landline", jo_doctor.getString("LDLine Number"));
+                                        doc.put("time", jo_doctor.getString("time"));
+                                        doc.put("fees", jo_doctor.getString("fees"));
+                                        doc.put("offer", jo_doctor.getString("offere"));
+                                        doc_list.add(doc);
+                                    }
+                                }
+                            }
+                        }
+                        Log.e("doctor", doc_list.toString());
+
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    progressDialog[0].dismiss();
+                    setAdapter();
+                }
+            }.execute();
+
+        }
+        else
+        {
+            Function.showInternetPopup(mContext);
+        }
+    }
+
+    public void addTextListener(){
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+
+                final List<HashMap<String,Object>> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < doc_list.size(); i++) {
+
+                    //Log.e("Text input",query+"");
+                    final String text = doc_list.get(i).get("name").toString().toLowerCase();
+                    if (text.contains(query)) {
+
+                        filteredList.add(doc_list.get(i));
+                    }
+                }
+
+                //adapter = new DoctorAdapter(filteredList, MainActivity.this);
+                rvList.setAdapter(adapter);
+                adapter = new DoctorAdapter(getActivity(), doc_list, new DoctorAdapter.OnclickListner() {
+                    @Override
+                    public void onItemClickListner(int position) {
+
+                    }
+                });
+                adapter.notifyDataSetChanged();  // data set changed
+            }
+        });
+    }
 }
