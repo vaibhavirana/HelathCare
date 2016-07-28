@@ -13,7 +13,7 @@
     </style>
 
     <style name="MyFlatButtonStyle" parent="android:Widget.Button">
-        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Borderless</item>
+        <item name="android:buttonStyle">@style/Widget.AppCompat.Button.Colored</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_height">wrap_content</item>
@@ -21,6 +21,7 @@
         <item name="android:layout_gravity">right</item>
         <item name="android:textSize">@dimen/M_TEXT</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:background">@color/color_light_green</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:padding">12dp</item>
 

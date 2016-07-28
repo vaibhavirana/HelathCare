@@ -61,12 +61,12 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorHold
         holder.txtTime.setText("Time : "+doctor.get("time").toString());
         holder.txtFees.setText("Fees : "+doctor.get("fees").toString());
         holder.txtPatient.setText("No of Patients : "+doctor.get("offer"));
-        //holder.txtNote.setText(doctor.get(""));
+        holder.txtNote.setText("Note : "+doctor.get("note"));
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(position==selectedPos && isSelected)
+                if(position==selectedPos)
                 {
                     new MaterialDialog.Builder(context)
                             .title(context.getString(R.string.alert_doctor_remove))

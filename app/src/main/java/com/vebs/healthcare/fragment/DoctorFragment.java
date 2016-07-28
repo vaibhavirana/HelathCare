@@ -70,6 +70,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private DoctorAdapter adapter;
     private String selectedGenderId, doctorname;
     private ArrayList<HashMap<String,Object>> doc_list;
+    private String date;
 
     public DoctorFragment() {
         // Required empty public constructor
@@ -112,8 +113,10 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     }
 
     private void init(View view) {
+        date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
         txtDate = (TextView) view.findViewById(R.id.txtDate);
-        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
+        txtDate.setText(date);
 
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
         //txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
@@ -272,7 +275,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                     edtAge.getText() + " || " + selectedGenderId + " || " +
                     txtSelectCategory.getText() + " || " +
                     docId + " || " +
-                    txtDate.getText() + " || " + edtRefer.getText());
+                    date + " || " + edtRefer.getText());
 
             final RestClient client = new RestClient(Function.REFER_DOCTOR_URL);
             client.AddParam("user_id", String.valueOf(PrefsUtil.getDrID(getActivity())));
@@ -280,7 +283,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             client.AddParam("patient_mob_number", edtPatientNo.getText().toString());
             client.AddParam("gender", selectedGenderId);
             client.AddParam("age", edtAge.getText().toString());
-            client.AddParam("date", txtDate.getText().toString());
+            client.AddParam("date", date);
             client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
             client.AddParam("doctor_name", String.valueOf(docId));
@@ -379,6 +382,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                                         doc.put("time", jo_doctor.getString("time"));
                                         doc.put("fees", jo_doctor.getString("fees"));
                                         doc.put("offer", jo_doctor.getString("offere"));
+                                        doc.put("note", jo_doctor.getString("note"));
                                         doc_list.add(doc);
                                     }
                                 }

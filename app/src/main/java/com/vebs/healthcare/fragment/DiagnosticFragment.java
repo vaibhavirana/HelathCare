@@ -34,9 +34,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
-import static com.vebs.healthcare.R.id.txtSelectTest;
-
 public class DiagnosticFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -58,6 +55,9 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     private int diagWhich=0,diagId=0;
     private String diagTest;
     private Integer[] testWhich = null;
+    private View layoutLabDetail;
+    private String date;
+
     public DiagnosticFragment() {
         // Required empty public constructor
     }
@@ -97,28 +97,15 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            Function.fetch_category(getActivity());
-            /*new CountDownTimer(2000, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-
-                }
-
-                @Override
-                public void onFinish() {
-
-                    // Toast.makeText(getActivity(), "call_doctor", Toast.LENGTH_SHORT).show();
-                    Function.fetch_category(getActivity());
-                   // Function.fetch_diag(getActivity());
-                    //callApi();
-                }
-            }.start();*/
+            Function.fetch_diag_category(getActivity());
         }
     }
 
     private void init(View view) {
+        date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+
         txtDate=(TextView) view.findViewById(R.id.txtDate);
-        txtDate.setText(new SimpleDateFormat("EE, MM-dd-yyyy").format(new Date()));
+        txtDate.setText(date);
 
         edtPatientName= (MaterialEditText) view.findViewById(R.id.edtPatientName);
         edtPatientNo=(MaterialEditText) view.findViewById(R.id.edtPatientNo);
@@ -126,30 +113,31 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         edtRefer=(MaterialEditText) view.findViewById(R.id.edtRefer);
 
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
-        txtSelectDiagCenter = (TextView) view.findViewById(R.id.txtSelectDiagCenter);
-        txtSelectDiagTest = (TextView) view.findViewById(R.id.txtSelectDiagTest);
+        layoutLabDetail = (View) view.findViewById(R.id.layoutLabDetail);
+
+       /* txtSelectDiagCenter = (TextView) view.findViewById(R.id.txtSelectDiagCenter);
+        txtSelectDiagTest = (TextView) view.findViewById(R.id.txtSelectDiagTest);*/
 
         btnRefernce=(Button)view.findViewById(R.id.btnRefernce);
         rgGender= (RadioGroup) view.findViewById(R.id.rgGender);
-        selectedGenderId = "MALE";
+        selectedGenderId = Function.MALE;
 
         actionListener();
     }
 
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
-        txtSelectDiagCenter.setOnClickListener(this);
+        //txtSelectDiagCenter.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
-        txtSelectDiagTest.setOnClickListener(this);
+        //txtSelectDiagTest.setOnClickListener(this);
 
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.rdMale) {
-                    selectedGenderId = "MALE";
-
+                    selectedGenderId = Function.MALE;
                 } else {
-                    selectedGenderId = "FEMALE";
+                    selectedGenderId = Function.FEMALE;
                 }
             }
         });
@@ -159,28 +147,37 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.txtSelectCategory:
-                txtSelectDiagTest.setText(this.getString(R.string.select_diag_test));
-                txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
-                new MaterialDialog.Builder(getActivity())
-                        .title(this.getString(R.string.select_category))
-                        .items(Function.cat_list)
-                        .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                dialog.dismiss();
-                                catWhich = which;
-                                txtSelectCategory.setText(Function.cat_list.get(which));
-                                catId = Function.cat_list_id.get(which);
-                                //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
-                                Function.fetch_diag(getActivity());
-                                return true;
-                            }
-                        })
-                        .positiveText(android.R.string.ok)
-                        .show();
+                if (PrefsUtil.getCity(getActivity()).isEmpty()) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_city_first))
+                            .positiveText(android.R.string.ok)
+                            .show();
+                    //showPopup();
+                } else {
+
+                    //txtSelectDiagTest.setText(this.getString(R.string.select_diag_test));
+                    //txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_category))
+                            .items(Function.diag_cat_list)
+                            .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    dialog.dismiss();
+                                    catWhich = which;
+                                    txtSelectCategory.setText(Function.diag_cat_list.get(which));
+                                    catId = Function.diag_cat_list_id.get(which);
+                                    //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
+                                    // Function.fetch_diag(getActivity());
+                                    return true;
+                                }
+                            })
+                            .positiveText(android.R.string.ok)
+                            .show();
+                }
                 break;
 
-            case R.id.txtSelectDiagCenter:
+           /* case R.id.txtSelectDiagCenter:
                 if(Function.diag_list.size()==0)
                 {
                     new MaterialDialog.Builder(getActivity())
@@ -241,7 +238,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                             .positiveText(android.R.string.ok)
                             .show();
                 }
-                break;
+                break;*/
 
             case R.id.btnRefernce:
                 validateData();
@@ -262,27 +259,27 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
         } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
             txtSelectCategory.setError(this.getString(R.string.select_category));
-        } else if (txtSelectDiagCenter.getText().equals(this.getString(R.string.select_diag))) {
+        } /*else if (txtSelectDiagCenter.getText().equals(this.getString(R.string.select_diag))) {
             txtSelectDiagCenter.setError(this.getString(R.string.select_diag));
         } else if (txtSelectDiagTest.getText().equals(this.getString(R.string.select_diag_test))) {
             txtSelectDiagTest.setError(this.getString(R.string.select_diag_test));
-        } else if (edtRefer.length() == 0) {
+        } */else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
         } else {
             // send data call referdoctor
             Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
-                    edtAge.getText() + " || " + selectedGenderId + " || " + txtSelectDiagCenter.getText() + " || " +
+                    edtAge.getText() + " || " + selectedGenderId + " || " + "" + " || " +
                     txtSelectCategory.getText() + " || " +
                     diagTest + " || " +
-                    txtDate.getText() + " || " + edtRefer.getText());
+                    date + " || " + edtRefer.getText());
 
-            final RestClient client = new RestClient(Function.REFER_DIAG_URL);
+           /* final RestClient client = new RestClient(Function.REFER_DIAG_URL);
             client.AddParam("user_id", String.valueOf(3));
             client.AddParam("patient_name", edtPatientName.getText().toString());
             client.AddParam("patient_mob_number", edtPatientNo.getText().toString());
             client.AddParam("gender", selectedGenderId);
             client.AddParam("age", edtAge.getText().toString());
-            client.AddParam("date", txtDate.getText().toString());
+            client.AddParam("date", date);
             client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
             client.AddParam("diagnostic_center_id", String.valueOf(diagId));
@@ -322,7 +319,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                     progressDialog.dismiss();
                 }
             }.execute();
-        }
+*/        }
 
 
     }

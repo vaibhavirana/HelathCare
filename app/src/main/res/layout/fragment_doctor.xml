@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/dimen_8dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/dimen_8dp">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -20,11 +20,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dimen_4dp"
-                android:singleLine="true"
-                android:imeOptions="actionNext"
-                android:hint="Patient Name "
-                android:padding="@dimen/dimen_4dp"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                android:hint="Patient Name "
+                android:imeOptions="actionNext"
+                android:padding="@dimen/dimen_4dp"
+                android:singleLine="true"
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -127,9 +127,9 @@
                 android:text="@string/select_doctor"
                 android:textSize="@dimen/M_TEXT" />-->
 
-           <include
-               android:id="@+id/layoutRV"
-               layout="@layout/layout_recyclerview"></include>
+            <include
+                android:id="@+id/layoutRV"
+                layout="@layout/layout_recyclerview"></include>
 
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtRefer"
@@ -157,17 +157,22 @@
                     android:id="@+id/btnRefernce"
                     style="@style/MyFlatButtonStyle"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"
+                    android:background="@color/color_light_green"
                     android:text="@string/reference" />
 
                 <Button
                     android:id="@+id/btnEmergency"
                     style="@style/MyFlatButtonStyle"
                     android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/dimen_8dp"
+                    android:layout_marginRight="@dimen/dimen_8dp"
                     android:layout_weight="1"
-                    android:background="@android:color/transparent"
-                    android:text="@string/emergengy" />
+                    android:background="@android:color/holo_red_light"
+                    android:text="@string/emergengy"
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
