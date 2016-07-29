@@ -298,8 +298,6 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 protected void onPreExecute() {
                     super.onPreExecute();
                     lab_test_detail = new ArrayList<>();
-                    // lab_test_price = new ArrayList<>();
-                    //lab_test_type = new ArrayList<>();
                     progressDialog[0] = ProgressDialog.show(mContext, "Fetching Lab Test", "Please wait...", false, false);
                     // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
                 }

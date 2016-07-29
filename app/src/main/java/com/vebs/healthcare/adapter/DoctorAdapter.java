@@ -66,60 +66,94 @@ public class DoctorAdapter extends RecyclerView.Adapter<DoctorAdapter.DoctorHold
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(position==selectedPos)
+                if(doctorList.size()==1)
                 {
-                    new MaterialDialog.Builder(context)
-                            .title(context.getString(R.string.alert_doctor_remove))
-                            .positiveText(android.R.string.yes)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    isSelected=false;
-                                    selectedPos=-1;
+                    if (!isSelected && position != selectedPos) {
+                        new MaterialDialog.Builder(context)
+                                .title(context.getString(R.string.alert_doctor_selection))
+                                .positiveText(android.R.string.yes)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect_fill));
+                                       // holder.llDoctor.setBackgroundResource(R.drawable.bg_round_rect_fill);
+                                       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                                            holder.llDoctor.setBackgroundResource(context.getResources().getDrawable(R.drawable.bg_round_rect_fill));
+                                        }else
+                                        {
+                                            holder.llDoctor.setBackgroundResource(context.getResources((R.drawable.bg_round_rect_fill);
+                                        }*/
+                                        isSelected = true;
+                                        selectedPos = position;
+                                        listner.onItemClickListner(selectedPos);
 
-                                    holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect));
-                                    listner.onItemClickListner(selectedPos);
-                                }
-                            })
-                            .negativeText(android.R.string.no)
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                }
-                else if(!isSelected && position!=selectedPos) {
-                    new MaterialDialog.Builder(context)
-                            .title(context.getString(R.string.alert_doctor_selection))
-                            .positiveText(android.R.string.yes)
-                            .onPositive(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect_fill));
-                                    isSelected=true;
-                                    selectedPos=position;
+                                    }
+                                })
+                                .negativeText(android.R.string.no)
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        new MaterialDialog.Builder(context)
+                                .title(context.getString(R.string.doctor_already_selected))
+                                .positiveText(android.R.string.ok)
+                                .show();
+                    }
+                }else {
+                    if (position == selectedPos) {
+                        new MaterialDialog.Builder(context)
+                                .title(context.getString(R.string.alert_doctor_remove))
+                                .positiveText(android.R.string.yes)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        isSelected = false;
+                                        selectedPos = -1;
 
-                                    listner.onItemClickListner(selectedPos);
+                                        holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect));
+                                        listner.onItemClickListner(selectedPos);
+                                    }
+                                })
+                                .negativeText(android.R.string.no)
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else if (!isSelected && position != selectedPos) {
+                        new MaterialDialog.Builder(context)
+                                .title(context.getString(R.string.alert_doctor_selection))
+                                .positiveText(android.R.string.yes)
+                                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect_fill));
+                                        isSelected = true;
+                                        selectedPos = position;
+                                        listner.onItemClickListner(selectedPos);
 
-                                }
-                            })
-                            .negativeText(android.R.string.no)
-                            .onNegative(new MaterialDialog.SingleButtonCallback() {
-                                @Override
-                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .show();
-                }
-                else
-                {
-                    new MaterialDialog.Builder(context)
-                            .title(context.getString(R.string.doctor_already_selected))
-                            .positiveText(android.R.string.ok)
-                            .show();
+                                    }
+                                })
+                                .negativeText(android.R.string.no)
+                                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    } else {
+                        new MaterialDialog.Builder(context)
+                                .title(context.getString(R.string.doctor_already_selected))
+                                .positiveText(android.R.string.ok)
+                                .show();
+                    }
                 }
                 //holder.llDoctor.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.bg_round_rect_fill));
             }

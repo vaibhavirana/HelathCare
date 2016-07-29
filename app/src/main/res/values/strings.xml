@@ -47,7 +47,7 @@
     <string name="no_doctor">No Doctor Found</string>
     <string name="no_lab_test">No Lab Test Found</string>
     <string name="no_diag_test">No Diagnostic Test Found</string>
-    <string name="no_diag">Please Select Category First</string>
+    <string name="no_diag">No Diagnostic Center Found</string>
     <string name="no_internet_msg">Please Check Your Internet Connection. Try Again Later.</string>
     <string name="enter_valid_email">Enter Valid Username</string>
     <string name="enter_valid_password">Enter Valid Password</string>

@@ -116,7 +116,7 @@
                 android:text="@string/select_category"
                 android:textSize="@dimen/M_TEXT" />
 
-           <!-- <TextView
+           <TextView
                 android:id="@+id/txtSelectDiagCenter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -127,7 +127,7 @@
                 android:text="@string/select_diag"
                 android:textSize="@dimen/M_TEXT" />
 
-            <TextView
+            <!-- <TextView
                 android:id="@+id/txtSelectDiagTest"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

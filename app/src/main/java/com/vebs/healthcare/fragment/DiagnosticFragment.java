@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -31,7 +32,9 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class DiagnosticFragment extends Fragment implements View.OnClickListener {
@@ -45,18 +48,19 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     private String mParam2;
 
 
-    private MaterialEditText edtPatientName,edtPatientNo,edtAge,edtRefer;
+    private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
     private TextView txtDate;
     private Button btnRefernce;
     private RadioGroup rgGender;
-    private TextView txtSelectCategory,txtSelectDiagCenter,txtSelectDiagTest;
-    private String selectedGenderId,doctorname;
+    private TextView txtSelectCategory, txtSelectDiagCenter, txtSelectDiagTest;
+    private String selectedGenderId, doctorname;
     private int catWhich = 0, catId = 0;
-    private int diagWhich=0,diagId=0;
+    private int diagWhich = 0, diagId = 0;
     private String diagTest;
     private Integer[] testWhich = null;
-    private View layoutLabDetail;
+    private View layoutDiagDetail;
     private String date;
+    private ArrayList<HashMap<String, Object>> diag_test_detail;
 
     public DiagnosticFragment() {
         // Required empty public constructor
@@ -85,10 +89,10 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_diagnostic, container, false);
+        View view = inflater.inflate(R.layout.fragment_diagnostic, container, false);
         init(view);
         return view;
-       // return inflater.inflate(R.layout.fragment_diagnostic, container, false);
+        // return inflater.inflate(R.layout.fragment_diagnostic, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -104,22 +108,22 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     private void init(View view) {
         date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
-        txtDate=(TextView) view.findViewById(R.id.txtDate);
+        txtDate = (TextView) view.findViewById(R.id.txtDate);
         txtDate.setText(date);
 
-        edtPatientName= (MaterialEditText) view.findViewById(R.id.edtPatientName);
-        edtPatientNo=(MaterialEditText) view.findViewById(R.id.edtPatientNo);
-        edtAge=(MaterialEditText) view.findViewById(R.id.edtAge);
-        edtRefer=(MaterialEditText) view.findViewById(R.id.edtRefer);
+        edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
+        edtPatientNo = (MaterialEditText) view.findViewById(R.id.edtPatientNo);
+        edtAge = (MaterialEditText) view.findViewById(R.id.edtAge);
+        edtRefer = (MaterialEditText) view.findViewById(R.id.edtRefer);
 
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
-        layoutLabDetail = (View) view.findViewById(R.id.layoutLabDetail);
+        layoutDiagDetail = (View) view.findViewById(R.id.layoutDiagDetail);
 
-       /* txtSelectDiagCenter = (TextView) view.findViewById(R.id.txtSelectDiagCenter);
-        txtSelectDiagTest = (TextView) view.findViewById(R.id.txtSelectDiagTest);*/
+        txtSelectDiagCenter = (TextView) view.findViewById(R.id.txtSelectDiagCenter);
+       /* txtSelectDiagTest = (TextView) view.findViewById(R.id.txtSelectDiagTest);*/
 
-        btnRefernce=(Button)view.findViewById(R.id.btnRefernce);
-        rgGender= (RadioGroup) view.findViewById(R.id.rgGender);
+        btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
+        rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = Function.MALE;
 
         actionListener();
@@ -127,7 +131,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
 
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
-        //txtSelectDiagCenter.setOnClickListener(this);
+        txtSelectDiagCenter.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
         //txtSelectDiagTest.setOnClickListener(this);
 
@@ -156,7 +160,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 } else {
 
                     //txtSelectDiagTest.setText(this.getString(R.string.select_diag_test));
-                    //txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
+                    txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_category))
                             .items(Function.diag_cat_list)
@@ -168,7 +172,8 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                                     txtSelectCategory.setText(Function.diag_cat_list.get(which));
                                     catId = Function.diag_cat_list_id.get(which);
                                     //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
-                                    // Function.fetch_diag(getActivity());
+                                    layoutDiagDetail.setVisibility(View.GONE);
+                                    Function.fetch_diag(getActivity(), catId);
                                     return true;
                                 }
                             })
@@ -177,14 +182,13 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 }
                 break;
 
-           /* case R.id.txtSelectDiagCenter:
-                if(Function.diag_list.size()==0)
-                {
+            case R.id.txtSelectDiagCenter:
+                if (Function.diag_list.size() == 0) {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.no_diag))
                             .positiveText(android.R.string.ok)
                             .show();
-                }else {
+                } else {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_diag))
                             .items(Function.diag_list)
@@ -195,7 +199,8 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                                     dialog.dismiss();
                                     txtSelectDiagCenter.setText(Function.diag_list.get(which));
                                     diagId = Function.diag_list_id.get(which);
-                                    Function.fetch_diag_test(getActivity(), diagId);
+                                    fetch_diag_detail(getActivity(), diagId);
+                                    // Function.fetch_diag_test(getActivity(), diagId);
                                     // doctorname=Function.doc_list.get(which);
                                     return true;
                                 }
@@ -205,7 +210,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 }
                 break;
 
-            case R.id.txtSelectDiagTest:
+            /*case R.id.txtSelectDiagTest:
                 if(Function.diag_test_list.size()==0)
                 { new MaterialDialog.Builder(getActivity())
                         .title(this.getString(R.string.no_diag_test))
@@ -259,22 +264,21 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
         } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
             txtSelectCategory.setError(this.getString(R.string.select_category));
-        } /*else if (txtSelectDiagCenter.getText().equals(this.getString(R.string.select_diag))) {
+        } else if (txtSelectDiagCenter.getText().equals(this.getString(R.string.select_diag))) {
             txtSelectDiagCenter.setError(this.getString(R.string.select_diag));
-        } else if (txtSelectDiagTest.getText().equals(this.getString(R.string.select_diag_test))) {
-            txtSelectDiagTest.setError(this.getString(R.string.select_diag_test));
-        } */else if (edtRefer.length() == 0) {
+        } else if (txtSelectTest.getText().equals(this.getString(R.string.select_diag_test))) {
+            txtSelectTest.setError(this.getString(R.string.select_diag_test));
+        } else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
         } else {
             // send data call referdoctor
-            Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
-                    edtAge.getText() + " || " + selectedGenderId + " || " + "" + " || " +
+           /* Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
+                    edtAge.getText() + " || " + selectedGenderId + " || " + test + " || " + diagId +" || "+
                     txtSelectCategory.getText() + " || " +
-                    diagTest + " || " +
-                    date + " || " + edtRefer.getText());
+                    date + " || " + edtRefer.getText());*/
 
-           /* final RestClient client = new RestClient(Function.REFER_DIAG_URL);
-            client.AddParam("user_id", String.valueOf(3));
+            final RestClient client = new RestClient(Function.REFER_DIAG_URL);
+            client.AddParam("user_id", PrefsUtil.getDrID(getActivity()));
             client.AddParam("patient_name", edtPatientName.getText().toString());
             client.AddParam("patient_mob_number", edtPatientNo.getText().toString());
             client.AddParam("gender", selectedGenderId);
@@ -283,7 +287,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
             client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
             client.AddParam("diagnostic_center_id", String.valueOf(diagId));
-            client.AddParam("diagnostic_test_name", diagTest);
+            client.AddParam("diagnostic_test_name", test);
             client.AddParam("refer_note", edtRefer.getText().toString());
             new AsyncTask<Void, Void, Void>() {
                 public ProgressDialog progressDialog;
@@ -313,13 +317,14 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                     }
                     return null;
                 }
+
                 @Override
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     progressDialog.dismiss();
                 }
             }.execute();
-*/        }
+        }
 
 
     }
@@ -327,10 +332,9 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     private void showToast(final boolean str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                if(str)
-                {
+                if (str) {
                     Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
-                }else
+                } else
                     Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();
 
             }
@@ -338,4 +342,174 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
 
     }
 
+    public void fetch_diag_detail(final Context mContext, final int diagId) {
+        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+        if (Function.isConnected(mContext)) {
+            final RestClient client = new RestClient(Function.DIAG_TEST_URL);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    diag_test_detail = new ArrayList<>();
+                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Diagnostic Center Detail", "Please wait...", false, false);
+                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        client.AddParam("id", String.valueOf(diagId));
+                        client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
+                        client.Execute("get");
+                        //Log.e("res")
+                        JSONArray ja = new JSONArray(client.getResponse());
+                        JSONObject jo_test = null;
+                        for (int i = 0; i < ja.length(); i++) {
+
+                            JSONObject object = ja.getJSONObject(i);
+                            if (object.has("diagnostics")) {
+                                jo_test = ja.getJSONObject(i).getJSONObject("diagnostics");
+                                if (jo_test != null) {
+                                    HashMap<String, Object> doc = new HashMap<String, Object>();
+                                    doc.put("id", jo_test.getInt("diagId"));
+                                    doc.put("diagName", jo_test.getString("diagName"));
+                                    doc.put("drname", jo_test.getString("drName"));
+                                    doc.put("email", jo_test.getString("email"));
+                                    doc.put("address", jo_test.getString("address"));
+                                    doc.put("mobile", jo_test.getString("mobile"));
+                                    doc.put("landline", jo_test.getString("ldNumber"));
+                                    doc.put("time", jo_test.getString("time"));
+                                    doc.put("test", jo_test.getString("test"));
+                                    doc.put("price", jo_test.getString("price"));
+                                    //doc.put("ctype", jo_test.getString("ctype"));
+                                    doc.put("offer", jo_test.getString("offere"));
+                                    doc.put("note", jo_test.getString("note"));
+                                    diag_test_detail.add(doc);
+
+
+                                }
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    progressDialog[0].dismiss();
+                    setAdapter();
+                }
+            }.execute();
+
+        } else {
+            Function.showInternetPopup(mContext);
+        }
+    }
+
+    private void setAdapter() {
+        // fetchDoctorList();
+        if (diag_test_detail.size() > 0) {
+            // inputSearch.setVisibility(View.GONE);
+            layoutDiagDetail.setVisibility(View.VISIBLE);
+            setLabLayout();
+
+        } else {
+            layoutDiagDetail.setVisibility(View.GONE);
+        }
+    }
+
+    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtFees, txtPatient, txtNote, txtSelectTest, txtSelectTestPrice;
+    LinearLayout llLab;
+    public String test = "";
+
+    private void setLabLayout() {
+        // View v=LayoutInflater.from(getActivity()).
+        llLab = (LinearLayout) layoutDiagDetail.findViewById(R.id.llLab);
+        //llTestList=(LinearLayout)layoutDiagDetail.findViewById(R.id.llTestList);
+        txtLabName = (TextView) layoutDiagDetail.findViewById(R.id.txtLabName);
+        txtDrName = (TextView) layoutDiagDetail.findViewById(R.id.txtDrName);
+        //txtHospName = (TextView) layoutDiagDetail.findViewById(R.id.txtHospName);
+        txtEmail = (TextView) layoutDiagDetail.findViewById(R.id.txtEmail);
+        txtMobileNo = (TextView) layoutDiagDetail.findViewById(R.id.txtMobileNo);
+        txtLandLineNo = (TextView) layoutDiagDetail.findViewById(R.id.txtLandLineNo);
+        txtAddress = (TextView) layoutDiagDetail.findViewById(R.id.txtAddress);
+        txtTime = (TextView) layoutDiagDetail.findViewById(R.id.txtTime);
+        txtFees = (TextView) layoutDiagDetail.findViewById(R.id.txtFees);
+        txtPatient = (TextView) layoutDiagDetail.findViewById(R.id.txtPatient);
+        txtNote = (TextView) layoutDiagDetail.findViewById(R.id.txtNote);
+        txtSelectTest = (TextView) layoutDiagDetail.findViewById(R.id.txtSelectTest);
+        txtSelectTestPrice = (TextView) layoutDiagDetail.findViewById(R.id.txtSelectTestPrice);
+        txtSelectTestPrice.setVisibility(View.GONE);
+        txtSelectTestPrice.setText("");
+
+        txtSelectTest.setText(getString(R.string.select_diag_test));
+
+        HashMap<String, Object> labDetail = diag_test_detail.get(0);
+
+        txtLabName.setText("Diagnostic Name : " + labDetail.get("diagName").toString());
+        txtDrName.setText("Doctor Name : " + labDetail.get("drname").toString());
+        txtEmail.setText("Doctor Email Id : " + labDetail.get("email").toString());
+        txtMobileNo.setText("Mobile No. : " + labDetail.get("mobile").toString());
+        txtLandLineNo.setText("Landline No. : " + labDetail.get("landline").toString());
+        txtAddress.setText("Address : " + labDetail.get("address").toString());
+        txtTime.setText("Time : " + labDetail.get("time").toString());
+        txtPatient.setText("No of Patients : " + labDetail.get("offer"));
+        txtNote.setText("Note : " + labDetail.get("note"));
+
+        List<String> lab_test = new ArrayList<>();
+        testWhich = null;
+
+        //Log.e("lab test", lab_test_detail.get(0).get("test").toString());
+        String str = diag_test_detail.get(0).get("test").toString();
+        String str1 = diag_test_detail.get(0).get("price").toString();
+        lab_test = Arrays.asList(str.split(","));
+        final List<String> lab_price = Arrays.asList(str1.split(","));
+
+        final List<String> finalLab_test = lab_test;
+        txtSelectTest.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                final StringBuilder sb = new StringBuilder();
+                final StringBuilder sb1 = new StringBuilder();
+                new MaterialDialog.Builder(getActivity())
+                        .title(getActivity().getString(R.string.select_lab_test))
+                        .items(finalLab_test)
+                        .itemsCallbackMultiChoice(testWhich, new MaterialDialog.ListCallbackMultiChoice() {
+                            @Override
+                            public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
+                                if (text.length > 0) {
+                                    txtSelectTestPrice.setVisibility(View.VISIBLE);
+                                    txtSelectTestPrice.setText("Test Selected");
+                                    for (int i = 0; i < text.length; i++) {
+                                        sb.append(text[i]).append(", ");
+
+                                        testWhich = which;
+                                        int pos = finalLab_test.indexOf(text[i]);
+                                        Log.e("selected", text[i].toString() + " " + pos);
+                                        sb1.append(text[i] + " ==> " + lab_price.get(pos)).append("\n");
+                                        test = sb.toString().substring(0, sb.toString().length() - 2);
+                                        txtSelectTest.setText(sb.toString().substring(0, sb.toString().length() - 2));
+                                        txtSelectTestPrice.setText(sb1.toString().substring(0, sb1.toString().length() - 1));
+                                    }
+                                } else {
+                                    testWhich = null;
+                                    txtSelectTest.setText(getString(R.string.select_lab_test));
+                                    txtSelectTestPrice.setText("");
+                                    txtSelectTestPrice.setVisibility(View.GONE);
+                                }
+                                return false;
+                            }
+                        })
+                        .positiveText(android.R.string.ok)
+
+                        .show();
+            }
+        });
+
+    }
 }

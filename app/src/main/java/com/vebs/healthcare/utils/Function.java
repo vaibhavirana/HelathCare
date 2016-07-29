@@ -46,7 +46,8 @@ public class Function {
     public static final String LAB_TEST_URL = ROOT_URL + "fetch_plab.php";
     public static final String DIAG_CATEGORY_URL = ROOT_URL + "fetch_diag.php";
     public static final String DIAG_URL = ROOT_URL + "fetch_diagnostic.php";
-    public static final String DIAG_TEST_URL = ROOT_URL + "fetch_diagnostic_test.php";
+    public static final String DIAG_TEST_URL = ROOT_URL + "fetch_pdiag.php";
+    //public static final String DIAG_TEST_URL = ROOT_URL + "fetch_diagnostic_test.php";
     public static final String REFER_DOCTOR_URL = ROOT_URL + "refer_doctor.php";
     public static final String REFER_LAB_URL = ROOT_URL + "refer_lab.php";
     public static final String REFER_DIAG_URL = ROOT_URL + "refer_daignostic.php";
@@ -218,7 +219,7 @@ public class Function {
                 protected Void doInBackground(Void... params) {
                     try {
                        // client.AddParam("catId", String.valueOf(0));
-                        //client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
+                        client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
                         client.Execute("get");
                         JSONArray ja = new JSONArray(client.getResponse());
                         JSONObject jo_lab = null;
@@ -308,7 +309,7 @@ public class Function {
         }
     }
 
-    public static void fetch_diag(final Context mContext) {
+    public static void fetch_diag(final Context mContext, final int catId) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         if (Function.isConnected(mContext)) {
             // Function.fetch_city();
@@ -319,13 +320,15 @@ public class Function {
                     super.onPreExecute();
                     diag_list = new ArrayList<>();
                     diag_list_id = new ArrayList<>();
-                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Diagnostics", "Please wait...", false, false);
+                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Diagnostics Center", "Please wait...", false, false);
                     // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
                 }
 
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
+                        client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
+                        client.AddParam("catId",String.valueOf(catId));
                         client.Execute("get");
                         JSONArray ja = new JSONArray(client.getResponse());
                         JSONObject jo_city = null;
