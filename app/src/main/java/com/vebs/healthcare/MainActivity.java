@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private int cityWhich = 0;
     private TextView txtCity;
+    private TextView txtName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,7 +138,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-
     }
 
     private void initToolbar() {
@@ -147,6 +147,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
+        txtName = (TextView) toolbar.findViewById(R.id.txtName);
+        txtName.setText(PrefsUtil.getDrName(this));
         if (!PrefsUtil.getCity(this).isEmpty()) {
             txtCity.setText(PrefsUtil.getCity(this));
         }else

@@ -330,16 +330,46 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     }
 
     private void showToast(final boolean str) {
+
+
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                if (str) {
+                /*if (str) {
                     Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();*/
 
+                if (str) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(getActivity().getString(R.string.doctor_refer_successfully))
+                            .positiveText(android.R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    resetAll();
+                                }
+                            })
+                            .show();
+                } else {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(getActivity().getString(R.string.doc_refer_error))
+                            .positiveText(android.R.string.ok)
+                            .show();
+                }
             }
         });
 
+    }
+
+    private void resetAll() {
+        edtPatientName.setText("");
+        edtPatientNo.setText("");
+        edtAge.setText("");
+        edtRefer.setText("");
+        txtSelectCategory.setText(this.getString(R.string.select_category));
+        rvList.setVisibility(View.GONE);
+        inputSearch.setVisibility(View.GONE);
+        emptyLayout.setVisibility(View.VISIBLE);
     }
 
     public  void fetch_doctor(final Context mContext, final int catId) {
@@ -358,6 +388,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
+                        Log.e("Req",catId +" ||" +PrefsUtil.getCityID(mContext));
                         client.AddParam("catId", String.valueOf(catId));
                         client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
                         client.Execute("get");

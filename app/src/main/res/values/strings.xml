@@ -56,4 +56,7 @@
     <string name="doctor_already_selected">Doctor Alreay Selected</string>
     <string name="alert_doctor_remove">Want to Remove Doctor Selection</string>
     <string name="search_doctor">Search Doctor</string>
+    <string name="doctor_refer_successfully">Doctor Refer Successfully</string>
+    <string name="doc_refer_error">Some Problem is there, Plaese Try Again</string>
+    <string name="lab_refer_successfully">Lab Refer Successfully</string>
 </resources>

@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
@@ -329,7 +331,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
 
     }
 
-    private void showToast(final boolean str) {
+   /* private void showToast(final boolean str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 if (str) {
@@ -340,6 +342,47 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
             }
         });
 
+    }*/
+
+    private void showToast(final boolean str) {
+
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                /*if (str) {
+                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();*/
+
+                if (str) {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(getActivity().getString(R.string.lab_refer_successfully))
+                            .positiveText(android.R.string.ok)
+                            .onPositive(new MaterialDialog.SingleButtonCallback() {
+                                @Override
+                                public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                    resetAll();
+                                }
+                            })
+                            .show();
+                } else {
+                    new MaterialDialog.Builder(getActivity())
+                            .title(getActivity().getString(R.string.doc_refer_error))
+                            .positiveText(android.R.string.ok)
+                            .show();
+                }
+            }
+        });
+
+    }
+
+    private void resetAll() {
+        edtPatientName.setText("");
+        edtPatientNo.setText("");
+        edtAge.setText("");
+        edtRefer.setText("");
+        txtSelectCategory.setText(this.getString(R.string.select_category));
+        txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
+        layoutDiagDetail.setVisibility(View.GONE);
     }
 
     public void fetch_diag_detail(final Context mContext, final int diagId) {

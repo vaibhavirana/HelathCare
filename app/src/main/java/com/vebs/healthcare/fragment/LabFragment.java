@@ -276,7 +276,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void showToast(final boolean str) {
+   /* private void showToast(final boolean str) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 if (str) {
@@ -287,6 +287,46 @@ public class LabFragment extends Fragment implements View.OnClickListener {
             }
         });
 
+    }*/
+   private void showToast(final boolean str) {
+
+       getActivity().runOnUiThread(new Runnable() {
+           public void run() {
+                /*if (str) {
+                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();*/
+
+               if (str) {
+                   new MaterialDialog.Builder(getActivity())
+                           .title(getActivity().getString(R.string.lab_refer_successfully))
+                           .positiveText(android.R.string.ok)
+                           .onPositive(new MaterialDialog.SingleButtonCallback() {
+                               @Override
+                               public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                   resetAll();
+                               }
+                           })
+                           .show();
+               } else {
+                   new MaterialDialog.Builder(getActivity())
+                           .title(getActivity().getString(R.string.doc_refer_error))
+                           .positiveText(android.R.string.ok)
+                           .show();
+               }
+           }
+       });
+
+   }
+
+    private void resetAll() {
+        edtPatientName.setText("");
+        edtPatientNo.setText("");
+        edtAge.setText("");
+        edtRefer.setText("");
+        //txtSelectLab.setText("");
+        txtSelectLab.setText(this.getString(R.string.select_lab));
+        layoutLabDetail.setVisibility(View.GONE);
     }
 
     public void fetch_lab_detail(final Context mContext, final int labid) {
