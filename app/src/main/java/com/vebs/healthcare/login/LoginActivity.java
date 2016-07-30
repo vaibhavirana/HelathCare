@@ -49,10 +49,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mRootView = findViewById(android.R.id.content);
         edtEmail = (MaterialEditText) findViewById(R.id.edtEmail);
         edtPassword = (MaterialEditText) findViewById(R.id.edtPassword);
-        //txtForget = (TextView) findViewById(R.id.txtForget);
-
         btnLogin = (Button) findViewById(R.id.btnLogin);
-
+        //txtForget = (TextView) findViewById(R.id.txtForget);
+        Function.setRegularFont(this, edtEmail);
+        Function.setRegularFont(this, edtPassword);
+        Function.setRegularFont(this, btnLogin);
+        
         progressDialog = new ProgressDialog(this);
         actionListener();
     }
@@ -106,30 +108,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             JSONArray ja = new JSONArray(client.getResponse());
                             //for (int i = 0; i < ja.length(); i++) {
-                                JSONObject object = ja.getJSONObject(0);
-                                if (object.has("flag")) {
-                                    if (object.getString("flag").equals("true")) {
-                                        flag[0] =true;
-                                        if(ja.getJSONObject(1).has("data")) {
-                                            JSONObject object1 = ja.getJSONObject(1).getJSONObject("data");
-                                            PrefsUtil.setDrID(LoginActivity.this, object1.getString("id"));
-                                            PrefsUtil.setDrName(LoginActivity.this, object1.getString("drName"));
-                                            PrefsUtil.setMobiles(LoginActivity.this, object1.getString("mobiles"));
-                                            PrefsUtil.setcAddress(LoginActivity.this, object1.getString("cAddress"));
-                                            PrefsUtil.setLogin(LoginActivity.this, true);
-                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                        }
-                                        else {
-                                            Toast.makeText(LoginActivity.this,"Some Error Occured in Connection. Please try again later",Toast.LENGTH_LONG).show();
-                                        }
-                                        //Log.e("data res", ja.getJSONObject(i+1).toString());
+                            JSONObject object = ja.getJSONObject(0);
+                            if (object.has("flag")) {
+                                if (object.getString("flag").equals("true")) {
+                                    flag[0] = true;
+                                    if (ja.getJSONObject(1).has("data")) {
+                                        JSONObject object1 = ja.getJSONObject(1).getJSONObject("data");
+                                        PrefsUtil.setDrID(LoginActivity.this, object1.getString("id"));
+                                        PrefsUtil.setDrName(LoginActivity.this, object1.getString("drName"));
+                                        PrefsUtil.setMobiles(LoginActivity.this, object1.getString("mobiles"));
+                                        PrefsUtil.setcAddress(LoginActivity.this, object1.getString("cAddress"));
+                                        PrefsUtil.setLogin(LoginActivity.this, true);
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
                                     } else {
-                                        flag[0] =false;
-                                        //Log.e(" no res", ja.getJSONObject(i+1).toString());
+                                        Toast.makeText(LoginActivity.this, "Some Error Occured in Connection. Please try again later", Toast.LENGTH_LONG).show();
                                     }
+                                    //Log.e("data res", ja.getJSONObject(i+1).toString());
+                                } else {
+                                    flag[0] = false;
+                                    //Log.e(" no res", ja.getJSONObject(i+1).toString());
                                 }
+                            }
                             //}
 
                         } catch (Exception e) {
@@ -143,9 +144,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
                         progressDialog[0].dismiss();
-                        if(!flag[0])
-                        {
-                             new MaterialDialog.Builder(LoginActivity.this)
+                        if (!flag[0]) {
+                            new MaterialDialog.Builder(LoginActivity.this)
                                     .title(LoginActivity.this.getString(R.string.login_fail))
                                     //.typeface(Functions.getBoldFont(context), Functions.getRegularFont(context))
                                     .positiveText(android.R.string.ok)

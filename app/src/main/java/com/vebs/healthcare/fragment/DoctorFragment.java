@@ -61,10 +61,11 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename and change types of parameters
 
     private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
-    private EditText inputSearch;
+
     private TextView txtDate, txtSelectCategory;
     private Button btnRefernce, btnEmergency;
     private RadioGroup rgGender;
+    private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
     private DoctorAdapter adapter;
@@ -117,7 +118,6 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
         txtDate = (TextView) view.findViewById(R.id.txtDate);
         txtDate.setText(date);
-
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
         //txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
         edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
@@ -139,16 +139,33 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = Function.MALE;
 
-
+        //setTypeFace();
         actionListener();
 
+    }
+
+    private void setTypeFace() {
+        Function.setRegularFont(getActivity(),txtDate);
+        Function.setRegularFont(getActivity(),txtSelectCategory);
+        Function.setRegularFont(getActivity(),edtPatientName);
+        Function.setRegularFont(getActivity(),edtPatientNo);
+        Function.setRegularFont(getActivity(),edtAge);
+        Function.setRegularFont(getActivity(),edtRefer);
+        Function.setRegularFont(getActivity(),btnRefernce);
+        Function.setRegularFont(getActivity(),btnEmergency);
     }
 
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
        // txtSelectDoctor.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
-        btnEmergency.setOnClickListener(this);
+        btnEmergency.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                validateData(1);
+                return false;
+            }
+        });
 
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -247,9 +264,9 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 validateData(0);
                 break;
 
-            case R.id.btnEmergency:
+            /*case R.id.btnEmergency:
                 validateData(1);
-                break;
+                break;*/
         }
     }
 

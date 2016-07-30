@@ -3,24 +3,17 @@ package com.vebs.healthcare.adapter;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.vebs.healthcare.PatientDetailActivity;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
@@ -30,12 +23,9 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static com.vebs.healthcare.utils.Function.diag_test_list;
 
 
-public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientHolder> {
+public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.PatientHolder> {
 
     private Context context;
     //private RealmResults<Appointment> appointmentList;
@@ -44,7 +34,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
     private ArrayList<String> patient_list;
     //  private Appointment appointment;
 
-    public PatientAdapter(Context context, ArrayList<String> pName, ArrayList<String> pId) {
+    public PatientDiagAdapter(Context context, ArrayList<String> pName, ArrayList<String> pId) {
         this.context = context;
         this.pName = pName;
         this.pId = pId;
@@ -77,7 +67,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
     private void Fetch_patient_detail(final String id) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         if (Function.isConnected(context)) {
-            final RestClient client = new RestClient(Function.PATIENT_DETAIL_DOC_URL);
+            final RestClient client = new RestClient(Function.PATIENT_DETAIL_DIAG_URL);
             new AsyncTask<Void, Void, Void>() {
                 @Override
                 protected void onPreExecute() {

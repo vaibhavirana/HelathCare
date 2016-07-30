@@ -5,21 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.adapter.PatientAdapter;
 
-import java.sql.Ref;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -91,14 +86,14 @@ public class ReferenceFragment extends Fragment {
     }
 
     private void fetchPatientList() {
-        ArrayList<String> list = new ArrayList<String>();
+       /* ArrayList<String> list = new ArrayList<String>();
         //list.add("Select Lab");
         for(int i=1;i<=5;i++) {
             list.add("("+i+") Patient " + i);
         }
-        PatientAdapter adpt=new PatientAdapter(getActivity(), list);
+        PatientAdapter adpt=new PatientAdapter(getActivity(), patient_list, list);
         rvPatientName.setAdapter(adpt);
-
+*/
 
     }
 

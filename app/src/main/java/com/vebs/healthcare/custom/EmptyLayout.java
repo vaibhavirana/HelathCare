@@ -70,7 +70,7 @@ public class EmptyLayout extends LinearLayout {
             case Function.NO_PATIENT:
                 emptyImage.setImageResource(R.drawable.ic_doctor);
                 //emptyImage.setColorFilter(R.color.colorAccent, PorterDuff.Mode.SRC_ATOP);
-                emptyTextView.setText("No Patient");
+                emptyTextView.setText(context.getString(R.string.no_patient_found));
                 break;
 
 

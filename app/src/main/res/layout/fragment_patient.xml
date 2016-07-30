@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/dimen_8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnNotConsulted"
+            style="@style/MyFlatButtonStyle"
+            android:layout_marginLeft="@dimen/dimen_8dp"
+            android:layout_marginRight="@dimen/dimen_8dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/S_TEXT"
+            android:background="@color/color_light_green"
+            android:text="@string/not_consulted" />
+
+        <Button
+            android:id="@+id/btnConsulted"
+            style="@style/MyFlatButtonStyle"
+            android:layout_marginLeft="@dimen/dimen_8dp"
+            android:layout_marginRight="@dimen/dimen_8dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/S_TEXT"
+            android:text="@string/consulted" />
+
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_recyclerview"></include>
+</LinearLayout>

@@ -10,16 +10,17 @@ import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
-import com.vebs.healthcare.utils.UIUtil;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        UIUtil.setActivityToFullScreen(this);
+        Function.setActivityToFullScreen(this);
         setContentView(R.layout.activity_splash_screen);
 
+        Function.setRegularFont(this, ((TextView)findViewById(R.id.txtCompanyName)));
+        //Functions.setRegularFont(this, edtNumber);
         // txtAppName.setTypeface(Functions.getBoldFont(this));
         if (Function.isConnected(this)) {
             Function.fetch_city(SplashScreenActivity.this);

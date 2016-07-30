@@ -25,6 +25,7 @@ import com.vebs.healthcare.fragment.DiagnosticFragment;
 import com.vebs.healthcare.fragment.DoctorFragment;
 import com.vebs.healthcare.fragment.LabFragment;
 import com.vebs.healthcare.fragment.ReferenceFragment;
+import com.vebs.healthcare.fragment.ReferenceFragmentRevised;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.Prefs;
 import com.vebs.healthcare.utils.PrefsUtil;
@@ -80,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setText(R.string.labs);
         tabLayout.getTabAt(2).setText(R.string.diagnostic);
         tabLayout.getTabAt(3).setText(R.string.reference);
-        /*ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
             ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
@@ -88,10 +89,10 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < tabChildsCount; i++) {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(Functions.getTypeFace(getActivity()));
+                    ((TextView) tabViewChild).setTypeface(Function.getRegularFont(this));
                 }
             }
-        }*/
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -99,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFrag(new DoctorFragment(), getResources().getString(R.string.doctor));
         adapter.addFrag(new LabFragment(), getResources().getString(R.string.labs));
         adapter.addFrag(new DiagnosticFragment(), getResources().getString(R.string.diagnostic));
-        adapter.addFrag(new ReferenceFragment(), getResources().getString(R.string.reference));
+        adapter.addFrag(new ReferenceFragmentRevised(), getResources().getString(R.string.reference));
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(0);
@@ -149,6 +150,9 @@ public class MainActivity extends AppCompatActivity {
         txtCity = (TextView) toolbar.findViewById(R.id.txtCity);
         txtName = (TextView) toolbar.findViewById(R.id.txtName);
         txtName.setText(PrefsUtil.getDrName(this));
+
+        Function.setRegularFont(this,txtCity);
+        Function.setRegularFont(this,txtName);
         if (!PrefsUtil.getCity(this).isEmpty()) {
             txtCity.setText(PrefsUtil.getCity(this));
         }else

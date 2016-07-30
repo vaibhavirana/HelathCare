@@ -3,14 +3,19 @@ package com.vebs.healthcare.utils;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
 
@@ -52,6 +57,18 @@ public class Function {
     public static final String REFER_LAB_URL = ROOT_URL + "refer_lab.php";
     public static final String REFER_DIAG_URL = ROOT_URL + "refer_daignostic.php";
 
+    public static final String PATIENT_C_DOC_URL = ROOT_URL + "fetch_consultedpat.php";
+    public static final String PATIENT_NC_DOC_URL = ROOT_URL + "fetch_notconsultedpat.php";
+    public static final String PATIENT_DETAIL_DOC_URL = ROOT_URL + "fetch_patient_detail.php";
+
+    public static final String PATIENT_C_LAB_URL = ROOT_URL + "fetch_consultedlab.php";
+    public static final String PATIENT_NC_LAB_URL = ROOT_URL + "fetch_notconsultedlab.php";
+    public static final String PATIENT_DETAIL_LAB_URL = ROOT_URL + "fetch_lab_patient.php";
+
+    public static final String PATIENT_C_DIAG_URL = ROOT_URL + "fetch_consulteddiag.php";
+    public static final String PATIENT_NC_DIAG_URL = ROOT_URL + "fetch_notconsulteddiag.php";
+    public static final String PATIENT_DETAIL_DIAG_URL = ROOT_URL + "fetch_diag_patient.php";
+
     public static final int NO_DOCTOR = 1;
     public static final int NO_LAB = 2;
     public static final int NO_DIAG = 3;
@@ -80,6 +97,26 @@ public class Function {
 
     // diag test
     public static ArrayList<String> diag_test_list;
+
+    public static void setActivityToFullScreen(Activity splashScreenActivity) {
+        splashScreenActivity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        splashScreenActivity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    }
+
+    public static Typeface getRegularFont(Context _context) {
+        Typeface tf = Typeface.createFromAsset(_context.getAssets(), "Ubuntu-Regular.ttf");
+        return tf;
+    }
+
+    public static void setRegularFont(Context context, MaterialEditText materialEditText) {
+        materialEditText.setTypeface(getRegularFont(context));
+
+    }
+
+    public static void setRegularFont(Context context, TextView textView) {
+        textView.setTypeface(getRegularFont(context));
+    }
 
     public static boolean isConnected(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

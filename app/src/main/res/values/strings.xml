@@ -47,6 +47,7 @@
     <string name="no_doctor">No Doctor Found</string>
     <string name="no_lab_test">No Lab Test Found</string>
     <string name="no_diag_test">No Diagnostic Test Found</string>
+    <string name="no_patient_found">No Patient Found</string>
     <string name="no_diag">No Diagnostic Center Found</string>
     <string name="no_internet_msg">Please Check Your Internet Connection. Try Again Later.</string>
     <string name="enter_valid_email">Enter Valid Username</string>
@@ -59,4 +60,10 @@
     <string name="doctor_refer_successfully">Doctor Refer Successfully</string>
     <string name="doc_refer_error">Some Problem is there, Plaese Try Again</string>
     <string name="lab_refer_successfully">Lab Refer Successfully</string>
+    <string name="search_patient">Search Patient</string>
+
+    <string-array name="yes_no">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 </resources>

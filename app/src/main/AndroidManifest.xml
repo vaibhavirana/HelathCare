@@ -15,9 +15,6 @@
             android:name=".MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity
-            android:name=".Main2Activity"
-            android:windowSoftInputMode="stateHidden" />
 
         <activity
             android:name=".login.SplashScreenActivity"
