@@ -16,24 +16,12 @@ import android.widget.TextView;
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
 /**
  * Created by vraj on 7/12/2016.
@@ -105,7 +93,7 @@ public class Function {
     }
 
     public static Typeface getRegularFont(Context _context) {
-        Typeface tf = Typeface.createFromAsset(_context.getAssets(), "Ubuntu-Regular.ttf");
+        Typeface tf = Typeface.createFromAsset(_context.getAssets(), "fonts/Ubuntu-Regular.ttf");
         return tf;
     }
 

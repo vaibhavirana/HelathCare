@@ -2,38 +2,22 @@ package com.vebs.healthcare.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Filter;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
-import com.vebs.healthcare.adapter.DoctorAdapter;
-import com.vebs.healthcare.custom.EmptyLayout;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -41,13 +25,10 @@ import com.vebs.healthcare.utils.RestClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
 
 public class DoctorFragment extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
@@ -56,26 +37,29 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_PARAM2 = "param2";
 
 
-    private int catWhich = 0, catId = 0, docWhich = 0, docId = 0;
+    private int catWhich = 0, catId = 0, drWhich = 0;
+    private String docId;
 
     // TODO: Rename and change types of parameters
 
     private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
 
-    private TextView txtDate, txtSelectCategory;
+    private TextView txtDate, txtSelectCategory, txtSelectDoctor;
     private Button btnRefernce, btnEmergency;
     private RadioGroup rgGender;
-    private EditText inputSearch;
-    private RecyclerView rvList;
-    private EmptyLayout emptyLayout;
-    private DoctorAdapter adapter;
+    /* private EditText inputSearch;
+     private RecyclerView rvList;
+     private EmptyLayout emptyLayout;
+     private DoctorAdapter adapter;*/
+    private View layoutDoctorDetail;
     private String selectedGenderId, doctorname;
-    private ArrayList<HashMap<String,Object>> doc_list;
+    private ArrayList<HashMap<String, Object>> doc_list;
     private String date;
 
     public DoctorFragment() {
         // Required empty public constructor
     }
+
     // TODO: Rename and change types and number of parameters
     public static DoctorFragment newInstance(String param1, String param2) {
         DoctorFragment fragment = new DoctorFragment();
@@ -108,7 +92,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-           // Log.e("uid",PrefsUtil.getDrID(getActivity()));
+            // Log.e("uid",PrefsUtil.getDrID(getActivity()));
             Function.fetch_category(getActivity());
         }
     }
@@ -119,18 +103,20 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         txtDate = (TextView) view.findViewById(R.id.txtDate);
         txtDate.setText(date);
         txtSelectCategory = (TextView) view.findViewById(R.id.txtSelectCategory);
-        //txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
+        txtSelectDoctor = (TextView) view.findViewById(R.id.txtSelectDoctor);
         edtPatientName = (MaterialEditText) view.findViewById(R.id.edtPatientName);
         edtPatientNo = (MaterialEditText) view.findViewById(R.id.edtPatientNo);
         edtAge = (MaterialEditText) view.findViewById(R.id.edtAge);
         edtRefer = (MaterialEditText) view.findViewById(R.id.edtRefer);
 
-        inputSearch = (EditText) view.findViewById(R.id.inputSearch);
+        /*inputSearch = (EditText) view.findViewById(R.id.inputSearch);
         rvList=(RecyclerView)view.findViewById(R.id.RecyclerViewList);
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
         rvList.setHasFixedSize(true);
-        emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
+        emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);*/
         //setAdapter();
+
+        layoutDoctorDetail = (View) view.findViewById(R.id.layoutDocDetail);
 
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
         btnEmergency = (Button) view.findViewById(R.id.btnEmergency);
@@ -145,19 +131,20 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setTypeFace() {
-        Function.setRegularFont(getActivity(),txtDate);
-        Function.setRegularFont(getActivity(),txtSelectCategory);
-        Function.setRegularFont(getActivity(),edtPatientName);
-        Function.setRegularFont(getActivity(),edtPatientNo);
-        Function.setRegularFont(getActivity(),edtAge);
-        Function.setRegularFont(getActivity(),edtRefer);
-        Function.setRegularFont(getActivity(),btnRefernce);
-        Function.setRegularFont(getActivity(),btnEmergency);
+        Function.setRegularFont(getActivity(), txtDate);
+        Function.setRegularFont(getActivity(), txtSelectCategory);
+        Function.setRegularFont(getActivity(), txtSelectDoctor);
+        Function.setRegularFont(getActivity(), edtPatientName);
+        Function.setRegularFont(getActivity(), edtPatientNo);
+        Function.setRegularFont(getActivity(), edtAge);
+        Function.setRegularFont(getActivity(), edtRefer);
+        Function.setRegularFont(getActivity(), btnRefernce);
+        Function.setRegularFont(getActivity(), btnEmergency);
     }
 
     private void actionListener() {
         txtSelectCategory.setOnClickListener(this);
-       // txtSelectDoctor.setOnClickListener(this);
+        txtSelectDoctor.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
         btnEmergency.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -180,7 +167,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    private void setAdapter() {
+    /*private void setAdapter() {
        // fetchDoctorList();
         if(doc_list.size()>0) {
             inputSearch.setVisibility(View.VISIBLE);
@@ -209,7 +196,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             inputSearch.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
         }
-    }
+    }*/
 
     @Override
     public void onClick(View v) {
@@ -221,8 +208,9 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                             .positiveText(android.R.string.ok)
                             .show();
                     //showPopup();
-                }else {
-                   // txtSelectDoctor.setText(this.getString(R.string.select_doctor));
+                } else {
+                    layoutDoctorDetail.setVisibility(View.GONE);
+                    txtSelectDoctor.setText(this.getString(R.string.select_doctor));
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_category))
                             .items(Function.cat_list)
@@ -244,21 +232,41 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
 
-            /*case R.id.txtSelectDoctor:
+            case R.id.txtSelectDoctor:
                 if (doc_list.size() == 0) {
 
+                    layoutDoctorDetail.setVisibility(View.GONE);
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.no_doctor))
                             .positiveText(android.R.string.ok)
                             .show();
-                    //txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
+                    txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
 
-                }else {
-                    Log.d("doc list",doc_list.toString());
-
+                } else {
+                    final ArrayList<String> listDr = new ArrayList<>();
+                    for (int i = 0; i < doc_list.size(); i++) {
+                        listDr.add(doc_list.get(i).get("name").toString());
+                    }
+                    //Log.e("doc list",listDr.toString());
+                    new MaterialDialog.Builder(getActivity())
+                            .title(this.getString(R.string.select_doctor))
+                            .items(listDr)
+                            .itemsCallbackSingleChoice(drWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                @Override
+                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                    dialog.dismiss();
+                                    drWhich = which;
+                                    txtSelectDoctor.setText(listDr.get(which));
+                                    //docId=drWhich;
+                                    setAdapter(drWhich);
+                                    return true;
+                                }
+                            })
+                            .positiveText(android.R.string.ok)
+                            .show();
                 }
 
-                break;*/
+                break;
 
             case R.id.btnRefernce:
                 validateData(0);
@@ -282,9 +290,13 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
         } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
             txtSelectCategory.setError(this.getString(R.string.select_category));
-        } else if (inputSearch.getText().equals(this.getString(R.string.search_doctor))) {
+        } else if (txtSelectDoctor.getText().equals(this.getString(R.string.select_doctor))) {
+            txtSelectDoctor.setError(this.getString(R.string.select_doctor));
+        }
+        /*else if (inputSearch.getText().equals(this.getString(R.string.search_doctor))) {
             inputSearch.setError(this.getString(R.string.search_doctor));
-        } else if (edtRefer.length() == 0) {
+        }*/
+        else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
         } else {
             // send data call referdoctor
@@ -330,6 +342,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                        showToast(false);
                         Log.e("Webservice 1", e.toString());
                     }
                     return null;
@@ -344,6 +357,47 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         }
 
 
+    }
+
+    private void setAdapter(int pos) {
+        // fetchDoctorList();
+        if (doc_list.size() > 0) {
+            // inputSearch.setVisibility(View.GONE);
+            layoutDoctorDetail.setVisibility(View.VISIBLE);
+            setLabLayout(pos);
+
+        } else {
+            layoutDoctorDetail.setVisibility(View.GONE);
+        }
+    }
+
+    TextView txtHospName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtFees, txtPatient, txtNote;
+
+    private void setLabLayout(final int id) {
+
+        txtDrName = (TextView) layoutDoctorDetail.findViewById(R.id.txtDrName);
+        txtHospName = (TextView) layoutDoctorDetail.findViewById(R.id.txtHospName);
+        txtEmail = (TextView) layoutDoctorDetail.findViewById(R.id.txtEmail);
+        txtMobileNo = (TextView) layoutDoctorDetail.findViewById(R.id.txtMobileNo);
+        txtLandLineNo = (TextView) layoutDoctorDetail.findViewById(R.id.txtLandLineNo);
+        txtAddress = (TextView) layoutDoctorDetail.findViewById(R.id.txtAddress);
+        txtTime = (TextView) layoutDoctorDetail.findViewById(R.id.txtTime);
+        txtFees = (TextView) layoutDoctorDetail.findViewById(R.id.txtFees);
+        txtPatient = (TextView) layoutDoctorDetail.findViewById(R.id.txtPatient);
+        txtNote = (TextView) layoutDoctorDetail.findViewById(R.id.txtNote);
+
+        HashMap<String, Object> doctor = doc_list.get(id);
+        docId=doctor.get("id").toString();
+        txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
+        txtEmail.setText("Doctor Email Id : " + doctor.get("email").toString());
+        txtHospName.setText("Doctor Hospital Name : " + doctor.get("hosp_name").toString());
+        txtMobileNo.setText("Mobile No. : " + doctor.get("mobile").toString());
+        txtLandLineNo.setText("Landline No. : " + doctor.get("landline").toString());
+        txtAddress.setText("Address : " + doctor.get("address").toString());
+        txtTime.setText("Time : " + doctor.get("time").toString());
+        txtFees.setText("Fees : " + doctor.get("fees").toString());
+        txtPatient.setText("No of Patients : " + doctor.get("offer"));
+        txtNote.setText("Note : " + doctor.get("note"));
     }
 
     private void showToast(final boolean str) {
@@ -384,12 +438,13 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         edtAge.setText("");
         edtRefer.setText("");
         txtSelectCategory.setText(this.getString(R.string.select_category));
-        rvList.setVisibility(View.GONE);
+        txtSelectDoctor.setText(this.getString(R.string.select_doctor));
+       /* rvList.setVisibility(View.GONE);
         inputSearch.setVisibility(View.GONE);
-        emptyLayout.setVisibility(View.VISIBLE);
+        emptyLayout.setVisibility(View.VISIBLE);*/
     }
 
-    public  void fetch_doctor(final Context mContext, final int catId) {
+    public void fetch_doctor(final Context mContext, final int catId) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         if (Function.isConnected(mContext)) {
             final RestClient client = new RestClient(Function.DOCTOR_URL);
@@ -397,7 +452,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    doc_list= new ArrayList<>();
+                    doc_list = new ArrayList<>();
                     progressDialog[0] = ProgressDialog.show(mContext, "Fetching Doctor", "Please wait...", false, false);
                     // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
                 }
@@ -405,7 +460,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 @Override
                 protected Void doInBackground(Void... params) {
                     try {
-                        Log.e("Req",catId +" ||" +PrefsUtil.getCityID(mContext));
+                        Log.e("Req", catId + " ||" + PrefsUtil.getCityID(mContext));
                         client.AddParam("catId", String.valueOf(catId));
                         client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
                         client.Execute("get");
@@ -424,7 +479,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                                         doc.put("name", jo_doctor.getString("Doc Name"));
                                         doc.put("email", jo_doctor.getString("email"));
                                         doc.put("address", jo_doctor.getString("address"));
-                                        doc.put("hosp_name", jo_doctor.getString("Hospotal name"));
+                                        doc.put("hosp_name", jo_doctor.getString("Hospital name"));
                                         doc.put("mobile", jo_doctor.getString("mobile"));
                                         doc.put("landline", jo_doctor.getString("LDLine Number"));
                                         doc.put("time", jo_doctor.getString("time"));
@@ -438,7 +493,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                         }
                         Log.e("doctor", doc_list.toString());
 
-                    }catch(Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                         Log.e("Webservice 1", e.toString());
                     }
@@ -450,18 +505,16 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     progressDialog[0].dismiss();
-                    setAdapter();
+                    //setAdapter();
                 }
             }.execute();
 
-        }
-        else
-        {
+        } else {
             Function.showInternetPopup(mContext);
         }
     }
 
-    public void addTextListener(){
+    /*public void addTextListener(){
 
         inputSearch.addTextChangedListener(new TextWatcher() {
 
@@ -496,5 +549,5 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 adapter.notifyDataSetChanged();  // data set changed
             }
         });
-    }
+    }*/
 }

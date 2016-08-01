@@ -1,6 +1,7 @@
 package com.vebs.healthcare;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private int cityWhich = 0;
     private TextView txtCity;
     private TextView txtName;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,8 +195,5 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.setCancelable(true);
     }
-
-
-
 
 }
