@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/dimen_8dp"
+    android:padding="@dimen/dimen_4dp"
     android:orientation="vertical">
 
-    <include layout="@layout/app_bar"></include>
+   <!-- <include layout="@layout/app_bar"></include>-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,31 +18,71 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/txtPatientName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:id="@+id/txtPatientMobNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:id="@+id/txtPatientGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:id="@+id/txtPatientAge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:id="@+id/txtDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:id="@+id/txtDoctorName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+
+            <TextView
+                android:id="@+id/txtLabName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+            <TextView
+                android:id="@+id/txtDoctorMobileNo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+            <TextView
+                android:id="@+id/txtDoctorFees"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+
+            <TextView
+                android:id="@+id/txtDoctorTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+
+            <TextView
+                android:id="@+id/txtDoctorOffer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="abc" />
+
+            <TextView
+                android:id="@+id/txtDoctorNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />

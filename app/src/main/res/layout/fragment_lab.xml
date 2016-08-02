@@ -147,14 +147,16 @@
                     android:id="@+id/btnHomeCollected"
                     android:layout_weight="1"
                     style="@style/MyFlatButtonStyle"
-                    android:background="@android:color/transparent"
+                    android:layout_marginLeft="@dimen/dimen_8dp"
+                    android:layout_marginRight="@dimen/dimen_8dp"
                     android:text="@string/home_collected" />
 
                 <Button
                     android:id="@+id/btnCenterCollected"
                     android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/dimen_8dp"
+                    android:layout_marginRight="@dimen/dimen_8dp"
                     style="@style/MyFlatButtonStyle"
-                    android:background="@android:color/transparent"
                     android:text="@string/center_collected" />
             </LinearLayout>
             <com.rengwuxian.materialedittext.MaterialEditText
@@ -176,7 +178,6 @@
                 android:id="@+id/btnRefernce"
                 style="@style/MyFlatButtonStyle"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent"
                 android:text="@string/reference" />
         </LinearLayout>
     </ScrollView>

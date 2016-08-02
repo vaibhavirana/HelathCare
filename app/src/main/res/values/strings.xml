@@ -60,10 +60,19 @@
     <string name="doctor_refer_successfully">Doctor Refer Successfully</string>
     <string name="doc_refer_error">Some Problem is there, Plaese Try Again</string>
     <string name="lab_refer_successfully">Lab Refer Successfully</string>
+    <string name="diag_refer_successfully">Diagnostic Refer Successfully</string>
     <string name="search_patient">Search Patient</string>
+    <string name="select_category_first">Select Category First</string>
 
     <string-array name="yes_no">
         <item>Yes</item>
         <item>No</item>
     </string-array>
+
+    <string name="fetching_category">Fetching Category
+ </string>
+    <string name="please_wait">
+ Please wait...
+ </string>
+    <string name="consulted1">Patient Consulted?</string>
 </resources>

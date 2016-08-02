@@ -4,34 +4,23 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
-import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
-import com.vebs.healthcare.adapter.DoctorAdapter;
-import com.vebs.healthcare.adapter.LabAdapter;
-import com.vebs.healthcare.custom.EmptyLayout;
 import com.vebs.healthcare.utils.Function;
-import com.vebs.healthcare.utils.Prefs;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
 
@@ -66,6 +55,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
     private String selectedGenderId, collected_type;
     private ArrayList<HashMap<String, Object>> lab_test_detail;
     private String date;
+    private View view;
     //private LabAdapter adapter;
 
     public LabFragment() {
@@ -103,12 +93,12 @@ public class LabFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_lab, container, false);
-        init(view);
+         view = inflater.inflate(R.layout.fragment_lab, container, false);
+        init();
         return view;
     }
 
-    private void init(View view) {
+    private void init() {
         txtSelectLab = (TextView) view.findViewById(R.id.txtSelectLab);
         // txtSelectTest = (TextView) view.findViewById(R.id.txtSelectTest);
 
@@ -130,7 +120,26 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         selectedGenderId = Function.MALE;
         collected_type = "CENTER";
 
+        btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+        btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+
+        setTypeFace();
         actionListener();
+    }
+
+    private void setTypeFace() {
+        Function.setRegularFont(getActivity(), txtDate);
+        Function.setRegularFont(getActivity(), txtSelectLab);
+        Function.setRegularFont(getActivity(), edtPatientName);
+        Function.setRegularFont(getActivity(), edtPatientNo);
+        Function.setRegularFont(getActivity(), edtAge);
+        Function.setRegularFont(getActivity(), edtRefer);
+        Function.setRegularFont(getActivity(), btnRefernce);
+        Function.setRegularFont(getActivity(), btnHomeCollected);
+        Function.setRegularFont(getActivity(), btnCenterCollected);
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdFemale)));
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdMale)));
+
     }
 
     private void actionListener() {
@@ -162,12 +171,14 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 if (PrefsUtil.getCity(getActivity()).isEmpty()) {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_city_first))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
                     //showPopup();
                 } else {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_lab))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .items(Function.lab_list)
                             .itemsCallbackSingleChoice(labWhich, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
@@ -191,10 +202,14 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.btnHomeCollected:
+                btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
+                btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
                 collected_type = "HOME";
                 break;
 
             case R.id.btnCenterCollected:
+                btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
+                btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
                 collected_type = "CENTER";
                 break;
 
@@ -233,7 +248,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
             client.AddParam("gender", selectedGenderId);
             client.AddParam("age", edtAge.getText().toString());
             client.AddParam("date", date);
-            client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
+            client.AddParam("city_id", String.valueOf(PrefsUtil.getCityID(getActivity())));
             client.AddParam("lab_id", String.valueOf(labId));
             client.AddParam("lab_test_name", test);
             client.AddParam("collected_type", collected_type);
@@ -276,18 +291,6 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-   /* private void showToast(final boolean str) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                if (str) {
-                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }*/
    private void showToast(final boolean str) {
 
        getActivity().runOnUiThread(new Runnable() {
@@ -300,6 +303,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                if (str) {
                    new MaterialDialog.Builder(getActivity())
                            .title(getActivity().getString(R.string.lab_refer_successfully))
+                           .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                            .positiveText(android.R.string.ok)
                            .onPositive(new MaterialDialog.SingleButtonCallback() {
                                @Override
@@ -311,6 +315,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                } else {
                    new MaterialDialog.Builder(getActivity())
                            .title(getActivity().getString(R.string.doc_refer_error))
+                           .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                            .positiveText(android.R.string.ok)
                            .show();
                }
@@ -327,6 +332,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         //txtSelectLab.setText("");
         txtSelectLab.setText(this.getString(R.string.select_lab));
         layoutLabDetail.setVisibility(View.GONE);
+        ((RadioButton) view.findViewById(R.id.rdMale)).setChecked(true);
+
     }
 
     public void fetch_lab_detail(final Context mContext, final int labid) {
@@ -400,24 +407,16 @@ public class LabFragment extends Fragment implements View.OnClickListener {
     }
 
     private void setAdapter() {
-        // fetchDoctorList();
         if (lab_test_detail.size() > 0) {
-            // inputSearch.setVisibility(View.GONE);
             layoutLabDetail.setVisibility(View.VISIBLE);
             setLabLayout();
-            //  rvList.setVisibility(View.VISIBLE);
-            //emptyLayout.setVisibility(View.GONE);
-            //adapter = new LabAdapter(getActivity(), lab_test_detail);
-            //rvList.setAdapter(adapter);
 
         } else {
             layoutLabDetail.setVisibility(View.GONE);
-            // inputSearch.setVisibility(View.GONE);
-            //emptyLayout.setVisibility(View.VISIBLE);
         }
     }
 
-    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtFees, txtPatient, txtNote, txtSelectTest,txtSelectTestPrice;
+    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtPatient, txtNote, txtSelectTest,txtSelectTestPrice;
     LinearLayout llLab;
     public String test = "";
 
@@ -433,15 +432,27 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         txtLandLineNo = (TextView) layoutLabDetail.findViewById(R.id.txtLandLineNo);
         txtAddress = (TextView) layoutLabDetail.findViewById(R.id.txtAddress);
         txtTime = (TextView) layoutLabDetail.findViewById(R.id.txtTime);
-        txtFees = (TextView) layoutLabDetail.findViewById(R.id.txtFees);
+       // txtFees = (TextView) layoutLabDetail.findViewById(R.id.txtFees);
         txtPatient = (TextView) layoutLabDetail.findViewById(R.id.txtPatient);
         txtNote = (TextView) layoutLabDetail.findViewById(R.id.txtNote);
         txtSelectTest = (TextView) layoutLabDetail.findViewById(R.id.txtSelectTest);
         txtSelectTestPrice = (TextView) layoutLabDetail.findViewById(R.id.txtSelectTestPrice);
         txtSelectTestPrice.setVisibility(View.GONE);
         txtSelectTestPrice.setText("");
-
         txtSelectTest.setText(getString(R.string.select_lab_test));
+
+        Function.setRegularFont(getActivity(), txtLabName);
+        Function.setRegularFont(getActivity(), txtDrName);
+        Function.setRegularFont(getActivity(), txtEmail);
+        Function.setRegularFont(getActivity(), txtMobileNo);
+        Function.setRegularFont(getActivity(), txtLandLineNo);
+        Function.setRegularFont(getActivity(), txtAddress);
+        Function.setRegularFont(getActivity(), txtTime);
+       // Function.setRegularFont(getActivity(), txtFees);
+        Function.setRegularFont(getActivity(), txtPatient);
+        Function.setRegularFont(getActivity(), txtNote);
+        Function.setRegularFont(getActivity(), txtSelectTest);
+        Function.setRegularFont(getActivity(), txtSelectTestPrice);
 
         HashMap<String, Object> labDetail = lab_test_detail.get(0);
 
@@ -474,6 +485,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 new MaterialDialog.Builder(getActivity())
                         .title(getActivity().getString(R.string.select_lab_test))
                         .items(finalLab_test)
+                        .typeface(Function.getRegularFont(getActivity()),Function.getRegularFont(getActivity()))
                         .itemsCallbackMultiChoice(testWhich, new MaterialDialog.ListCallbackMultiChoice() {
                             @Override
                             public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {

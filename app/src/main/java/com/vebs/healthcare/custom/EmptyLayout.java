@@ -1,10 +1,6 @@
 package com.vebs.healthcare.custom;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +43,7 @@ public class EmptyLayout extends LinearLayout {
         emptyImage = (ImageView) rootView.findViewById(R.id.emptyImage);
         emptyTextView = (TextView) rootView.findViewById(R.id.emptyTextView);
 
-       // emptyTextView.setTypeface(Functions.getRegularFont(context));
+        emptyTextView.setTypeface(Function.getRegularFont(context));
     }
 
     public void setType(int emptyType) {

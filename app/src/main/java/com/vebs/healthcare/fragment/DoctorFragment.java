@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -55,6 +56,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private String selectedGenderId, doctorname;
     private ArrayList<HashMap<String, Object>> doc_list;
     private String date;
+    private View view;
 
     public DoctorFragment() {
         // Required empty public constructor
@@ -83,8 +85,8 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_doctor, container, false);
-        init(view);
+        view = inflater.inflate(R.layout.fragment_doctor, container, false);
+        init();
         return view;
     }
 
@@ -97,7 +99,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    private void init(View view) {
+    private void init() {
         date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         txtDate = (TextView) view.findViewById(R.id.txtDate);
@@ -108,14 +110,6 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         edtPatientNo = (MaterialEditText) view.findViewById(R.id.edtPatientNo);
         edtAge = (MaterialEditText) view.findViewById(R.id.edtAge);
         edtRefer = (MaterialEditText) view.findViewById(R.id.edtRefer);
-
-        /*inputSearch = (EditText) view.findViewById(R.id.inputSearch);
-        rvList=(RecyclerView)view.findViewById(R.id.RecyclerViewList);
-        rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvList.setHasFixedSize(true);
-        emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);*/
-        //setAdapter();
-
         layoutDoctorDetail = (View) view.findViewById(R.id.layoutDocDetail);
 
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
@@ -125,7 +119,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = Function.MALE;
 
-        //setTypeFace();
+        setTypeFace();
         actionListener();
 
     }
@@ -140,6 +134,10 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         Function.setRegularFont(getActivity(), edtRefer);
         Function.setRegularFont(getActivity(), btnRefernce);
         Function.setRegularFont(getActivity(), btnEmergency);
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdFemale)));
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdMale)));
+
+
     }
 
     private void actionListener() {
@@ -167,37 +165,6 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         });
     }
 
-    /*private void setAdapter() {
-       // fetchDoctorList();
-        if(doc_list.size()>0) {
-            inputSearch.setVisibility(View.VISIBLE);
-            rvList.setVisibility(View.VISIBLE);
-            emptyLayout.setVisibility(View.GONE);
-            adapter = new DoctorAdapter(getActivity(), doc_list, new DoctorAdapter.OnclickListner() {
-                @Override
-                public void onItemClickListner(int position) {
-                    Log.e("selected doctor",position+"");
-                    if(position>=0) {
-                        inputSearch.setText(doc_list.get(position).get("name").toString());
-                        docId= (int) doc_list.get(position).get("id");
-                    }else
-                    {
-                        inputSearch.setText("");
-                        inputSearch.setError(getString(R.string.search_doctor));
-                    }
-                }
-            });
-            rvList.setAdapter(adapter);
-            addTextListener();
-
-        }else
-        {
-            rvList.setVisibility(View.GONE);
-            inputSearch.setVisibility(View.GONE);
-            emptyLayout.setVisibility(View.VISIBLE);
-        }
-    }*/
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -205,6 +172,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 if (PrefsUtil.getCity(getActivity()).isEmpty()) {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_city_first))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
                     //showPopup();
@@ -213,6 +181,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                     txtSelectDoctor.setText(this.getString(R.string.select_doctor));
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_category))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .items(Function.cat_list)
                             .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
@@ -233,37 +202,46 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.txtSelectDoctor:
-                if (doc_list.size() == 0) {
-
-                    layoutDoctorDetail.setVisibility(View.GONE);
+                if (catId==0) {
                     new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.no_doctor))
+                            .title(this.getString(R.string.select_category_first))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
-                    txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
-
                 } else {
-                    final ArrayList<String> listDr = new ArrayList<>();
-                    for (int i = 0; i < doc_list.size(); i++) {
-                        listDr.add(doc_list.get(i).get("name").toString());
+                    if (doc_list.size() == 0) {
+                        layoutDoctorDetail.setVisibility(View.GONE);
+                        new MaterialDialog.Builder(getActivity())
+                                .title(this.getString(R.string.no_doctor))
+                                .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
+                                .positiveText(android.R.string.ok)
+                                .show();
+                        txtSelectDoctor.setText(getActivity().getString(R.string.no_doctor));
+
+                    } else {
+                        final ArrayList<String> listDr = new ArrayList<>();
+                        for (int i = 0; i < doc_list.size(); i++) {
+                            listDr.add(doc_list.get(i).get("name").toString());
+                        }
+                        //Log.e("doc list",listDr.toString());
+                        new MaterialDialog.Builder(getActivity())
+                                .title(this.getString(R.string.select_doctor))
+                                .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
+                                .items(listDr)
+                                .itemsCallbackSingleChoice(drWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                    @Override
+                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        dialog.dismiss();
+                                        drWhich = which;
+                                        txtSelectDoctor.setText(listDr.get(which));
+                                        //docId=drWhich;
+                                        setAdapter(drWhich);
+                                        return true;
+                                    }
+                                })
+                                .positiveText(android.R.string.ok)
+                                .show();
                     }
-                    //Log.e("doc list",listDr.toString());
-                    new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.select_doctor))
-                            .items(listDr)
-                            .itemsCallbackSingleChoice(drWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    dialog.dismiss();
-                                    drWhich = which;
-                                    txtSelectDoctor.setText(listDr.get(which));
-                                    //docId=drWhich;
-                                    setAdapter(drWhich);
-                                    return true;
-                                }
-                            })
-                            .positiveText(android.R.string.ok)
-                            .show();
                 }
 
                 break;
@@ -272,9 +250,6 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 validateData(0);
                 break;
 
-            /*case R.id.btnEmergency:
-                validateData(1);
-                break;*/
         }
     }
 
@@ -300,7 +275,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             edtRefer.setError(this.getString(R.string.refer_error));
         } else {
             // send data call referdoctor
-            Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
+            Log.e("data", PrefsUtil.getCityID(getActivity()) + " || " + edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
                     edtAge.getText() + " || " + selectedGenderId + " || " +
                     txtSelectCategory.getText() + " || " +
                     docId + " || " +
@@ -313,7 +288,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
             client.AddParam("gender", selectedGenderId);
             client.AddParam("age", edtAge.getText().toString());
             client.AddParam("date", date);
-            client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
+            client.AddParam("city_id", String.valueOf(PrefsUtil.getCityID(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
             client.AddParam("doctor_name", String.valueOf(docId));
             client.AddParam("is_emergency", String.valueOf(flag));
@@ -386,8 +361,19 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         txtPatient = (TextView) layoutDoctorDetail.findViewById(R.id.txtPatient);
         txtNote = (TextView) layoutDoctorDetail.findViewById(R.id.txtNote);
 
+        Function.setRegularFont(getActivity(), txtDrName);
+        Function.setRegularFont(getActivity(), txtHospName);
+        Function.setRegularFont(getActivity(), txtEmail);
+        Function.setRegularFont(getActivity(), txtMobileNo);
+        Function.setRegularFont(getActivity(), txtLandLineNo);
+        Function.setRegularFont(getActivity(), txtAddress);
+        Function.setRegularFont(getActivity(), txtTime);
+        Function.setRegularFont(getActivity(), txtFees);
+        Function.setRegularFont(getActivity(), txtPatient);
+        Function.setRegularFont(getActivity(), txtNote);
+
         HashMap<String, Object> doctor = doc_list.get(id);
-        docId=doctor.get("id").toString();
+        docId = doctor.get("id").toString();
         txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
         txtEmail.setText("Doctor Email Id : " + doctor.get("email").toString());
         txtHospName.setText("Doctor Hospital Name : " + doctor.get("hosp_name").toString());
@@ -413,6 +399,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 if (str) {
                     new MaterialDialog.Builder(getActivity())
                             .title(getActivity().getString(R.string.doctor_refer_successfully))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
@@ -424,6 +411,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
                 } else {
                     new MaterialDialog.Builder(getActivity())
                             .title(getActivity().getString(R.string.doc_refer_error))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
                 }
@@ -439,6 +427,9 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         edtRefer.setText("");
         txtSelectCategory.setText(this.getString(R.string.select_category));
         txtSelectDoctor.setText(this.getString(R.string.select_doctor));
+        selectedGenderId = Function.MALE;
+        ((RadioButton) view.findViewById(R.id.rdMale)).setChecked(true);
+        layoutDoctorDetail.setVisibility(View.GONE);
        /* rvList.setVisibility(View.GONE);
         inputSearch.setVisibility(View.GONE);
         emptyLayout.setVisibility(View.VISIBLE);*/
@@ -514,40 +505,4 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    /*public void addTextListener(){
-
-        inputSearch.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {}
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            public void onTextChanged(CharSequence query, int start, int before, int count) {
-
-                query = query.toString().toLowerCase();
-
-                final List<HashMap<String,Object>> filteredList = new ArrayList<>();
-
-                for (int i = 0; i < doc_list.size(); i++) {
-
-                    //Log.e("Text input",query+"");
-                    final String text = doc_list.get(i).get("name").toString().toLowerCase();
-                    if (text.contains(query)) {
-
-                        filteredList.add(doc_list.get(i));
-                    }
-                }
-
-                //adapter = new DoctorAdapter(filteredList, MainActivity.this);
-                rvList.setAdapter(adapter);
-                adapter = new DoctorAdapter(getActivity(), doc_list, new DoctorAdapter.OnclickListner() {
-                    @Override
-                    public void onItemClickListner(int position) {
-
-                    }
-                });
-                adapter.notifyDataSetChanged();  // data set changed
-            }
-        });
-    }*/
 }

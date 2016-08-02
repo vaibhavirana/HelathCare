@@ -2,24 +2,19 @@ package com.vebs.healthcare.fragment;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -63,6 +58,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     private View layoutDiagDetail;
     private String date;
     private ArrayList<HashMap<String, Object>> diag_test_detail;
+    private View view;
 
     public DiagnosticFragment() {
         // Required empty public constructor
@@ -91,8 +87,8 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_diagnostic, container, false);
-        init(view);
+        view = inflater.inflate(R.layout.fragment_diagnostic, container, false);
+        init();
         return view;
         // return inflater.inflate(R.layout.fragment_diagnostic, container, false);
     }
@@ -107,7 +103,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void init(View view) {
+    private void init() {
         date = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
 
         txtDate = (TextView) view.findViewById(R.id.txtDate);
@@ -127,8 +123,22 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = Function.MALE;
-
+        setTypeFace();
         actionListener();
+    }
+
+    private void setTypeFace() {
+        Function.setRegularFont(getActivity(), txtDate);
+        Function.setRegularFont(getActivity(), txtSelectCategory);
+        Function.setRegularFont(getActivity(), txtSelectDiagCenter);
+        Function.setRegularFont(getActivity(), edtPatientName);
+        Function.setRegularFont(getActivity(), edtPatientNo);
+        Function.setRegularFont(getActivity(), edtAge);
+        Function.setRegularFont(getActivity(), edtRefer);
+        Function.setRegularFont(getActivity(), btnRefernce);
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdFemale)));
+        Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdMale)));
+
     }
 
     private void actionListener() {
@@ -156,6 +166,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 if (PrefsUtil.getCity(getActivity()).isEmpty()) {
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_city_first))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
                     //showPopup();
@@ -165,6 +176,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                     txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
                     new MaterialDialog.Builder(getActivity())
                             .title(this.getString(R.string.select_category))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .items(Function.diag_cat_list)
                             .itemsCallbackSingleChoice(catWhich, new MaterialDialog.ListCallbackSingleChoice() {
                                 @Override
@@ -185,67 +197,44 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 break;
 
             case R.id.txtSelectDiagCenter:
-                if (Function.diag_list.size() == 0) {
+                if(catId==0)
+                {
                     new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.no_diag))
+                            .title(this.getString(R.string.select_category_first))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
-                } else {
-                    new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.select_diag))
-                            .items(Function.diag_list)
-                            .itemsCallbackSingleChoice(diagWhich, new MaterialDialog.ListCallbackSingleChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                    diagWhich = which;
-                                    dialog.dismiss();
-                                    txtSelectDiagCenter.setText(Function.diag_list.get(which));
-                                    diagId = Function.diag_list_id.get(which);
-                                    fetch_diag_detail(getActivity(), diagId);
-                                    // Function.fetch_diag_test(getActivity(), diagId);
-                                    // doctorname=Function.doc_list.get(which);
-                                    return true;
-                                }
-                            })
-                            .positiveText(android.R.string.ok)
-                            .show();
+                }
+                else {
+                    if (Function.diag_list.size() == 0) {
+                        new MaterialDialog.Builder(getActivity())
+                                .title(this.getString(R.string.no_diag))
+                                .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
+                                .positiveText(android.R.string.ok)
+                                .show();
+                    } else {
+                        new MaterialDialog.Builder(getActivity())
+                                .title(this.getString(R.string.select_diag))
+                                .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
+                                .items(Function.diag_list)
+                                .itemsCallbackSingleChoice(diagWhich, new MaterialDialog.ListCallbackSingleChoice() {
+                                    @Override
+                                    public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+                                        diagWhich = which;
+                                        dialog.dismiss();
+                                        txtSelectDiagCenter.setText(Function.diag_list.get(which));
+                                        diagId = Function.diag_list_id.get(which);
+                                        fetch_diag_detail(getActivity(), diagId);
+                                        // Function.fetch_diag_test(getActivity(), diagId);
+                                        // doctorname=Function.doc_list.get(which);
+                                        return true;
+                                    }
+                                })
+                                .positiveText(android.R.string.ok)
+                                .show();
+                    }
                 }
                 break;
-
-            /*case R.id.txtSelectDiagTest:
-                if(Function.diag_test_list.size()==0)
-                { new MaterialDialog.Builder(getActivity())
-                        .title(this.getString(R.string.no_diag_test))
-                        .positiveText(android.R.string.ok)
-                        .show();
-                    //txtSelectDiagTest.setText(getActivity().getString(R.string.no_diag_test));
-
-                }else {
-                    final StringBuilder sb = new StringBuilder();
-                    new MaterialDialog.Builder(getActivity())
-                            .title(this.getString(R.string.select_diag_test))
-                            .items(Function.diag_test_list)
-                            .itemsCallbackMultiChoice(testWhich, new MaterialDialog.ListCallbackMultiChoice() {
-                                @Override
-                                public boolean onSelection(MaterialDialog dialog, Integer[] which, CharSequence[] text) {
-                                    if (text.length > 0) {
-                                        for (int i = 0; i < text.length; i++) {
-                                            sb.append(text[i]).append(", ");
-                                            testWhich = which;
-                                            diagTest = sb.toString().substring(0, sb.toString().length() - 2);
-                                            txtSelectDiagTest.setText(sb.toString().substring(0, sb.toString().length() - 2));
-                                        }
-                                    } else {
-                                        testWhich = null;
-                                        txtSelectDiagTest.setText(getString(R.string.select_diag_test));
-                                    }
-                                    return false;
-                                }
-                            })
-                            .positiveText(android.R.string.ok)
-                            .show();
-                }
-                break;*/
 
             case R.id.btnRefernce:
                 validateData();
@@ -286,7 +275,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
             client.AddParam("gender", selectedGenderId);
             client.AddParam("age", edtAge.getText().toString());
             client.AddParam("date", date);
-            client.AddParam("city_id", String.valueOf(PrefsUtil.getCity(getActivity())));
+            client.AddParam("city_id", String.valueOf(PrefsUtil.getCityID(getActivity())));
             client.AddParam("category_id", String.valueOf(catId));
             client.AddParam("diagnostic_center_id", String.valueOf(diagId));
             client.AddParam("diagnostic_test_name", test);
@@ -331,31 +320,14 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
 
     }
 
-   /* private void showToast(final boolean str) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                if (str) {
-                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-    }*/
-
     private void showToast(final boolean str) {
 
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
-                /*if (str) {
-                    Toast.makeText(getActivity(), "Doctor Refer Successfully", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(getActivity(), "Some Problem is there, Plaese Try Again", Toast.LENGTH_SHORT).show();*/
-
                 if (str) {
                     new MaterialDialog.Builder(getActivity())
-                            .title(getActivity().getString(R.string.lab_refer_successfully))
+                            .title(getActivity().getString(R.string.diag_refer_successfully))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .onPositive(new MaterialDialog.SingleButtonCallback() {
                                 @Override
@@ -367,6 +339,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 } else {
                     new MaterialDialog.Builder(getActivity())
                             .title(getActivity().getString(R.string.doc_refer_error))
+                            .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                             .positiveText(android.R.string.ok)
                             .show();
                 }
@@ -383,6 +356,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         txtSelectCategory.setText(this.getString(R.string.select_category));
         txtSelectDiagCenter.setText(this.getString(R.string.select_diag));
         layoutDiagDetail.setVisibility(View.GONE);
+        ((RadioButton) view.findViewById(R.id.rdMale)).setChecked(true);
     }
 
     public void fetch_diag_detail(final Context mContext, final int diagId) {
@@ -465,7 +439,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtFees, txtPatient, txtNote, txtSelectTest, txtSelectTestPrice;
+    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtPatient, txtNote, txtSelectTest, txtSelectTestPrice;
     LinearLayout llLab;
     public String test = "";
 
@@ -481,7 +455,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         txtLandLineNo = (TextView) layoutDiagDetail.findViewById(R.id.txtLandLineNo);
         txtAddress = (TextView) layoutDiagDetail.findViewById(R.id.txtAddress);
         txtTime = (TextView) layoutDiagDetail.findViewById(R.id.txtTime);
-        txtFees = (TextView) layoutDiagDetail.findViewById(R.id.txtFees);
+       // txtFees = (TextView) layoutDiagDetail.findViewById(R.id.txtFees);
         txtPatient = (TextView) layoutDiagDetail.findViewById(R.id.txtPatient);
         txtNote = (TextView) layoutDiagDetail.findViewById(R.id.txtNote);
         txtSelectTest = (TextView) layoutDiagDetail.findViewById(R.id.txtSelectTest);
@@ -490,6 +464,20 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
         txtSelectTestPrice.setText("");
 
         txtSelectTest.setText(getString(R.string.select_diag_test));
+
+        Function.setRegularFont(getActivity(), txtLabName);
+        Function.setRegularFont(getActivity(), txtDrName);
+        Function.setRegularFont(getActivity(), txtEmail);
+        Function.setRegularFont(getActivity(), txtMobileNo);
+        Function.setRegularFont(getActivity(), txtLandLineNo);
+        Function.setRegularFont(getActivity(), txtAddress);
+        Function.setRegularFont(getActivity(), txtTime);
+        // Function.setRegularFont(getActivity(), txtFees);
+        Function.setRegularFont(getActivity(), txtPatient);
+        Function.setRegularFont(getActivity(), txtNote);
+        Function.setRegularFont(getActivity(), txtSelectTest);
+        Function.setRegularFont(getActivity(), txtSelectTestPrice);
+
 
         HashMap<String, Object> labDetail = diag_test_detail.get(0);
 
@@ -521,6 +509,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 final StringBuilder sb1 = new StringBuilder();
                 new MaterialDialog.Builder(getActivity())
                         .title(getActivity().getString(R.string.select_lab_test))
+                        .typeface(Function.getRegularFont(getActivity()), Function.getRegularFont(getActivity()))
                         .items(finalLab_test)
                         .itemsCallbackMultiChoice(testWhich, new MaterialDialog.ListCallbackMultiChoice() {
                             @Override

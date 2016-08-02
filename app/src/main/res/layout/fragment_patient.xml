@@ -17,6 +17,8 @@
             android:layout_marginLeft="@dimen/dimen_8dp"
             android:layout_marginRight="@dimen/dimen_8dp"
             android:layout_weight="1"
+            android:layout_width="0dp"
+            android:textStyle="bold"
             android:textSize="@dimen/S_TEXT"
             android:background="@color/color_light_green"
             android:text="@string/not_consulted" />
@@ -24,9 +26,11 @@
         <Button
             android:id="@+id/btnConsulted"
             style="@style/MyFlatButtonStyle"
+            android:layout_width="0dp"
             android:layout_marginLeft="@dimen/dimen_8dp"
             android:layout_marginRight="@dimen/dimen_8dp"
             android:layout_weight="1"
+            android:textStyle="bold"
             android:textSize="@dimen/S_TEXT"
             android:text="@string/consulted" />
 

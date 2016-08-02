@@ -13,10 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.vebs.healthcare.R;
-import com.vebs.healthcare.adapter.PatientAdapter;
 import com.vebs.healthcare.adapter.PatientDiagAdapter;
 import com.vebs.healthcare.custom.EmptyLayout;
 import com.vebs.healthcare.utils.Function;
@@ -94,7 +92,17 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
         // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
         //fetchPatientList();
         changeUI(btnNotConsulted, btnConsulted);
+        setTypeFace();
         setOnClickListner();
+        // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
+        //fetchPatientList();
+    }
+    private void setTypeFace() {
+        Function.setBoldFont(getActivity(),btnConsulted);
+        Function.setBoldFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),inputSearch);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
     }
     private void setOnClickListner() {
         btnConsulted.setOnClickListener(this);
@@ -194,11 +202,10 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
     }
 
     private void changeUI(Button btn, Button btn1) {
-        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
         btn.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
 
-        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
-        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
     }
-
 }

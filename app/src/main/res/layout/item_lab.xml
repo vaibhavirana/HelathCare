@@ -58,6 +58,7 @@
         android:drawableRight="@drawable/ic_arrow_drop_down"
         android:paddingLeft="@dimen/dimen_4dp"
         android:paddingRight="@dimen/dimen_4dp"
+        android:textColor="@color/colorPrimaryDark"
         android:text="Select Test"
         android:textSize="@dimen/M_TEXT" />
 

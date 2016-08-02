@@ -97,6 +97,11 @@ public class Function {
         return tf;
     }
 
+    public static Typeface getBoldFont(Context _context) {
+        Typeface tf = Typeface.createFromAsset(_context.getAssets(), "fonts/Ubuntu-Bold.ttf");
+        return tf;
+    }
+
     public static void setRegularFont(Context context, MaterialEditText materialEditText) {
         materialEditText.setTypeface(getRegularFont(context));
 
@@ -104,6 +109,9 @@ public class Function {
 
     public static void setRegularFont(Context context, TextView textView) {
         textView.setTypeface(getRegularFont(context));
+    }
+    public static void setBoldFont(Context context, TextView textView) {
+        textView.setTypeface(getBoldFont(context));
     }
 
     public static boolean isConnected(Context context) {
@@ -117,6 +125,7 @@ public class Function {
     {
         new MaterialDialog.Builder(context)
                 .title(context.getString(R.string.no_internet_msg))
+                .typeface(Function.getRegularFont(context), Function.getRegularFont(context))
                 .positiveText(android.R.string.ok)
                 .onPositive(new MaterialDialog.SingleButtonCallback() {
                     @Override
@@ -183,8 +192,8 @@ public class Function {
                     super.onPreExecute();
                     cat_list = new ArrayList<>();
                     cat_list_id = new ArrayList<>();
-                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Category", "Please wait...", false, false);
-                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                    progressDialog[0] = ProgressDialog.show(mContext, (mContext.getString(R.string.fetching_category)), (mContext.getString(R.string.please_wait)), false, false);
+                    // progressDialog[0] = ProgressDialog.show(mContext, "Fetching Data", "Please wait...", false, false);
                 }
 
                 @Override
@@ -389,57 +398,4 @@ public class Function {
         }
     }
 
-    public static void fetch_diag_test(final Context mContext, final int diagid) {
-        final ProgressDialog[] progressDialog = new ProgressDialog[1];
-        if (Function.isConnected(mContext)) {
-            final RestClient client = new RestClient(Function.DIAG_TEST_URL);
-            new AsyncTask<Void, Void, Void>() {
-                @Override
-                protected void onPreExecute() {
-                    super.onPreExecute();
-                    diag_test_list = new ArrayList<>();
-                    progressDialog[0] = ProgressDialog.show(mContext, "Fetching Diagnostic Test", "Please wait...", false, false);
-                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
-                }
-
-                @Override
-                protected Void doInBackground(Void... params) {
-                    try {
-                        client.AddParam("id", String.valueOf(diagid));
-                        client.AddParam("cityID", String.valueOf(PrefsUtil.getCityID(mContext)));
-                        client.Execute("get");
-                        //Log.e("res")
-                        JSONArray ja = new JSONArray(client.getResponse());
-                        JSONObject jo_test = null;
-                        for (int i = 0; i < ja.length(); i++) {
-
-                            JSONObject object = ja.getJSONObject(i);
-                            if (object.has("test")) {
-                                jo_test = ja.getJSONObject(i).getJSONObject("test");
-                                if (jo_test != null) {
-                                    diag_test_list.add(jo_test.getString("test"));
-
-                                    Log.e("lab test", diag_test_list.get(i));
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Log.e("Webservice 1", e.toString());
-                    }
-                    return null;
-                }
-
-                @Override
-                protected void onPostExecute(Void aVoid) {
-                    super.onPostExecute(aVoid);
-                    progressDialog[0].dismiss();
-                }
-            }.execute();
-
-        }else
-        {
-            showInternetPopup(mContext);
-        }
-    }
 }

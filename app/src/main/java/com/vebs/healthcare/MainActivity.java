@@ -1,10 +1,6 @@
 package com.vebs.healthcare;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,41 +8,20 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.gigamole.navigationtabbar.ntb.NavigationTabBar;
-import com.vebs.healthcare.adapter.MyPagerAdapter;
 import com.vebs.healthcare.fragment.DiagnosticFragment;
 import com.vebs.healthcare.fragment.DoctorFragment;
 import com.vebs.healthcare.fragment.LabFragment;
-import com.vebs.healthcare.fragment.ReferenceFragment;
 import com.vebs.healthcare.fragment.ReferenceFragmentRevised;
 import com.vebs.healthcare.utils.Function;
-import com.vebs.healthcare.utils.Prefs;
 import com.vebs.healthcare.utils.PrefsUtil;
-import com.vebs.healthcare.utils.RestClient;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.vebs.healthcare.R.id.txtSelectCategory;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -106,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFrag(new ReferenceFragmentRevised(), getResources().getString(R.string.reference));
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(0);
+        viewPager.setCurrentItem(4);
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
@@ -182,9 +157,10 @@ public class MainActivity extends AppCompatActivity {
                         cityWhich = which;
                         txtCity.setText(Function.city_list.get(which));
                         //cityId = Function.city_list_id.get(which);
-                        Log.e("city",Function.city_list.get(which));
+                        //Log.e("city",Function.city_list.get(which));
                         PrefsUtil.setCity(MainActivity.this, Function.city_list.get(which));
                         PrefsUtil.setCityID(MainActivity.this, Function.city_list_id.get(which));
+                       // Log.e("city in pref",PrefsUtil.getCity(MainActivity.this) + " || "+ PrefsUtil.getCityID(MainActivity.this));
                         return true;
                     }
                 })

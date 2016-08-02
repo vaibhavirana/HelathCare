@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.custom.MDDialog;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -51,7 +50,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
 
        // appointment = appointmentList.get(position);
         holder.txtname.setText(pName.get(position));
-
+        Function.setRegularFont(context,holder.txtname);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,7 +72,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                 protected void onPreExecute() {
                     super.onPreExecute();
                     patient_list = new ArrayList<>();
-                    progressDialog[0] = ProgressDialog.show(context, "Fetching Diagnostic Test", "Please wait...", false, false);
+                    progressDialog[0] = ProgressDialog.show(context, "Fetching Patient Detail", "Please wait...", false, false);
                     // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
                 }
 
@@ -91,7 +90,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                             JSONObject object = ja.getJSONObject(i);
                             if (object.has("Patient Detail")) {
                                 jo_test = ja.getJSONObject(i).getJSONObject("Patient Detail");
-                                showPopup(jo_test.toString());
+                                showPopup(jo_test);
                                 /*if (jo_test != null) {
                                     HashMap<String,String> pDetail=new HashMap<String, String>();
                                     pDetail.put("p_name",object.getString("p_name"));
@@ -135,40 +134,102 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
     }
 
 
-    private void showPopup(final String str) {
+    private void showPopup(final JSONObject str) {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
+
+                new MDDialog.Builder(context)
+//				        .setContentView(ll)
+                        .setContentView(R.layout.activity_patient_detail)
+                        .setContentViewOperator(new MDDialog.ContentViewOperator() {
+                            @Override
+                            public void operate(View contentView) {
+                               /* EditText et = (EditText)contentView.findViewById(R.id.edit0);
+                                et.setHint("hint set in operator");*/
+                                TextView txtPatientName=(TextView)contentView.findViewById(R.id.txtPatientName);
+                                TextView txtPatientMobNo=(TextView)contentView.findViewById(R.id.txtPatientMobNo);
+                                TextView txtPatientGender=(TextView)contentView.findViewById(R.id.txtPatientGender);
+                                TextView txtPatientAge=(TextView)contentView.findViewById(R.id.txtPatientAge);
+                                TextView txtDate=(TextView)contentView.findViewById(R.id.txtDate);
+                                TextView txtDoctorName=(TextView)contentView.findViewById(R.id.txtDoctorName);
+                                TextView txtLabName=(TextView)contentView.findViewById(R.id.txtLabName);
+                                TextView txtDoctorMobileNo=(TextView)contentView.findViewById(R.id.txtDoctorMobileNo);
+                                TextView txtDoctorFees=(TextView)contentView.findViewById(R.id.txtDoctorFees);
+                                TextView txtDoctorTime=(TextView)contentView.findViewById(R.id.txtDoctorTime);
+                                TextView txtDoctorOffer=(TextView)contentView.findViewById(R.id.txtDoctorOffer);
+                                TextView txtDoctorNote=(TextView)contentView.findViewById(R.id.txtDoctorNote);
+
+                                Function.setRegularFont(context,txtPatientName);
+                                Function.setRegularFont(context,txtPatientMobNo);
+                                Function.setRegularFont(context,txtPatientGender);
+                                Function.setRegularFont(context,txtPatientAge);
+                                Function.setRegularFont(context,txtDate);
+                                Function.setRegularFont(context,txtDoctorName);
+                                Function.setRegularFont(context,txtLabName);
+                                Function.setRegularFont(context,txtDoctorMobileNo);
+                                Function.setRegularFont(context,txtDoctorFees);
+                                Function.setRegularFont(context,txtDoctorTime);
+                                Function.setRegularFont(context,txtDoctorOffer);
+                                Function.setRegularFont(context,txtDoctorNote);
+
+                                try {
+                                    if(str!=null) {
+                                        txtPatientName.setText("Patient Name : " + str.getString("p_name").toString());
+                                        txtPatientMobNo.setText("Patient Mobile No : " + str.getString("Mobile Number").toString());
+                                        txtPatientGender.setText("Patient Gender : " + str.getString("gender").toString());
+                                        txtPatientAge.setText("Patient Age : " + str.getString("Age").toString());
+                                        txtDate.setText("Date : " + str.getString("Date").toString());
+                                        txtDoctorName.setText("Doctor Name : " + str.getString("Doctor Name").toString());
+                                        txtLabName.setText("Center Name : " + str.getString("Center Name").toString());
+                                        txtDoctorMobileNo.setText("Doctor Mobile No : " + str.getString("D Mobile Num").toString());
+                                        txtDoctorFees.setText("test : " + str.getString("test").toString());
+                                        txtDoctorOffer.setText("Offere : " + str.getString("Offere").toString());
+                                        txtDoctorNote.setText("Notes : " + str.getString("refer_note").toString());
+                                        txtDoctorTime.setText("time : " + str.getString("time").toString());
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        })
+//                      .setMessages(messages)
+                        .setTitle("Patient Detail")
+                        .setNegativeButton(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        })
+                        .setPositiveButton(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        })
+                        .setWidthMaxDp(600)
+//                      .setShowTitle(false)
+                        .setShowButtons(true)
+                        .create()
+                        .show();
+
+/*
                 MaterialDialog dialog = new MaterialDialog.Builder(context)
-                /*.customView(R.layout.activity_patient_detail,false)*/
+                .customView(R.layout.activity_patient_detail,false)
                         .title("Patient Detail")
+
+                        *//*.setContentView(R.layout.activity_patient_detail)
+                        .setContentViewOperator(new dialog.ContentViewOperator() {
+                            @Override
+                            public void operate(View contentView) {
+                               *//**//* EditText et = (EditText) contentView.findViewById(R.id.edit0);
+                                et.setHint("hint set in operator");*//**//*
+                            }
+                        })*//*
                         .content(str)
                         .positiveText("OK")
                         .items(R.array.yes_no)
-                        .itemsCallbackSingleChoice(1, new MaterialDialog.ListCallbackSingleChoice() {
-                            @Override
-                            public boolean onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-                                dialog.dismiss();
-                                //catWhich = which;
-                       /* txtSelectCategory.setText(Function.cat_list.get(which));
-                        catId = Function.cat_list_id.get(which);
-                        //Log.e("id",Function.cat_list.get(which)+" || "+catId+"||"+which);
-                        fetch_doctor(getActivity(), catId);*/
-                                //setAdapter();
-                                return true;
-                            }
-                        })
-                        .onPositive(new MaterialDialog.SingleButtonCallback() {
-                            @Override
-                            public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-                        /*if (saveListener != null) {
-                            saveListener.onSave();
-                        }*/
-                            }
-                        })
-
                         .show();
-                dialog.setCancelable(true);
+                dialog.setCancelable(true);*/
             }
         });
 

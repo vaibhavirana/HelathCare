@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.vebs.healthcare.R;
-import com.vebs.healthcare.adapter.PatientAdapter;
 import com.vebs.healthcare.adapter.PatientLabAdapter;
 import com.vebs.healthcare.custom.EmptyLayout;
 import com.vebs.healthcare.utils.Function;
@@ -91,10 +90,17 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
         changeUI(btnNotConsulted, btnConsulted);
         setOnClickListner();
+        setTypeFace();
         // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
         //fetchPatientList();
     }
-
+    private void setTypeFace() {
+        Function.setBoldFont(getActivity(),btnConsulted);
+        Function.setBoldFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),inputSearch);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
+    }
     private void setOnClickListner() {
         btnConsulted.setOnClickListener(this);
         btnNotConsulted.setOnClickListener(this);
@@ -106,7 +112,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
             inputSearch.setVisibility(View.VISIBLE);
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
-            inputSearch.setText(R.string.search_patient);
+            inputSearch.setHint(R.string.search_patient);
             PatientLabAdapter adpt = new PatientLabAdapter(getActivity(), patient_list, patient_referid_list);
             rvList.setAdapter(adpt);
         }else
@@ -118,6 +124,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
         }
 
     }
+
 
     public void fetch_patient(final Context mContext, String url) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
@@ -196,10 +203,10 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     }
 
     private void changeUI(Button btn, Button btn1) {
-        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
         btn.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
 
-        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
-        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
     }
 }

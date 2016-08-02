@@ -7,17 +7,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
-import com.vebs.healthcare.adapter.PatientAdapter;
+import com.vebs.healthcare.utils.Function;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +89,7 @@ public class ReferenceFragmentRevised extends Fragment {
         tabLayout1.getTabAt(1).setText(R.string.labs);
         tabLayout1.getTabAt(2).setText(R.string.diagnostic);
        // tabLayout.getTabAt(3).setText(R.string.reference);
-        /*ViewGroup vg = (ViewGroup) tabLayout.getChildAt(0);
+        ViewGroup vg = (ViewGroup) tabLayout1.getChildAt(0);
         int tabsCount = vg.getChildCount();
         for (int j = 0; j < tabsCount; j++) {
             ViewGroup vgTab = (ViewGroup) vg.getChildAt(j);
@@ -101,10 +97,10 @@ public class ReferenceFragmentRevised extends Fragment {
             for (int i = 0; i < tabChildsCount; i++) {
                 View tabViewChild = vgTab.getChildAt(i);
                 if (tabViewChild instanceof TextView) {
-                    ((TextView) tabViewChild).setTypeface(Functions.getTypeFace(getActivity()));
+                    ((TextView) tabViewChild).setTypeface(Function.getRegularFont(getActivity()));
                 }
             }
-        }*/
+        }
     }
 
     private void setupViewPager(ViewPager viewPager) {

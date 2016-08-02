@@ -39,6 +39,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
+    private View view;
 
     public PatientDoctorFragment() {
         // Required empty public constructor
@@ -76,12 +77,12 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_patient, container, false);
-        init(view);
+        view = inflater.inflate(R.layout.fragment_patient, container, false);
+        init();
         return view;
     }
 
-    private void init(View view) {
+    private void init() {
         btnConsulted = (Button) view.findViewById(R.id.btnConsulted);
         btnNotConsulted = (Button) view.findViewById(R.id.btnNotConsulted);
 
@@ -91,7 +92,17 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
         changeUI(btnNotConsulted, btnConsulted);
+
+        setTypeFace();
         setOnClickListner();
+    }
+
+    private void setTypeFace() {
+        Function.setBoldFont(getActivity(),btnConsulted);
+        Function.setBoldFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),inputSearch);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
+        Function.setRegularFont(getActivity(),btnNotConsulted);
     }
 
     private void setOnClickListner() {
@@ -105,7 +116,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
             inputSearch.setVisibility(View.VISIBLE);
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
-            inputSearch.setText(R.string.search_patient);
+            inputSearch.setHint(R.string.search_patient);
             PatientAdapter adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list);
             rvList.setAdapter(adpt);
         } else {
@@ -192,10 +203,10 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     }
 
     private void changeUI(Button btn, Button btn1) {
-        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
         btn.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
 
-        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
-        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorPrimary));
+        btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+        btn1.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
     }
 }
