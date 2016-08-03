@@ -57,6 +57,7 @@
         android:layout_marginRight="@dimen/md_dialog_margin" >
 
         <TextView
+            android:id="@+id/txtcPatient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:typeface="monospace"
@@ -72,8 +73,8 @@
             android:gravity="center"
             android:padding="@dimen/md_dialog_bottom_button_padding"
             android:text="YES"
+            android:textColor="@color/md_dialog_gray_dark"
             android:typeface="monospace"
-            android:textColor="@color/md_dialog_green_dark"
             android:textSize="@dimen/md_dialog_bottom_button_textsize" />
 
         <Button

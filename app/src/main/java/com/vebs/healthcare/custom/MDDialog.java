@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.Function;
 
 
 /**
@@ -106,6 +107,7 @@ public class MDDialog extends Dialog implements View.OnClickListener{
             btn_no.setVisibility(View.GONE);
         }
         if(!wrapper.showPositiveButton){
+
             btn_yes.setVisibility(View.GONE);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)btn_no.getLayoutParams();
             params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
@@ -116,6 +118,11 @@ public class MDDialog extends Dialog implements View.OnClickListener{
             iv_title.setVisibility(View.VISIBLE);
             tv_title.setPadding(0, 0, 0, 0);
         }
+        Function.setRegularFont(getContext(),btn_yes);
+        Function.setRegularFont(getContext(),btn_no);
+        Function.setRegularFont(getContext(),tv_title);
+        Function.setRegularFont(getContext(),((TextView)this.findViewById(R.id.txtcPatient)));
+
         tv_title.setText(wrapper.title);
         tv_title.setTextColor(wrapper.primaryTextColor);
         btn_yes.setTag(BUTTON_POSITIVE_INDEX);

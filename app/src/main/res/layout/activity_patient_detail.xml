@@ -27,61 +27,72 @@
                 android:id="@+id/txtPatientMobNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/N_TEXT"
                 android:text="abc" />
 
             <TextView
                 android:id="@+id/txtPatientGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/N_TEXT"
                 android:text="abc" />
 
             <TextView
                 android:id="@+id/txtPatientAge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/N_TEXT"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtLabName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorMobileNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorFees"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorOffer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="abc" />
 
             <TextView
+                android:textSize="@dimen/N_TEXT"
                 android:id="@+id/txtDoctorNote"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

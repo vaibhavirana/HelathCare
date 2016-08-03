@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.custom.MDDialog;
 import com.vebs.healthcare.utils.Function;
@@ -18,10 +19,10 @@ import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.PatientHolder> {
@@ -30,7 +31,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
     //private RealmResults<Appointment> appointmentList;
     private ArrayList<String> pName,pId;
     private String str;
-    private ArrayList<String> patient_list;
+    private ArrayList<HashMap<String,String>> patient_list;
     //  private Appointment appointment;
 
     public PatientDiagAdapter(Context context, ArrayList<String> pName, ArrayList<String> pId) {
@@ -54,9 +55,6 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(context,"item selected"+pName.get(position),Toast.LENGTH_LONG).show();
-                //Intent intent=new Intent(context, PatientDetailActivity.class);
-                //context.startActivity(intent);
                 Log.e("patient selected",pName.get(position) +"||"+pId.get(position) +" || "+ PrefsUtil.getDrID(context));
                 Fetch_patient_detail(pId.get(position));
             }
@@ -90,27 +88,27 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                             JSONObject object = ja.getJSONObject(i);
                             if (object.has("Patient Detail")) {
                                 jo_test = ja.getJSONObject(i).getJSONObject("Patient Detail");
-                                showPopup(jo_test);
-                                /*if (jo_test != null) {
+                                //Log.e("json object",jo_test.toString());
+                                if (jo_test != null) {
                                     HashMap<String,String> pDetail=new HashMap<String, String>();
-                                    pDetail.put("p_name",object.getString("p_name"));
-                                    pDetail.put("Mobile Number",object.getString("Mobile Number"));
-                                    pDetail.put("gender",object.getString("gender"));
-                                    pDetail.put("Age",object.getString("Age"));
-                                    pDetail.put("Date",object.getString("Date"));
-                                    pDetail.put("Doctor Name",object.getString("Doctor Name"));
-                                    pDetail.put("Center Name",object.getString("Center Name"));
-                                    pDetail.put("D Mobile Num",object.getString("D Mobile Num"));
-                                    pDetail.put("test",object.getString("test"));
-                                    pDetail.put("price",object.getString("price"));
-                                    pDetail.put("Offere",object.getString("Offere"));
-                                    pDetail.put("refer_note",object.getString("refer_note"));
-                                    pDetail.put("time",object.getString("time"));
+                                    pDetail.put("p_name",jo_test.getString("p_name"));
+                                    pDetail.put("Mobile Number",jo_test.getString("Mobile Number"));
+                                    pDetail.put("gender",jo_test.getString("gender,"));
+                                    pDetail.put("Age",jo_test.getString("Age"));
+                                    pDetail.put("Date",jo_test.getString("Date"));
+                                    pDetail.put("Doctor Name",jo_test.getString("Doctor Name"));
+                                    pDetail.put("Center Name",jo_test.getString("Center Name"));
+                                    pDetail.put("D Mobile Num",jo_test.getString("D Mobile Num"));
+                                    pDetail.put("test",jo_test.getString("test"));
+                                    pDetail.put("price",jo_test.getString("price"));
+                                    pDetail.put("Offere",jo_test.getString("Offere"));
+                                    pDetail.put("refer_note",jo_test.getString("refer_note"));
+                                    pDetail.put("time",jo_test.getString("time"));
 
-                                    patient_list.add(jo_test.getString("test"));
+                                    patient_list.add(pDetail);
 
-                                    Log.e("lab test", diag_test_list.get(i));
-                                }*/
+                                  //  Log.e("lab test", patient_list.get(i).toString());
+                                }
                             }
                         }
                     } catch (Exception e) {
@@ -124,6 +122,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     progressDialog[0].dismiss();
+                    showPopup();
                 }
             }.execute();
 
@@ -134,7 +133,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
     }
 
 
-    private void showPopup(final JSONObject str) {
+    private void showPopup() {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -147,50 +146,9 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                             public void operate(View contentView) {
                                /* EditText et = (EditText)contentView.findViewById(R.id.edit0);
                                 et.setHint("hint set in operator");*/
-                                TextView txtPatientName=(TextView)contentView.findViewById(R.id.txtPatientName);
-                                TextView txtPatientMobNo=(TextView)contentView.findViewById(R.id.txtPatientMobNo);
-                                TextView txtPatientGender=(TextView)contentView.findViewById(R.id.txtPatientGender);
-                                TextView txtPatientAge=(TextView)contentView.findViewById(R.id.txtPatientAge);
-                                TextView txtDate=(TextView)contentView.findViewById(R.id.txtDate);
-                                TextView txtDoctorName=(TextView)contentView.findViewById(R.id.txtDoctorName);
-                                TextView txtLabName=(TextView)contentView.findViewById(R.id.txtLabName);
-                                TextView txtDoctorMobileNo=(TextView)contentView.findViewById(R.id.txtDoctorMobileNo);
-                                TextView txtDoctorFees=(TextView)contentView.findViewById(R.id.txtDoctorFees);
-                                TextView txtDoctorTime=(TextView)contentView.findViewById(R.id.txtDoctorTime);
-                                TextView txtDoctorOffer=(TextView)contentView.findViewById(R.id.txtDoctorOffer);
-                                TextView txtDoctorNote=(TextView)contentView.findViewById(R.id.txtDoctorNote);
 
-                                Function.setRegularFont(context,txtPatientName);
-                                Function.setRegularFont(context,txtPatientMobNo);
-                                Function.setRegularFont(context,txtPatientGender);
-                                Function.setRegularFont(context,txtPatientAge);
-                                Function.setRegularFont(context,txtDate);
-                                Function.setRegularFont(context,txtDoctorName);
-                                Function.setRegularFont(context,txtLabName);
-                                Function.setRegularFont(context,txtDoctorMobileNo);
-                                Function.setRegularFont(context,txtDoctorFees);
-                                Function.setRegularFont(context,txtDoctorTime);
-                                Function.setRegularFont(context,txtDoctorOffer);
-                                Function.setRegularFont(context,txtDoctorNote);
+                                setLayoutDetail(contentView);
 
-                                try {
-                                    if(str!=null) {
-                                        txtPatientName.setText("Patient Name : " + str.getString("p_name").toString());
-                                        txtPatientMobNo.setText("Patient Mobile No : " + str.getString("Mobile Number").toString());
-                                        txtPatientGender.setText("Patient Gender : " + str.getString("gender").toString());
-                                        txtPatientAge.setText("Patient Age : " + str.getString("Age").toString());
-                                        txtDate.setText("Date : " + str.getString("Date").toString());
-                                        txtDoctorName.setText("Doctor Name : " + str.getString("Doctor Name").toString());
-                                        txtLabName.setText("Center Name : " + str.getString("Center Name").toString());
-                                        txtDoctorMobileNo.setText("Doctor Mobile No : " + str.getString("D Mobile Num").toString());
-                                        txtDoctorFees.setText("test : " + str.getString("test").toString());
-                                        txtDoctorOffer.setText("Offere : " + str.getString("Offere").toString());
-                                        txtDoctorNote.setText("Notes : " + str.getString("refer_note").toString());
-                                        txtDoctorTime.setText("time : " + str.getString("time").toString());
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
                             }
                         })
 //                      .setMessages(messages)
@@ -212,26 +170,59 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
                         .create()
                         .show();
 
-/*
-                MaterialDialog dialog = new MaterialDialog.Builder(context)
-                .customView(R.layout.activity_patient_detail,false)
-                        .title("Patient Detail")
-
-                        *//*.setContentView(R.layout.activity_patient_detail)
-                        .setContentViewOperator(new dialog.ContentViewOperator() {
-                            @Override
-                            public void operate(View contentView) {
-                               *//**//* EditText et = (EditText) contentView.findViewById(R.id.edit0);
-                                et.setHint("hint set in operator");*//**//*
-                            }
-                        })*//*
-                        .content(str)
-                        .positiveText("OK")
-                        .items(R.array.yes_no)
-                        .show();
-                dialog.setCancelable(true);*/
             }
         });
+
+    }
+
+    private void setLayoutDetail(View contentView) {
+        TextView txtPatientName=(TextView)contentView.findViewById(R.id.txtPatientName);
+        TextView txtPatientMobNo=(TextView)contentView.findViewById(R.id.txtPatientMobNo);
+        TextView txtPatientGender=(TextView)contentView.findViewById(R.id.txtPatientGender);
+        TextView txtPatientAge=(TextView)contentView.findViewById(R.id.txtPatientAge);
+        TextView txtDate=(TextView)contentView.findViewById(R.id.txtDate);
+        TextView txtDoctorName=(TextView)contentView.findViewById(R.id.txtDoctorName);
+        TextView txtLabName=(TextView)contentView.findViewById(R.id.txtLabName);
+        TextView txtDoctorMobileNo=(TextView)contentView.findViewById(R.id.txtDoctorMobileNo);
+        TextView txtDoctorFees=(TextView)contentView.findViewById(R.id.txtDoctorFees);
+        TextView txtDoctorTime=(TextView)contentView.findViewById(R.id.txtDoctorTime);
+        TextView txtDoctorOffer=(TextView)contentView.findViewById(R.id.txtDoctorOffer);
+        TextView txtDoctorNote=(TextView)contentView.findViewById(R.id.txtDoctorNote);
+
+        Function.setRegularFont(context,txtPatientName);
+        Function.setRegularFont(context,txtPatientMobNo);
+        Function.setRegularFont(context,txtPatientGender);
+        Function.setRegularFont(context,txtPatientAge);
+        Function.setRegularFont(context,txtDate);
+        Function.setRegularFont(context,txtDoctorName);
+        Function.setRegularFont(context,txtLabName);
+        Function.setRegularFont(context,txtDoctorMobileNo);
+        Function.setRegularFont(context,txtDoctorFees);
+        Function.setRegularFont(context,txtDoctorTime);
+        Function.setRegularFont(context,txtDoctorOffer);
+        Function.setRegularFont(context,txtDoctorNote);
+
+        if(patient_list.get(0)!=null) {
+            txtPatientName.setText("Patient Name : " + patient_list.get(0).get("p_name").toString());
+            txtPatientMobNo.setText("Patient Mobile No : " + patient_list.get(0).get("Mobile Number").toString());
+            txtPatientGender.setText("Patient Gender : " + patient_list.get(0).get("gender").toString());
+            txtPatientAge.setText("Patient Age : " + patient_list.get(0).get("Age").toString());
+            txtDate.setText("Date : " + patient_list.get(0).get("Date").toString());
+            txtDoctorName.setText("Doctor Name : " + patient_list.get(0).get("Doctor Name").toString());
+            txtLabName.setText("Center Name : " +patient_list.get(0).get("Center Name").toString());
+            txtDoctorMobileNo.setText("Doctor Mobile No : " + patient_list.get(0).get("D Mobile Num").toString());
+            txtDoctorFees.setText("test : " + patient_list.get(0).get("test").toString() + "\nPrice : "+patient_list.get(0).get("price").toString() );
+            txtDoctorOffer.setText("Offere : " + patient_list.get(0).get("Offere").toString());
+            txtDoctorNote.setText("Notes : " + patient_list.get(0).get("refer_note").toString());
+            txtDoctorTime.setText("time : " + patient_list.get(0).get("time").toString());
+        }else
+        {
+            new MaterialDialog.Builder(context)
+                    .title(context.getString(R.string.doc_refer_error))
+                    .typeface(Function.getRegularFont(context), Function.getRegularFont(context))
+                    .positiveText(android.R.string.ok)
+                    .show();
+        }
 
     }
 
