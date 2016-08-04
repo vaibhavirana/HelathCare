@@ -412,7 +412,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
        // txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
         txtDrName.setText(doctor.get("name").toString());
         txtEmail.setText("Email : " + doctor.get("email").toString());
-        txtHospName.setText("Doctor Hospital Name : " + doctor.get("hosp_name").toString());
+        txtHospName.setText("Hospital Name : " + doctor.get("hosp_name").toString());
         txtMobileNo.setText("Mobile No. : " + doctor.get("mobile").toString());
         txtLandLineNo.setText("Landline No. : " + doctor.get("landline").toString());
         txtAddress.setText("Address : " + doctor.get("address").toString());

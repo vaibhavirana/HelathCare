@@ -43,6 +43,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     private EmptyLayout emptyLayout;
     private boolean is_consulted;
     private View view;
+    private boolean isViewShown=false;
 
     public PatientDoctorFragment() {
         // Required empty public constructor
@@ -51,10 +52,6 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     // TODO: Rename and change types and number of parameters
     public static PatientDoctorFragment newInstance(String param1, String param2) {
         PatientDoctorFragment fragment = new PatientDoctorFragment();
-       /* Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
         return fragment;
     }
 
@@ -62,9 +59,9 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            // Log.e("uid",PrefsUtil.getDrID(getActivity()));
             fetch_patient(getActivity(), Function.PATIENT_NC_DOC_URL);
         }
+
     }
 
     @Override
@@ -96,8 +93,9 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
 
-        changeUI(btnNotConsulted, btnConsulted);
 
+
+        changeUI(btnNotConsulted, btnConsulted);
         setTypeFace();
         setOnClickListner();
     }

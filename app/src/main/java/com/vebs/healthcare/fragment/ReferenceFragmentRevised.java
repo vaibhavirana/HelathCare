@@ -40,7 +40,7 @@ public class ReferenceFragmentRevised extends Fragment {
     private String mParam1;
     private String mParam2;
     private View view;
-
+    private boolean isViewShown = false;
     public ReferenceFragmentRevised() {
         // Required empty public constructor
     }
@@ -75,20 +75,51 @@ public class ReferenceFragmentRevised extends Fragment {
        // return inflater.inflate(R.layout.fragment_reference, container, false);
     }
 
+
     private void init() {
         tabLayout1 = (TabLayout) view.findViewById(R.id.tab_layout1);
         viewPager1 = (ViewPager) view.findViewById(R.id.pager1);
+
+        if(!isViewShown)
+        {
+            setTab();
+        }
+    }
+
+    private void setTab()
+    {
         setupViewPager(viewPager1);
-        /*tabLayout1.post(new Runnable() {
-            @Override
-            public void run() {
-                tabLayout1.setupWithViewPager(viewPager1);
-            }
-        });*/
         tabLayout1.setupWithViewPager(viewPager1);
         setupTabIcons();
         viewPager1.setOffscreenPageLimit(0);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setTab();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getView() != null) {
+            isViewShown = true;
+            // fetchdata() contains logic to show data when page is selected mostly asynctask to fill the data
+            setupViewPager(viewPager1);
+            tabLayout1.setupWithViewPager(viewPager1);
+            setupTabIcons();
+            viewPager1.setOffscreenPageLimit(0);
+        } else {
+            isViewShown = false;
+        }
+
+       /* if (isVisibleToUser) {
+            setupViewPager(viewPager1);
+            tabLayout1.setupWithViewPager(viewPager1);
+            setupTabIcons();
+            viewPager1.setOffscreenPageLimit(0);
+        }*/
     }
 
     private void setupTabIcons() {
