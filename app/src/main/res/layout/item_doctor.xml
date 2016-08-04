@@ -1,68 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/llDoctor"
     android:layout_margin="@dimen/dimen_8dp"
-    android:background="@drawable/bg_round_rect"
-    android:orientation="vertical"
-    android:padding="@dimen/dimen_8dp">
+    android:elevation="@dimen/dimen_8dp">
 
-    <TextView
-        android:id="@+id/txtDrName"
+    <LinearLayout
+        android:id="@+id/llDoctor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Doctor Name: " />
+        android:orientation="vertical"
+       >
 
-    <TextView
-        android:id="@+id/txtHospName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Hospital Name: " />
+        <LinearLayout
 
-    <TextView
-        android:id="@+id/txtMobileNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Mobile Num: " />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dimen_8dp"
+            android:background="@color/edittext_hint_color"
+            android:orientation="vertical">
+        <TextView
+            android:id="@+id/txtDrName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="@dimen/L_TEXT"
+            android:text="Doctor Name: " />
 
-    <TextView
-        android:id="@+id/txtLandLineNo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Landline Num: " />
+            <TextView
+                android:id="@+id/txtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:gravity="center"
+                android:textSize="@dimen/N_TEXT"
+                android:text="Email: " />
 
-    <TextView
-        android:id="@+id/txtEmail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email: " />
+        </LinearLayout>
+        <TextView
+            android:layout_margin="@dimen/dimen_4dp"
+            android:id="@+id/txtHospName"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Hospital Name: " />
 
-    <TextView
-        android:id="@+id/txtAddress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Clinic Address: " />
+        <TextView
+            android:layout_margin="@dimen/dimen_4dp"
+            android:id="@+id/txtAddress"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clinic Address: " />
 
-    <TextView
-        android:id="@+id/txtTime"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Timming: " />
-    <TextView
-        android:id="@+id/txtFees"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Fees: " />
-    <TextView
-        android:id="@+id/txtPatient"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No of Patient: " />
+        <TextView
+            android:layout_margin="@dimen/dimen_4dp"
+            android:id="@+id/txtMobileNo"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mobile Num: " />
 
-    <TextView
-        android:id="@+id/txtNote"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Note: " />
-</LinearLayout>
+        <TextView
+
+            android:id="@+id/txtLandLineNo"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_margin="@dimen/dimen_4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Landline Num: " />
+
+
+        <TextView
+            android:id="@+id/txtNote"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_margin="@dimen/dimen_4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Note: " />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="3"
+            android:layout_margin="@dimen/dimen_4dp"
+            android:padding="@dimen/dimen_4dp"
+            android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/txtTime"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_height="wrap_content"
+            android:text="Timming: " />
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/txtFees"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_width="0dp"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="Fees: " />
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/txtPatient"
+            android:layout_width="0dp"
+            android:textSize="@dimen/M_TEXT"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:text="No of Patient: " />
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

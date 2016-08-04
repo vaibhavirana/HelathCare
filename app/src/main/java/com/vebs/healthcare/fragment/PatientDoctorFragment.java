@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,6 +18,7 @@ import android.widget.EditText;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.adapter.PatientAdapter;
 import com.vebs.healthcare.custom.EmptyLayout;
+import com.vebs.healthcare.custom.SimpleDividerItemDecoration;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -32,13 +33,15 @@ import java.util.ArrayList;
  */
 
 public class PatientDoctorFragment extends Fragment implements View.OnClickListener {
+
     private static ArrayList<String> patient_list;
     private static ArrayList<String> patient_referid_list;
-    private Button btnNotConsulted, btnConsulted;
+    private Button btnNotConsulted,btnConsulted;
     //private AutoCompleteTextView txtSearch;
     private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
+    private boolean is_consulted;
     private View view;
 
     public PatientDoctorFragment() {
@@ -77,20 +80,22 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view = inflater.inflate(R.layout.fragment_patient, container, false);
+        view=inflater.inflate(R.layout.fragment_patient, container, false);
         init();
         return view;
     }
 
     private void init() {
-        btnConsulted = (Button) view.findViewById(R.id.btnConsulted);
-        btnNotConsulted = (Button) view.findViewById(R.id.btnNotConsulted);
-
+        btnConsulted=(Button)view.findViewById(R.id.btnConsulted);
+        btnNotConsulted=(Button)view.findViewById(R.id.btnNotConsulted);
         inputSearch = (EditText) view.findViewById(R.id.inputSearch);
         rvList = (RecyclerView) view.findViewById(R.id.RecyclerViewList);
+        rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getResources()));
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvList.setItemAnimator(new DefaultItemAnimator());
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
+
         changeUI(btnNotConsulted, btnConsulted);
 
         setTypeFace();
@@ -101,8 +106,6 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
         Function.setBoldFont(getActivity(),btnConsulted);
         Function.setBoldFont(getActivity(),btnNotConsulted);
         Function.setRegularFont(getActivity(),inputSearch);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
     }
 
     private void setOnClickListner() {
@@ -117,7 +120,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
             inputSearch.setHint(R.string.search_patient);
-            PatientAdapter adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list);
+            PatientAdapter adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
             rvList.setAdapter(adpt);
         } else {
             rvList.setVisibility(View.GONE);
@@ -189,11 +192,13 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConsulted:
+                is_consulted=true;
                 changeUI(btnConsulted, btnNotConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_C_DOC_URL);
                 break;
 
             case R.id.btnNotConsulted:
+                is_consulted=false;
                 changeUI(btnNotConsulted, btnConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_NC_DOC_URL);
                 break;

@@ -47,7 +47,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
 
     private MaterialEditText edtPatientName, edtPatientNo, edtAge, edtRefer;
     private TextView txtDate;
-    private Button btnRefernce, btnHomeCollected, btnCenterCollected;
+    private Button btnRefernce;
+    /*btnHomeCollected, btnCenterCollected;*/
     private RadioGroup rgGender;
     private int labId = 0, labWhich = 0;
     private View layoutLabDetail;
@@ -114,14 +115,14 @@ public class LabFragment extends Fragment implements View.OnClickListener {
 
         layoutLabDetail = (View) view.findViewById(R.id.layoutLabDetail);
         btnRefernce = (Button) view.findViewById(R.id.btnRefernce);
-        btnHomeCollected = (Button) view.findViewById(R.id.btnHomeCollected);
-        btnCenterCollected = (Button) view.findViewById(R.id.btnCenterCollected);
+     /*   btnHomeCollected = (Button) view.findViewById(R.id.btnHomeCollected);
+        btnCenterCollected = (Button) view.findViewById(R.id.btnCenterCollected);*/
         rgGender = (RadioGroup) view.findViewById(R.id.rgGender);
         selectedGenderId = Function.MALE;
         collected_type = "CENTER";
 
-        btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
-        btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+       /* btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
+        btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));*/
 
         setTypeFace();
         actionListener();
@@ -135,8 +136,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         Function.setRegularFont(getActivity(), edtAge);
         Function.setRegularFont(getActivity(), edtRefer);
         Function.setRegularFont(getActivity(), btnRefernce);
-        Function.setRegularFont(getActivity(), btnHomeCollected);
-        Function.setRegularFont(getActivity(), btnCenterCollected);
+       /* Function.setRegularFont(getActivity(), btnHomeCollected);
+        Function.setRegularFont(getActivity(), btnCenterCollected);*/
         Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdFemale)));
         Function.setRegularFont(getActivity(), ((RadioButton) view.findViewById(R.id.rdMale)));
 
@@ -146,8 +147,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         //txtSelectTest.setOnClickListener(this);
         txtSelectLab.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
-        btnHomeCollected.setOnClickListener(this);
-        btnCenterCollected.setOnClickListener(this);
+       /* btnHomeCollected.setOnClickListener(this);
+        btnCenterCollected.setOnClickListener(this);*/
 
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -201,7 +202,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 validateData();
                 break;
 
-            case R.id.btnHomeCollected:
+           /* case R.id.btnHomeCollected:
                 btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
                 btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
                 collected_type = "HOME";
@@ -211,7 +212,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
                 btnCenterCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
                 btnHomeCollected.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
                 collected_type = "CENTER";
-                break;
+                break;*/
 
         }
 
@@ -416,7 +417,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime, txtPatient, txtNote, txtSelectTest,txtSelectTestPrice;
+    TextView txtLabName, txtDrName, txtEmail, txtMobileNo, txtLandLineNo, txtAddress, txtTime,txtFees, txtPatient, txtNote, txtSelectTest,txtSelectTestPrice;
     LinearLayout llLab;
     public String test = "";
 
@@ -432,7 +433,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         txtLandLineNo = (TextView) layoutLabDetail.findViewById(R.id.txtLandLineNo);
         txtAddress = (TextView) layoutLabDetail.findViewById(R.id.txtAddress);
         txtTime = (TextView) layoutLabDetail.findViewById(R.id.txtTime);
-       // txtFees = (TextView) layoutLabDetail.findViewById(R.id.txtFees);
+        txtFees = (TextView) layoutLabDetail.findViewById(R.id.txtFees);
+        txtFees.setVisibility(View.VISIBLE);
         txtPatient = (TextView) layoutLabDetail.findViewById(R.id.txtPatient);
         txtNote = (TextView) layoutLabDetail.findViewById(R.id.txtNote);
         txtSelectTest = (TextView) layoutLabDetail.findViewById(R.id.txtSelectTest);
@@ -448,7 +450,7 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         Function.setRegularFont(getActivity(), txtLandLineNo);
         Function.setRegularFont(getActivity(), txtAddress);
         Function.setRegularFont(getActivity(), txtTime);
-       // Function.setRegularFont(getActivity(), txtFees);
+        Function.setRegularFont(getActivity(), txtFees);
         Function.setRegularFont(getActivity(), txtPatient);
         Function.setRegularFont(getActivity(), txtNote);
         Function.setRegularFont(getActivity(), txtSelectTest);
@@ -456,20 +458,21 @@ public class LabFragment extends Fragment implements View.OnClickListener {
 
         HashMap<String, Object> labDetail = lab_test_detail.get(0);
 
-        txtLabName.setText("Lab Name : " + labDetail.get("labName").toString());
+        txtLabName.setText("" + labDetail.get("labName").toString());
         txtDrName.setText("Doctor Name : " + labDetail.get("drname").toString());
-        txtEmail.setText("Doctor Email Id : " + labDetail.get("email").toString());
+        txtEmail.setText("Email : " + labDetail.get("email").toString());
         txtMobileNo.setText("Mobile No. : " + labDetail.get("mobile").toString());
         txtLandLineNo.setText("Landline No. : " + labDetail.get("landline").toString());
         txtAddress.setText("Address : " + labDetail.get("address").toString());
-        txtTime.setText("Time : " + labDetail.get("time").toString());
-        txtPatient.setText("No of Patients : " + labDetail.get("offer"));
+        txtTime.setText("Time \n" + labDetail.get("time").toString());
+        txtFees.setText("Collection Type : " + labDetail.get("ctype").toString());
+        txtPatient.setText("No of Patients \n" + labDetail.get("offer"));
         txtNote.setText("Note : " + labDetail.get("note"));
 
+        collected_type=labDetail.get("ctype").toString();
         List<String> lab_test = new ArrayList<>();
         testWhich = null;
-
-        //Log.e("lab test", lab_test_detail.get(0).get("test").toString());
+        //Log.e("lab test", lab_test_detail.get(0).get("ctype").toString());
         String str = lab_test_detail.get(0).get("test").toString();
         String str1 = lab_test_detail.get(0).get("price").toString();
         lab_test = Arrays.asList(str.split(","));

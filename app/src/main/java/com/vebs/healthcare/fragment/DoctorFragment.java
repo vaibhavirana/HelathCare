@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -144,13 +146,46 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         txtSelectCategory.setOnClickListener(this);
         txtSelectDoctor.setOnClickListener(this);
         btnRefernce.setOnClickListener(this);
-        btnEmergency.setOnLongClickListener(new View.OnLongClickListener() {
+       /* btnEmergency.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 validateData(1);
                 return false;
             }
+        });*/
+
+
+        final boolean[] isLongPress = {false};
+        final int duration = 3000;
+        final Handler someHandler = new Handler();
+        final Runnable someCall = new Runnable() {
+            @Override
+            public void run() {
+                if(isLongPress[0]) {
+                    validateData(1);
+                    //Log.e("long press","long press after 3 sec");
+                    // your code goes here
+                }
+            }
+        };
+
+        btnEmergency.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int eventAction = event.getAction();
+                if(eventAction == MotionEvent.ACTION_DOWN){
+                    isLongPress[0] = true;
+                    someHandler.postDelayed(someCall, duration);
+                }
+                else if (eventAction == MotionEvent.ACTION_UP) {
+                    isLongPress[0] = false;
+                    someHandler.removeCallbacks(someCall);
+                }
+                return false;
+            }
         });
+
 
         rgGender.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -374,15 +409,16 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
 
         HashMap<String, Object> doctor = doc_list.get(id);
         docId = doctor.get("id").toString();
-        txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
-        txtEmail.setText("Doctor Email Id : " + doctor.get("email").toString());
+       // txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
+        txtDrName.setText(doctor.get("name").toString());
+        txtEmail.setText("Email : " + doctor.get("email").toString());
         txtHospName.setText("Doctor Hospital Name : " + doctor.get("hosp_name").toString());
         txtMobileNo.setText("Mobile No. : " + doctor.get("mobile").toString());
         txtLandLineNo.setText("Landline No. : " + doctor.get("landline").toString());
         txtAddress.setText("Address : " + doctor.get("address").toString());
-        txtTime.setText("Time : " + doctor.get("time").toString());
-        txtFees.setText("Fees : " + doctor.get("fees").toString());
-        txtPatient.setText("No of Patients : " + doctor.get("offer"));
+        txtTime.setText("Time \n" + doctor.get("time").toString());
+        txtFees.setText("Fees \n" + doctor.get("fees").toString());
+        txtPatient.setText("No of Patients \n" + doctor.get("offer"));
         txtNote.setText("Note : " + doctor.get("note"));
     }
 

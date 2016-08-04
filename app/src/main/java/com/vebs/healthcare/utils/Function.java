@@ -57,6 +57,12 @@ public class Function {
     public static final String PATIENT_NC_DIAG_URL = ROOT_URL + "fetch_notconsulteddiag.php";
     public static final String PATIENT_DETAIL_DIAG_URL = ROOT_URL + "fetch_diag_patient.php";
 
+    public static final String PATIENT_DETAIL_CHNAGE_STATUS_DOC_URL = ROOT_URL + "change_status_doc.php";
+    public static final String PATIENT_DETAIL_CHNAGE_STATUS_LAB__URL = ROOT_URL + "change_status_lab.php";
+    public static final String PATIENT_DETAIL_CHNAGE_STATUS_DIAG__URL = ROOT_URL + "change_status_diag.php";
+
+
+
     public static final int NO_DOCTOR = 1;
     public static final int NO_LAB = 2;
     public static final int NO_DIAG = 3;
@@ -397,5 +403,47 @@ public class Function {
             showInternetPopup(mContext);
         }
     }
+
+    public static void chnage_status(final Context mContext, final String referid,final String url) {
+        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+        if (Function.isConnected(mContext)) {
+            // Function.fetch_city();
+            final RestClient client = new RestClient(url);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog[0] = ProgressDialog.show(mContext, "Changing Status", "Please wait...", false, false);
+                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        client.AddParam("id", String.valueOf(referid));
+                        client.AddParam("a",String.valueOf(1));
+                        client.Execute("get");
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    progressDialog[0].dismiss();
+
+                }
+            }.execute();
+
+        }else
+        {
+            showInternetPopup(mContext);
+        }
+    }
+
 
 }

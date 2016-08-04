@@ -286,7 +286,7 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
                 @Override
                 protected void onPreExecute() {
                     super.onPreExecute();
-                    progressDialog = ProgressDialog.show(getActivity(), "Refer Doctor", "Please wait...", false, false);
+                    progressDialog = ProgressDialog.show(getActivity(), "Refer Diagnostic", "Please wait...", false, false);
                 }
 
                 @Override
@@ -481,14 +481,14 @@ public class DiagnosticFragment extends Fragment implements View.OnClickListener
 
         HashMap<String, Object> labDetail = diag_test_detail.get(0);
 
-        txtLabName.setText("Diagnostic Name : " + labDetail.get("diagName").toString());
+        txtLabName.setText("" + labDetail.get("diagName").toString());
         txtDrName.setText("Doctor Name : " + labDetail.get("drname").toString());
-        txtEmail.setText("Doctor Email Id : " + labDetail.get("email").toString());
+        txtEmail.setText("Email : " + labDetail.get("email").toString());
         txtMobileNo.setText("Mobile No. : " + labDetail.get("mobile").toString());
         txtLandLineNo.setText("Landline No. : " + labDetail.get("landline").toString());
         txtAddress.setText("Address : " + labDetail.get("address").toString());
-        txtTime.setText("Time : " + labDetail.get("time").toString());
-        txtPatient.setText("No of Patients : " + labDetail.get("offer"));
+        txtTime.setText("Time \n" + labDetail.get("time").toString());
+        txtPatient.setText("No of Patients \n" + labDetail.get("offer"));
         txtNote.setText("Note : " + labDetail.get("note"));
 
         List<String> lab_test = new ArrayList<>();

@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFrag(new ReferenceFragmentRevised(), getResources().getString(R.string.reference));
 
         viewPager.setAdapter(adapter);
-        viewPager.setCurrentItem(4);
+        viewPager.setCurrentItem(0);
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {

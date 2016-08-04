@@ -39,6 +39,7 @@ public class ReferenceFragmentRevised extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private View view;
 
     public ReferenceFragmentRevised() {
         // Required empty public constructor
@@ -67,17 +68,23 @@ public class ReferenceFragmentRevised extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_reference_revised, container, false);
-        init(view);
+        view=inflater.inflate(R.layout.fragment_reference_revised, container, false);
+        init();
         return view;
         
        // return inflater.inflate(R.layout.fragment_reference, container, false);
     }
 
-    private void init(View view) {
+    private void init() {
         tabLayout1 = (TabLayout) view.findViewById(R.id.tab_layout1);
         viewPager1 = (ViewPager) view.findViewById(R.id.pager1);
         setupViewPager(viewPager1);
+        /*tabLayout1.post(new Runnable() {
+            @Override
+            public void run() {
+                tabLayout1.setupWithViewPager(viewPager1);
+            }
+        });*/
         tabLayout1.setupWithViewPager(viewPager1);
         setupTabIcons();
         viewPager1.setOffscreenPageLimit(0);

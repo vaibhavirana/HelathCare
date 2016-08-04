@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.adapter.PatientLabAdapter;
 import com.vebs.healthcare.custom.EmptyLayout;
+import com.vebs.healthcare.custom.SimpleDividerItemDecoration;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -38,6 +40,8 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
+    private View view;
+    private boolean is_consulted;
 
     public PatientLabFragment() {
         // Required empty public constructor
@@ -46,10 +50,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     // TODO: Rename and change types and number of parameters
     public static PatientLabFragment newInstance(String param1, String param2) {
         PatientLabFragment fragment = new PatientLabFragment();
-       /* Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);*/
+
         return fragment;
     }
 
@@ -58,6 +59,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Log.e("uid",PrefsUtil.getDrID(getActivity()));
+            //init();
             fetch_patient(getActivity(),Function.PATIENT_NC_LAB_URL);
         }
     }
@@ -75,32 +77,36 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_patient, container, false);
-        init(view);
+        view=inflater.inflate(R.layout.fragment_patient, container, false);
+init();
         return view;
     }
 
-    private void init(View view) {
+    private void init() {
         btnConsulted=(Button)view.findViewById(R.id.btnConsulted);
         btnNotConsulted=(Button)view.findViewById(R.id.btnNotConsulted);
+        changeUI(btnNotConsulted, btnConsulted);
+
         inputSearch = (EditText) view.findViewById(R.id.inputSearch);
-        rvList=(RecyclerView)view.findViewById(R.id.RecyclerViewList);
+        rvList = (RecyclerView) view.findViewById(R.id.RecyclerViewList);
+        rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getResources()));
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvList.setItemAnimator(new DefaultItemAnimator());
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
-        changeUI(btnNotConsulted, btnConsulted);
+
         setOnClickListner();
         setTypeFace();
         // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
         //fetchPatientList();
     }
+
     private void setTypeFace() {
         Function.setBoldFont(getActivity(),btnConsulted);
         Function.setBoldFont(getActivity(),btnNotConsulted);
         Function.setRegularFont(getActivity(),inputSearch);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
     }
+
     private void setOnClickListner() {
         btnConsulted.setOnClickListener(this);
         btnNotConsulted.setOnClickListener(this);
@@ -113,7 +119,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
             inputSearch.setHint(R.string.search_patient);
-            PatientLabAdapter adpt = new PatientLabAdapter(getActivity(), patient_list, patient_referid_list);
+            PatientLabAdapter adpt = new PatientLabAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
             rvList.setAdapter(adpt);
         }else
         {
@@ -189,11 +195,13 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConsulted:
+                is_consulted=true;
                 changeUI(btnConsulted, btnNotConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_C_LAB_URL);
                 break;
 
             case R.id.btnNotConsulted:
+                is_consulted=false;
                 changeUI(btnNotConsulted, btnConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_NC_LAB_URL);
                 break;

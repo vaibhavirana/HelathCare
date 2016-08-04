@@ -135,7 +135,7 @@
                 android:visibility="gone"
                 layout="@layout/item_lab"></include>
 
-            <LinearLayout
+           <!-- <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_8dp"
@@ -144,6 +144,7 @@
                 android:orientation="horizontal">
 
                 <Button
+                    android:enabled="false"
                     android:id="@+id/btnHomeCollected"
                     android:layout_weight="1"
                     style="@style/MyFlatButtonStyle"
@@ -152,13 +153,14 @@
                     android:text="@string/home_collected" />
 
                 <Button
+                    android:enabled="false"
                     android:id="@+id/btnCenterCollected"
                     android:layout_weight="1"
                     android:layout_marginLeft="@dimen/dimen_8dp"
                     android:layout_marginRight="@dimen/dimen_8dp"
                     style="@style/MyFlatButtonStyle"
                     android:text="@string/center_collected" />
-            </LinearLayout>
+            </LinearLayout>-->
             <com.rengwuxian.materialedittext.MaterialEditText
                 android:id="@+id/edtRefer"
                 android:layout_width="match_parent"

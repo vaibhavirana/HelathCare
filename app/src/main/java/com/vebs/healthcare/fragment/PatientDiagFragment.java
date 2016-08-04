@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.EditText;
 import com.vebs.healthcare.R;
 import com.vebs.healthcare.adapter.PatientDiagAdapter;
 import com.vebs.healthcare.custom.EmptyLayout;
+import com.vebs.healthcare.custom.SimpleDividerItemDecoration;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -39,6 +41,8 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
     private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
+    private boolean is_consulted;
+    private View view;
 
     public PatientDiagFragment() {
         // Required empty public constructor
@@ -59,6 +63,7 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
             // Log.e("uid",PrefsUtil.getDrID(getActivity()));
+           // init();
             fetch_patient(getActivity(), Function.PATIENT_NC_DIAG_URL);
         }
     }
@@ -76,45 +81,46 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view=inflater.inflate(R.layout.fragment_patient, container, false);
-        init(view);
+        view=inflater.inflate(R.layout.fragment_patient, container, false);
+        init();
         return view;
     }
 
-    private void init(View view) {
+    private void init() {
         btnConsulted=(Button)view.findViewById(R.id.btnConsulted);
         btnNotConsulted=(Button)view.findViewById(R.id.btnNotConsulted);
         inputSearch = (EditText) view.findViewById(R.id.inputSearch);
-        rvList=(RecyclerView)view.findViewById(R.id.RecyclerViewList);
+        rvList = (RecyclerView) view.findViewById(R.id.RecyclerViewList);
+        rvList.addItemDecoration(new SimpleDividerItemDecoration(getActivity().getResources()));
         rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvList.setItemAnimator(new DefaultItemAnimator());
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
-        // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
-        //fetchPatientList();
+
         changeUI(btnNotConsulted, btnConsulted);
         setTypeFace();
         setOnClickListner();
-        // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
-        //fetchPatientList();
     }
+
     private void setTypeFace() {
         Function.setBoldFont(getActivity(),btnConsulted);
         Function.setBoldFont(getActivity(),btnNotConsulted);
         Function.setRegularFont(getActivity(),inputSearch);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
-        Function.setRegularFont(getActivity(),btnNotConsulted);
+
     }
+
     private void setOnClickListner() {
         btnConsulted.setOnClickListener(this);
         btnNotConsulted.setOnClickListener(this);
     }
+
     private void setAdapater() {
 
         if(patient_list.size()>0) {
             inputSearch.setVisibility(View.VISIBLE);
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
-            PatientDiagAdapter adpt = new PatientDiagAdapter(getActivity(), patient_list,patient_referid_list);
+            PatientDiagAdapter adpt = new PatientDiagAdapter(getActivity(), patient_list,patient_referid_list,is_consulted);
             rvList.setAdapter(adpt);
         }else
         {
@@ -188,11 +194,13 @@ public class PatientDiagFragment extends Fragment implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConsulted:
+                is_consulted=true;
                 changeUI(btnConsulted, btnNotConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_C_DIAG_URL);
                 break;
 
             case R.id.btnNotConsulted:
+                is_consulted=false;
                 changeUI(btnNotConsulted, btnConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_NC_DIAG_URL);
                 break;

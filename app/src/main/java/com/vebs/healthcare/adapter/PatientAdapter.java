@@ -30,11 +30,13 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
     private Context context;
     private ArrayList<String> pName, pId;
     private ArrayList<HashMap<String, String>> patient_list;
+    private boolean is_consulted;
 
-    public PatientAdapter(Context context, ArrayList<String> pName, ArrayList<String> pId) {
+    public PatientAdapter(Context context, ArrayList<String> pName, ArrayList<String> pId, boolean is_consulted) {
         this.context = context;
         this.pName = pName;
         this.pId = pId;
+        this.is_consulted=is_consulted;
     }
 
     @Override
@@ -52,12 +54,12 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
             @Override
             public void onClick(View v) {
                 Log.e("patient selected", pName.get(position) + "||" + pId.get(position) + " || " + PrefsUtil.getDrID(context));
-                Fetch_patient_detail(pId.get(position));
+                Fetch_patient_detail(pId.get(position),position);
             }
         });
     }
 
-    private void Fetch_patient_detail(final String id) {
+    private void Fetch_patient_detail(final String id,final int pos) {
         final ProgressDialog[] progressDialog = new ProgressDialog[1];
         if (Function.isConnected(context)) {
             final RestClient client = new RestClient(Function.PATIENT_DETAIL_DOC_URL);
@@ -82,12 +84,12 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
                         for (int i = 0; i < ja.length(); i++) {
 
                             JSONObject object = ja.getJSONObject(i);
-                            if (object.has("Patient Name")) {
-                                jo_test = ja.getJSONObject(i).getJSONObject("Patient Name");
+                            if (object.has("Patient")) {
+                                jo_test = ja.getJSONObject(i).getJSONObject("Patient");
                                 HashMap<String,String> pDetail=new HashMap<String, String>();
-                                pDetail.put("p_name",jo_test.getString("p_name"));
+                                pDetail.put("p_name",jo_test.getString("Name"));
                                 pDetail.put("Mobile Number",jo_test.getString("Mobile Number"));
-                                pDetail.put("gender",jo_test.getString("gender,"));
+                                pDetail.put("gender",jo_test.getString("gender"));
                                 pDetail.put("Age",jo_test.getString("Age"));
                                 pDetail.put("Date",jo_test.getString("Date"));
                                 pDetail.put("Doctor Name",jo_test.getString("Doctor Name"));
@@ -113,7 +115,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
                 protected void onPostExecute(Void aVoid) {
                     super.onPostExecute(aVoid);
                     progressDialog[0].dismiss();
-                    showPopup();
+                    showPopup(id,pos);
                 }
             }.execute();
 
@@ -122,43 +124,54 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
         }
     }
 
-    private void showPopup() {
+    private void showPopup(final String id,final int pos) {
         ((Activity)context).runOnUiThread(new Runnable() {
             @Override
             public void run() {
 
-                new MDDialog.Builder(context)
-//				        .setContentView(ll)
-                        .setContentView(R.layout.activity_patient_detail)
-                        .setContentViewOperator(new MDDialog.ContentViewOperator() {
-                            @Override
-                            public void operate(View contentView) {
-                               /* EditText et = (EditText)contentView.findViewById(R.id.edit0);
-                                et.setHint("hint set in operator");*/
+                if(is_consulted)
+                {
+                    new MDDialog.Builder(context)
+                            .setContentView(R.layout.activity_patient_detail)
+                            .setContentViewOperator(new MDDialog.ContentViewOperator() {
+                                @Override
+                                public void operate(View contentView) {
+                                    setLayoutDetail(contentView);
+                                }
+                            })
+                            .setTitle("Patient Detail")
+                            .setWidthMaxDp(600)
+                            .setShowButtons(false)
+                            .create()
+                            .show();
+                }else {
+                    new MDDialog.Builder(context)
+                            .setContentView(R.layout.activity_patient_detail)
+                            .setContentViewOperator(new MDDialog.ContentViewOperator() {
+                                @Override
+                                public void operate(View contentView) {
+                                    setLayoutDetail(contentView);
 
-                                setLayoutDetail(contentView);
-
-                            }
-                        })
-//                      .setMessages(messages)
-                        .setTitle("Patient Detail")
-                        .setNegativeButton(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                            }
-                        })
-                        .setPositiveButton(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-
-                            }
-                        })
-                        .setWidthMaxDp(600)
-//                      .setShowTitle(false)
-                        .setShowButtons(true)
-                        .create()
-                        .show();
-
+                                }
+                            })
+                            .setTitle("Patient Detail")
+                            .setNegativeButton(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                }
+                            })
+                            .setPositiveButton(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Log.e("selected id", id + " " + pos);
+                                    chnage_status(id, pos);
+                                }
+                            })
+                            .setWidthMaxDp(600)
+                            .setShowButtons(true)
+                            .create()
+                            .show();
+                }
             }
         });
 
@@ -234,4 +247,58 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientH
         }
     }
 
+    public  void chnage_status(final String referid,final int pos) {
+        final ProgressDialog[] progressDialog = new ProgressDialog[1];
+        if (Function.isConnected(context)) {
+            // Function.fetch_city();
+            final RestClient client = new RestClient(Function.PATIENT_DETAIL_CHNAGE_STATUS_DOC_URL);
+            new AsyncTask<Void, Void, Void>() {
+                @Override
+                protected void onPreExecute() {
+                    super.onPreExecute();
+                    progressDialog[0] = ProgressDialog.show(context, "Changing Status", "Please wait...", false, false);
+                    // progressDialog = ProgressDialog.show(MainActivity.this, "Fetching Data", "Please wait...", false, false);
+                }
+
+                @Override
+                protected Void doInBackground(Void... params) {
+                    try {
+                        client.AddParam("id", String.valueOf(referid));
+                        client.AddParam("a",String.valueOf(1));
+                        client.Execute("get");
+                        /*if (client.getResponse().equals("Your Status was updated succesfully"))
+                        {
+                            //removeAt(pos);
+
+                        }*/
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("Webservice 1", e.toString());
+                    }
+                    return null;
+                }
+
+                @Override
+                protected void onPostExecute(Void aVoid) {
+                    super.onPostExecute(aVoid);
+                    progressDialog[0].dismiss();
+                    removeAt(pos);
+                    //notifyDataSetChanged();
+
+                }
+            }.execute();
+
+        }else
+        {
+            Function.showInternetPopup(context);
+        }
+    }
+
+    public void removeAt(int position) {
+        pName.remove(position);
+        pId.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, pName.size());
+    }
 }
