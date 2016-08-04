@@ -25,26 +25,22 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textColor="@color/colorWhite"
-            android:textSize="@dimen/L_TEXT"
+            android:textSize="@dimen/XL_TEXT"
             android:text="Doctor Name: " />
 
             <TextView
-                android:id="@+id/txtEmail"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+
                 android:textColor="@color/colorWhite"
                 android:gravity="center"
-                android:textSize="@dimen/N_TEXT"
-                android:text="Email: " />
+                android:id="@+id/txtHospName"
+                android:textSize="@dimen/M_TEXT"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Hospital Name: " />
 
         </LinearLayout>
-        <TextView
-            android:layout_margin="@dimen/dimen_4dp"
-            android:id="@+id/txtHospName"
-            android:textSize="@dimen/M_TEXT"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Hospital Name: " />
+
+
 
         <TextView
             android:layout_margin="@dimen/dimen_4dp"
@@ -71,6 +67,13 @@
             android:layout_height="wrap_content"
             android:text="Landline Num: " />
 
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_4dp"
+            android:textSize="@dimen/M_TEXT"
+            android:text="Email: " />
 
         <TextView
             android:id="@+id/txtNote"

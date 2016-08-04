@@ -25,6 +25,7 @@
                 android:imeOptions="actionNext"
                 android:padding="@dimen/dimen_4dp"
                 android:singleLine="true"
+                app:met_textColorHint="@color/half_black"
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -38,9 +39,45 @@
                 android:inputType="number"
                 android:maxLength="10"
                 android:padding="@dimen/dimen_4dp"
+                app:met_textColorHint="@color/half_black"
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.rengwuxian.materialedittext.MaterialEditText
+                    android:id="@+id/edtAge"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="age"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:padding="@dimen/dimen_4dp"
+                    app:met_baseColor="@color/blue"
+                    app:met_textColorHint="@color/half_black"
+                    app:met_floatingLabel="highlight"
+                    app:met_primaryColor="@color/blue" />
+
+                <TextView
+                    android:id="@+id/txtDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/dimen_8dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:hint="Date"
+                    android:padding="@dimen/dimen_4dp"
+                    android:textColor="@color/blue" />
+
+
+            </LinearLayout>
 
             <RadioGroup
                 android:id="@+id/rgGender"
@@ -73,38 +110,6 @@
 
             </RadioGroup>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/txtDate"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="@dimen/dimen_8dp"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:hint="Date"
-                    android:padding="@dimen/dimen_4dp"
-                    android:textColor="@color/blue" />
-
-                <com.rengwuxian.materialedittext.MaterialEditText
-                    android:id="@+id/edtAge"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="right"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:hint="age"
-                    android:inputType="number"
-                    android:maxLength="3"
-                    android:padding="@dimen/dimen_4dp"
-                    app:met_baseColor="@color/blue"
-                    app:met_floatingLabel="highlight"
-                    app:met_primaryColor="@color/blue" />
-            </LinearLayout>
-
             <TextView
                 android:id="@+id/txtSelectCategory"
                 android:layout_width="match_parent"
@@ -113,6 +118,7 @@
                 android:drawableRight="@drawable/ic_arrow_drop_down"
                 android:paddingLeft="@dimen/dimen_4dp"
                 android:paddingRight="@dimen/dimen_4dp"
+                android:textColor="@color/half_black"
                 android:text="@string/select_category"
                 android:textSize="@dimen/M_TEXT" />
 
@@ -124,6 +130,7 @@
                 android:drawableRight="@drawable/ic_arrow_drop_down"
                 android:paddingLeft="@dimen/dimen_4dp"
                 android:paddingRight="@dimen/dimen_4dp"
+                android:textColor="@color/half_black"
                 android:text="@string/select_doctor"
                 android:textSize="@dimen/M_TEXT" />
 
@@ -146,6 +153,7 @@
                 android:inputType="textMultiLine|textCapWords"
                 android:minLines="2"
                 android:padding="@dimen/dimen_8dp"
+                app:met_textColorHint="@color/half_black"
                 app:met_baseColor="@color/blue"
                 app:met_floatingLabel="highlight"
                 app:met_primaryColor="@color/blue" />
@@ -179,6 +187,16 @@
                     android:text="@string/emergengy"
                     android:textColor="@color/colorWhite" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/txtNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_8dp"
+                android:layout_marginRight="@dimen/dimen_8dp"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="@dimen/S_TEXT"
+                android:text="Note: For emergency, hold down the red button for 3 seconds."/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

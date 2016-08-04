@@ -75,4 +75,5 @@
  Please wait...
  </string>
     <string name="consulted1">Patient Consulted?</string>
+    <string name="exit">Are you sure you want to close App?</string>
 </resources>

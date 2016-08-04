@@ -1,6 +1,7 @@
 package com.vebs.healthcare;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.vebs.healthcare.fragment.DiagnosticFragment;
 import com.vebs.healthcare.fragment.DoctorFragment;
@@ -33,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private int cityWhich = 0;
     private TextView txtCity;
     private TextView txtName;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +144,31 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public void onBackPressed() {
+       // super.onBackPressed();
+
+        MaterialDialog dialog = new MaterialDialog.Builder(this)
+                .title(this.getString(R.string.exit))
+                .positiveText("YES")
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        finish();
+                    }
+                })
+                .negativeText("NO")
+                .onNegative(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        dialog.dismiss();
+                    }
+                })
+                .show();
+
+        dialog.setCancelable(true);
     }
 
     private void showPopup() {

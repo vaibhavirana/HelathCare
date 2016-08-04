@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by vraj on 7/30/2016.
@@ -44,6 +47,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     private boolean is_consulted;
     private View view;
     private boolean isViewShown=false;
+    private PatientAdapter adpt;
 
     public PatientDoctorFragment() {
         // Required empty public constructor
@@ -93,11 +97,10 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
 
-
-
         changeUI(btnNotConsulted, btnConsulted);
         setTypeFace();
         setOnClickListner();
+        addTextListener();
     }
 
     private void setTypeFace() {
@@ -118,7 +121,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
             inputSearch.setHint(R.string.search_patient);
-            PatientAdapter adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
+            adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
             rvList.setAdapter(adpt);
         } else {
             rvList.setVisibility(View.GONE);
@@ -211,5 +214,36 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
 
         btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
         btn1.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
+    }
+
+    public void addTextListener(){
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+
+                final List<String> filteredList = new ArrayList<>();
+
+                for (int i = 0; i < patient_list.size(); i++) {
+
+                    final String text = patient_list.get(i).toLowerCase();
+                    if (text.contains(query)) {
+
+                        filteredList.add(patient_list.get(i));
+                    }
+                }
+
+                rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
+                rvList.setAdapter(adpt);
+                adpt.notifyDataSetChanged();  // data set changed
+            }
+        });
     }
 }

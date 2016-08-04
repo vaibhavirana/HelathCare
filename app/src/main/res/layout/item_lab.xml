@@ -24,28 +24,21 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/L_TEXT"
+                android:textSize="@dimen/XL_TEXT"
                 android:text="Lab Name: " />
 
             <TextView
-                android:id="@+id/txtEmail"
+                android:id="@+id/txtDrName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/M_TEXT"
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
-                android:layout_margin="@dimen/dimen_4dp"
-                android:text="Email: " />
+                android:text="Doctor Name: " />
+
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/txtDrName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/M_TEXT"
-            android:layout_margin="@dimen/dimen_4dp"
-            android:text="Doctor Name: " />
 
         <TextView
             android:id="@+id/txtAddress"
@@ -72,6 +65,13 @@
             android:text="Landline Num: " />
 
 
+        <TextView
+            android:id="@+id/txtEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/M_TEXT"
+            android:layout_margin="@dimen/dimen_4dp"
+            android:text="Email: " />
 
 
         <TextView

@@ -20,6 +20,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.AdvancedSpannableString;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -222,19 +223,25 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         //Log.e("test", test);
         if (edtPatientName.length() == 0) {
             edtPatientName.setError(this.getString(R.string.patient_error));
+            edtPatientName.requestFocus();
         } else if (edtPatientNo.length() == 0) {
             edtPatientNo.setError(this.getString(R.string.patient_no_error));
+            edtPatientNo.requestFocus();
+
         } else if (edtAge.length() == 0) {
             edtAge.setError(this.getString(R.string.patient_age_error));
+            edtAge.requestFocus();
         } else if (Integer.parseInt(edtAge.getText().toString().trim()) <= 0
                 || Integer.parseInt(edtAge.getText().toString().trim()) >= 110) {
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
+            edtAge.requestFocus();
         } else if (txtSelectLab.getText().equals(this.getString(R.string.select_lab))) {
             txtSelectLab.setError(this.getString(R.string.select_lab));
         } else if (txtSelectTest.getText().equals(this.getString(R.string.select_lab_test))) {
             txtSelectTest.setError(this.getString(R.string.select_lab_test));
         }  else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
+            edtRefer.requestFocus();
         } else {
             // send data call referdoctor
            /* Log.e("data", edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
@@ -458,8 +465,8 @@ public class LabFragment extends Fragment implements View.OnClickListener {
 
         HashMap<String, Object> labDetail = lab_test_detail.get(0);
 
-        txtLabName.setText("" + labDetail.get("labName").toString());
-        txtDrName.setText("Doctor Name : " + labDetail.get("drname").toString());
+  /*      txtLabName.setText("" + labDetail.get("labName").toString());
+        txtDrName.setText("" + labDetail.get("drname").toString());
         txtEmail.setText("Email : " + labDetail.get("email").toString());
         txtMobileNo.setText("Mobile No. : " + labDetail.get("mobile").toString());
         txtLandLineNo.setText("Landline No. : " + labDetail.get("landline").toString());
@@ -469,6 +476,39 @@ public class LabFragment extends Fragment implements View.OnClickListener {
         txtPatient.setText("No of Patients \n" + labDetail.get("offer"));
         txtNote.setText("Note : " + labDetail.get("note"));
 
+*/
+        txtLabName.setText("" + labDetail.get("labName").toString());
+        txtDrName.setText("" + labDetail.get("drname").toString());
+
+        AdvancedSpannableString sp = new AdvancedSpannableString("Email : "+ labDetail.get("email").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Email : ");
+        txtEmail.setText(sp);
+        sp = new AdvancedSpannableString("Mobile No. : "+ labDetail.get("mobile").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Mobile No. : ");
+        txtMobileNo.setText(sp);
+        sp = new AdvancedSpannableString("Landline No. : "+ labDetail.get("landline").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Landline No. : ");
+        txtLandLineNo.setText(sp);
+        sp = new AdvancedSpannableString("Address : "+ labDetail.get("address").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Address : ");
+        txtAddress.setText(sp);
+        sp = new AdvancedSpannableString("Collection Type : "+ labDetail.get("ctype").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Collection Type : ");
+        txtFees.setText(sp);
+        sp = new AdvancedSpannableString("Time \n"+ labDetail.get("time").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Time \n");
+        txtTime.setText(sp);
+        //  txtPatient.setText("No of Patients \n" + labDetail.get("offer"));
+        sp = new AdvancedSpannableString("No of Patients \n"+ labDetail.get("offer").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "No of Patients \n");
+        txtPatient.setText(sp);
+
+        //txtNote.setText("Note : " + labDetail.get("note"));
+        sp = new AdvancedSpannableString("Note : "+ labDetail.get("note").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Note : ");
+        txtNote.setText(sp);
+
+        //////////////////////////////////////////////////////////////////////
         collected_type=labDetail.get("ctype").toString();
         List<String> lab_test = new ArrayList<>();
         testWhich = null;

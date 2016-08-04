@@ -21,6 +21,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.vebs.healthcare.R;
+import com.vebs.healthcare.utils.AdvancedSpannableString;
 import com.vebs.healthcare.utils.Function;
 import com.vebs.healthcare.utils.PrefsUtil;
 import com.vebs.healthcare.utils.RestClient;
@@ -130,6 +131,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         Function.setRegularFont(getActivity(), txtDate);
         Function.setRegularFont(getActivity(), txtSelectCategory);
         Function.setRegularFont(getActivity(), txtSelectDoctor);
+        Function.setRegularFont(getActivity(), ((TextView)view.findViewById(R.id.txtNote)));
         Function.setRegularFont(getActivity(), edtPatientName);
         Function.setRegularFont(getActivity(), edtPatientNo);
         Function.setRegularFont(getActivity(), edtAge);
@@ -291,15 +293,20 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
     private void validateData(int flag) {
         if (edtPatientName.length() == 0) {
             edtPatientName.setError(this.getString(R.string.patient_error));
+            edtPatientName.requestFocus();
         } else if (edtPatientNo.length() == 0) {
             edtPatientNo.setError(this.getString(R.string.patient_no_error));
+            edtPatientNo.requestFocus();
         } else if (edtAge.length() == 0) {
             edtAge.setError(this.getString(R.string.patient_age_error));
+            edtAge.requestFocus();
         } else if (Integer.parseInt(edtAge.getText().toString().trim()) <= 0
                 || Integer.parseInt(edtAge.getText().toString().trim()) >= 110) {
             edtAge.setError(this.getString(R.string.patient_proper_age_error));
+            edtAge.requestFocus();
         } else if (txtSelectCategory.getText().equals(this.getString(R.string.select_category))) {
             txtSelectCategory.setError(this.getString(R.string.select_category));
+            txtSelectCategory.requestFocus();
         } else if (txtSelectDoctor.getText().equals(this.getString(R.string.select_doctor))) {
             txtSelectDoctor.setError(this.getString(R.string.select_doctor));
         }
@@ -308,6 +315,7 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         }*/
         else if (edtRefer.length() == 0) {
             edtRefer.setError(this.getString(R.string.refer_error));
+            edtRefer.requestFocus();
         } else {
             // send data call referdoctor
             Log.e("data", PrefsUtil.getCityID(getActivity()) + " || " + edtPatientName.getText() + " || " + edtPatientNo.getText() + " || " +
@@ -410,16 +418,39 @@ public class DoctorFragment extends Fragment implements View.OnClickListener {
         HashMap<String, Object> doctor = doc_list.get(id);
         docId = doctor.get("id").toString();
        // txtDrName.setText("Doctor Name : " + doctor.get("name").toString());
+
         txtDrName.setText(doctor.get("name").toString());
-        txtEmail.setText("Email : " + doctor.get("email").toString());
-        txtHospName.setText("Hospital Name : " + doctor.get("hosp_name").toString());
-        txtMobileNo.setText("Mobile No. : " + doctor.get("mobile").toString());
-        txtLandLineNo.setText("Landline No. : " + doctor.get("landline").toString());
-        txtAddress.setText("Address : " + doctor.get("address").toString());
-        txtTime.setText("Time \n" + doctor.get("time").toString());
-        txtFees.setText("Fees \n" + doctor.get("fees").toString());
-        txtPatient.setText("No of Patients \n" + doctor.get("offer"));
-        txtNote.setText("Note : " + doctor.get("note"));
+        txtHospName.setText("" + doctor.get("hosp_name").toString());
+
+        AdvancedSpannableString sp = new AdvancedSpannableString("Email : "+ doctor.get("email").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Email : ");
+        txtEmail.setText(sp);
+        sp = new AdvancedSpannableString("Mobile No. : "+ doctor.get("mobile").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Mobile No. : ");
+        txtMobileNo.setText(sp);
+        sp = new AdvancedSpannableString("Landline No. : "+ doctor.get("landline").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Landline No. : ");
+        txtLandLineNo.setText(sp);
+        sp = new AdvancedSpannableString("Address : "+ doctor.get("address").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Address : ");
+        txtAddress.setText(sp);
+       // txtAddress.setText("Address : " + doctor.get("address").toString());
+        sp = new AdvancedSpannableString("Time \n"+ doctor.get("time").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Time \n");
+        txtTime.setText(sp);
+       // txtTime.setText("Time \n" + doctor.get("time").toString());
+        sp = new AdvancedSpannableString("Fees \n"+ doctor.get("fees").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Fees \n");
+        txtFees.setText(sp);
+       // txtFees.setText("Fees \n" + doctor.get("fees").toString());
+        sp = new AdvancedSpannableString("No of Patients \n"+ doctor.get("offer").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "No of Patients \n");
+        txtPatient.setText(sp);
+        //txtPatient.setText("No of Patients \n" + doctor.get("offer"));
+        sp = new AdvancedSpannableString("Note : "+ doctor.get("note").toString());
+        sp.setColor(getActivity().getResources().getColor(R.color.colorPrimary), "Note : ");
+        txtNote.setText(sp);
+        //txtNote.setText("Note : " + doctor.get("note"));
     }
 
     private void showToast(final boolean str) {
