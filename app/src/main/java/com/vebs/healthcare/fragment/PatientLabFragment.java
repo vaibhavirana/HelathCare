@@ -8,6 +8,8 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,13 +37,14 @@ import java.util.ArrayList;
 public class PatientLabFragment extends Fragment implements View.OnClickListener {
     private static ArrayList<String> patient_list;
     private static ArrayList<String> patient_referid_list;
-    private Button btnNotConsulted,btnConsulted;
+    private Button btnNotConsulted, btnConsulted;
     //private AutoCompleteTextView txtSearch;
     private EditText inputSearch;
     private RecyclerView rvList;
     private EmptyLayout emptyLayout;
     private View view;
     private boolean is_consulted;
+    private PatientLabAdapter adpt;
 
     public PatientLabFragment() {
         // Required empty public constructor
@@ -60,7 +63,7 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
         if (isVisibleToUser) {
             // Log.e("uid",PrefsUtil.getDrID(getActivity()));
             //init();
-            fetch_patient(getActivity(),Function.PATIENT_NC_LAB_URL);
+            fetch_patient(getActivity(), Function.PATIENT_NC_LAB_URL);
         }
     }
 
@@ -77,15 +80,15 @@ public class PatientLabFragment extends Fragment implements View.OnClickListener
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view=inflater.inflate(R.layout.fragment_patient, container, false);
-init();
+        view = inflater.inflate(R.layout.fragment_patient, container, false);
+        init();
         return view;
     }
 
     private void init() {
-        btnConsulted=(Button)view.findViewById(R.id.btnConsulted);
-        btnNotConsulted=(Button)view.findViewById(R.id.btnNotConsulted);
-        changeUI(btnNotConsulted, btnConsulted);
+        btnConsulted = (Button) view.findViewById(R.id.btnConsulted);
+        btnNotConsulted = (Button) view.findViewById(R.id.btnNotConsulted);
+
 
         inputSearch = (EditText) view.findViewById(R.id.inputSearch);
         rvList = (RecyclerView) view.findViewById(R.id.RecyclerViewList);
@@ -94,17 +97,18 @@ init();
         rvList.setItemAnimator(new DefaultItemAnimator());
         rvList.setHasFixedSize(true);
         emptyLayout = (EmptyLayout) view.findViewById(R.id.emptyLayout);
-
+        changeUI(btnNotConsulted, btnConsulted);
         setOnClickListner();
         setTypeFace();
+        addTextListener();
         // rvPatientName.addItemDecoration(new VerticalSpaceItemDecoration(2));
         //fetchPatientList();
     }
 
     private void setTypeFace() {
-        Function.setBoldFont(getActivity(),btnConsulted);
-        Function.setBoldFont(getActivity(),btnNotConsulted);
-        Function.setRegularFont(getActivity(),inputSearch);
+        Function.setBoldFont(getActivity(), btnConsulted);
+        Function.setBoldFont(getActivity(), btnNotConsulted);
+        Function.setRegularFont(getActivity(), inputSearch);
     }
 
     private void setOnClickListner() {
@@ -114,15 +118,14 @@ init();
 
     private void setAdapater() {
 
-        if(patient_list.size()>0) {
+        if (patient_list.size() > 0) {
             inputSearch.setVisibility(View.VISIBLE);
             rvList.setVisibility(View.VISIBLE);
             emptyLayout.setVisibility(View.GONE);
             inputSearch.setHint(R.string.search_patient);
-            PatientLabAdapter adpt = new PatientLabAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
+            adpt = new PatientLabAdapter(getActivity(), patient_list, patient_referid_list, is_consulted);
             rvList.setAdapter(adpt);
-        }else
-        {
+        } else {
             rvList.setVisibility(View.GONE);
             inputSearch.setVisibility(View.GONE);
             emptyLayout.setVisibility(View.VISIBLE);
@@ -185,8 +188,7 @@ init();
                 }
             }.execute();
 
-        }else
-        {
+        } else {
             Function.showInternetPopup(mContext);
         }
     }
@@ -195,13 +197,13 @@ init();
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btnConsulted:
-                is_consulted=true;
+                is_consulted = true;
                 changeUI(btnConsulted, btnNotConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_C_LAB_URL);
                 break;
 
             case R.id.btnNotConsulted:
-                is_consulted=false;
+                is_consulted = false;
                 changeUI(btnNotConsulted, btnConsulted);
                 fetch_patient(getActivity(), Function.PATIENT_NC_LAB_URL);
                 break;
@@ -211,10 +213,43 @@ init();
     }
 
     private void changeUI(Button btn, Button btn1) {
+        inputSearch.setText("");
         btn.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
         btn.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
 
         btn1.setBackgroundColor(getActivity().getResources().getColor(R.color.trans_blue));
         btn1.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
+    }
+
+    public void addTextListener(){
+
+        inputSearch.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {}
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence query, int start, int before, int count) {
+
+                query = query.toString().toLowerCase();
+                Log.e("Text",query.toString());
+                final ArrayList<String> filteredList = new ArrayList<>();
+                final ArrayList<String> filteredIdList = new ArrayList<>();
+
+                for (int i = 0; i < patient_list.size(); i++) {
+
+                    final String text = patient_list.get(i).toLowerCase();
+                    if (text.contains(query)) {
+                        filteredList.add(patient_list.get(i));
+                        filteredIdList.add(patient_referid_list.get(i));
+                        Log.e("arraylist",filteredList.toString());
+                    }
+                }
+
+                adpt = new PatientLabAdapter(getActivity(), filteredList, filteredIdList,is_consulted);
+                rvList.setAdapter(adpt);
+                adpt.notifyDataSetChanged();  // data set changed
+            }
+        });
     }
 }

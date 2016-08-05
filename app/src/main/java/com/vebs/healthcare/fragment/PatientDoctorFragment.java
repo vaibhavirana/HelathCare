@@ -29,7 +29,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by vraj on 7/30/2016.
@@ -209,6 +208,7 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
     }
 
     private void changeUI(Button btn, Button btn1) {
+        inputSearch.setText("");
         btn.setBackgroundColor(getActivity().getResources().getColor(R.color.color_light_green));
         btn.setTextColor(getActivity().getResources().getColor(R.color.colorWhite));
 
@@ -227,20 +227,21 @@ public class PatientDoctorFragment extends Fragment implements View.OnClickListe
             public void onTextChanged(CharSequence query, int start, int before, int count) {
 
                 query = query.toString().toLowerCase();
-
-                final List<String> filteredList = new ArrayList<>();
+                Log.e("Text",query.toString());
+                final ArrayList<String> filteredList = new ArrayList<>();
+                final ArrayList<String> filteredIdList = new ArrayList<>();
 
                 for (int i = 0; i < patient_list.size(); i++) {
 
                     final String text = patient_list.get(i).toLowerCase();
                     if (text.contains(query)) {
-
                         filteredList.add(patient_list.get(i));
+                        filteredIdList.add(patient_referid_list.get(i));
+                        Log.e("arraylist",filteredList.toString());
                     }
                 }
 
-                rvList.setLayoutManager(new LinearLayoutManager(getActivity()));
-                adpt = new PatientAdapter(getActivity(), patient_list, patient_referid_list,is_consulted);
+                adpt = new PatientAdapter(getActivity(), filteredList, filteredIdList,is_consulted);
                 rvList.setAdapter(adpt);
                 adpt.notifyDataSetChanged();  // data set changed
             }
