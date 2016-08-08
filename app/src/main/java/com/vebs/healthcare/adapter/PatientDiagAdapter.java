@@ -224,7 +224,7 @@ public class PatientDiagAdapter extends RecyclerView.Adapter<PatientDiagAdapter.
             txtLabName.setText("Center Name : " +patient_list.get(0).get("Center Name").toString());
             txtDoctorMobileNo.setText("Doctor Mobile No : " + patient_list.get(0).get("D Mobile Num").toString());
             txtDoctorFees.setText("test : " + patient_list.get(0).get("test").toString() + "\nPrice : "+patient_list.get(0).get("price").toString() );
-            txtDoctorOffer.setText("Offere : " + patient_list.get(0).get("Offere").toString());
+            txtDoctorOffer.setText("No of Patients : " + patient_list.get(0).get("Offere").toString());
             txtDoctorNote.setText("Notes : " + patient_list.get(0).get("refer_note").toString());
             txtDoctorTime.setText("time : " + patient_list.get(0).get("time").toString());
         }else

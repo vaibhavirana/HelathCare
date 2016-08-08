@@ -25,13 +25,13 @@
 
     <ProgressBar
         android:id="@+id/progressBar"
+        android:layout_below="@+id/imageLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/txtCompanyName"
         android:layout_marginBottom="@dimen/dimen_8dp"
         android:layout_centerHorizontal="true" />
 
-    <TextView
+  <!--  <TextView
         android:id="@+id/txtCompanyName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,5 +40,5 @@
         android:text="@string/developed_text"
         android:gravity="center"
         android:layout_alignParentBottom="true"
-        android:textSize="@dimen/M_TEXT" />
+        android:textSize="@dimen/M_TEXT" />-->
 </RelativeLayout>

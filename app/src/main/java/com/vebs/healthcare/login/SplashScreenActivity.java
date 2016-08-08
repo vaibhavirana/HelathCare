@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.TextView;
 
 import com.vebs.healthcare.MainActivity;
 import com.vebs.healthcare.R;
@@ -19,7 +18,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         Function.setActivityToFullScreen(this);
         setContentView(R.layout.activity_splash_screen);
 
-        Function.setRegularFont(this, ((TextView)findViewById(R.id.txtCompanyName)));
+      //  Function.setRegularFont(this, ((TextView)findViewById(R.id.txtCompanyName)));
         //Functions.setRegularFont(this, edtNumber);
         // txtAppName.setTypeface(Functions.getBoldFont(this));
         if (Function.isConnected(this)) {

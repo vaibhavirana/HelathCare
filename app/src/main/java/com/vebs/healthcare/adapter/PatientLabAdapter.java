@@ -221,7 +221,7 @@ public class PatientLabAdapter extends RecyclerView.Adapter<PatientLabAdapter.Pa
             txtDoctorMobileNo.setText("Doctor Mobile No : " + patient_list.get(0).get("D Mobile Num").toString());
             //txtDoctorFees.setText("Fees : " + patient_list.get(0).get("Fees").toString() + "\nPrice : "+patient_list.get(0).get("price").toString() );
             txtDoctorFees.setText("Fees : " + patient_list.get(0).get("Fees").toString() );
-            txtDoctorOffer.setText("Offere : " + patient_list.get(0).get("Offere").toString());
+            txtDoctorOffer.setText("No of Patients : " + patient_list.get(0).get("Offere").toString());
             txtDoctorNote.setText("Notes : " + patient_list.get(0).get("refer_note").toString());
             txtDoctorTime.setText("time : " + patient_list.get(0).get("time").toString());
         }else
